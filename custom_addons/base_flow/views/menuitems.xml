@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_flow_root" name="Approval Flow" sequence="10"/>
+
+    <menuitem
+        id="menu_approval_flow"
+        name="Flows"
+        parent="base_flow.menu_flow_root"
+        action="base_flow.action_approval_flow"
+        sequence="10"
+        groups="base.group_user,base_flow.group_approval_user,base_flow.group_approval_manager"/>
+
+    <menuitem
+        id="menu_approval_action"
+        name="Actions"
+        parent="base_flow.menu_flow_root"
+        action="base_flow.action_approval_action"
+        sequence="20"
+        groups="base.group_user,base_flow.group_approval_user,base_flow.group_approval_manager"/>
+</odoo>
+

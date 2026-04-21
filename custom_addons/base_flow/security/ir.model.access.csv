@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_flow_manager,approval.flow manager,model_approval_flow,base_flow.group_approval_manager,1,1,1,1
+access_approval_node_manager,approval.node manager,model_approval_node,base_flow.group_approval_manager,1,1,1,1
+access_approval_runtime_manager,approval.runtime manager,model_approval_runtime,base_flow.group_approval_manager,1,1,1,1
+access_approval_runtime_line_manager,approval.runtime.line manager,model_approval_runtime_line,base_flow.group_approval_manager,1,1,1,1
+access_approval_action_system,approval.action system,model_approval_action,base.group_system,1,1,1,1
+access_approval_runtime_system,approval.runtime system,model_approval_runtime,base.group_system,1,1,1,1
+access_approval_runtime_line_system,approval.runtime.line system,model_approval_runtime_line,base.group_system,1,1,1,1
+access_approval_flow_user_read,approval.flow user read,model_approval_flow,base_flow.group_approval_user,1,0,0,0
+access_approval_node_user_read,approval.node user read,model_approval_node,base_flow.group_approval_user,1,0,0,0
+access_approval_runtime_user_read,approval.runtime user read,model_approval_runtime,base_flow.group_approval_user,1,0,0,0
+access_approval_runtime_line_user_read,approval.runtime.line user read,model_approval_runtime_line,base_flow.group_approval_user,1,0,0,0
+access_approval_flow_internal_read,approval.flow internal read,model_approval_flow,base.group_user,1,0,0,0
+access_approval_node_internal_read,approval.node internal read,model_approval_node,base.group_user,1,0,0,0
+access_approval_action_internal_read,approval.action internal read,model_approval_action,base.group_user,1,0,0,0
+access_approval_runtime_internal_read,approval.runtime internal read,model_approval_runtime,base.group_user,1,0,0,0
+access_approval_runtime_line_internal_read,approval.runtime.line internal read,model_approval_runtime_line,base.group_user,1,0,0,0
+access_approval_reject_wizard_user,approval.reject.wizard user,model_approval_reject_wizard,base.group_user,1,1,1,1

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tg_hr_requisition_user,tg.hr.requisition recruitment user,model_tg_hr_requisition,hr_recruitment.group_hr_recruitment_user,1,1,1,1
+access_tg_hr_requisition_interviewer,tg.hr.requisition recruitment interviewer,model_tg_hr_requisition,hr_recruitment.group_hr_recruitment_interviewer,1,0,0,0
+access_tg_hr_requisition_stage_interviewer,tg.hr.requisition.stage interviewer,model_tg_hr_requisition_stage,hr_recruitment.group_hr_recruitment_interviewer,1,0,0,0
+access_tg_hr_requisition_stage_user,tg.hr.requisition.stage recruitment user,model_tg_hr_requisition_stage,hr_recruitment.group_hr_recruitment_user,1,0,0,0
+access_tg_hr_requisition_stage_manager,tg.hr.requisition.stage recruitment manager,model_tg_hr_requisition_stage,hr_recruitment.group_hr_recruitment_manager,1,1,1,1
+access_tg_hr_requisition_hired_person_user,tg.hr.requisition.hired.person recruitment user,model_tg_hr_requisition_hired_person,hr_recruitment.group_hr_recruitment_user,1,1,1,1
+access_tg_hr_requisition_hired_person_system,tg.hr.requisition.hired.person system,model_tg_hr_requisition_hired_person,base.group_system,1,1,1,1

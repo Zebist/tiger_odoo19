@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_tg_hr_requisition"
+        name="Requisitions"
+        parent="hr_recruitment.menu_hr_recruitment_root"
+        action="action_tg_hr_requisition"
+        sequence="15"
+        groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_interviewer"/>
+
+    <menuitem
+        id="menu_tg_hr_requisition_stage"
+        name="Requisition Stages"
+        parent="hr_recruitment.menu_hr_recruitment_configuration"
+        action="action_tg_hr_requisition_stage"
+        sequence="25"
+        groups="hr_recruitment.group_hr_recruitment_manager"/>
+</odoo>

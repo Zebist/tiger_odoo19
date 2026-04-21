@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tg_hr_requisition_stage_tree" model="ir.ui.view">
+        <field name="name">tg.hr.requisition.stage.list</field>
+        <field name="model">tg.hr.requisition.stage</field>
+        <field name="arch" type="xml">
+            <list string="Requisition Stages">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="fold"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tg_hr_requisition_stage_form" model="ir.ui.view">
+        <field name="name">tg.hr.requisition.stage.form</field>
+        <field name="model">tg.hr.requisition.stage</field>
+        <field name="arch" type="xml">
+            <form string="Requisition Stage">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" placeholder="e.g. draft, submitted, hm_assigned, hired"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                        </group>
+                    </group>
+                    <p class="text-muted" colspan="2">
+                        The workflow code must stay unique and match server rules (allowed transitions, buttons).
+                        Changing codes on existing stages can break requisitions in those stages.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tg_hr_requisition_stage_search" model="ir.ui.view">
+        <field name="name">tg.hr.requisition.stage.search</field>
+        <field name="model">tg.hr.requisition.stage</field>
+        <field name="arch" type="xml">
+            <search string="Requisition Stages">
+                <field name="name"/>
+                <field name="code"/>
+                <filter string="Folded in Kanban" name="filter_fold" domain="[('fold', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tg_hr_requisition_stage" model="ir.actions.act_window">
+        <field name="name">Requisition Stages</field>
+        <field name="res_model">tg.hr.requisition.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a requisition stage
+            </p>
+            <p>
+                Stages define the pipeline for job requisitions (order, labels, and technical workflow codes).
+            </p>
+        </field>
+    </record>
+
+    <record id="action_tg_hr_requisition_stage_new" model="ir.actions.act_window">
+        <field name="name">New Requisition Stage</field>
+        <field name="res_model">tg.hr.requisition.stage</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
