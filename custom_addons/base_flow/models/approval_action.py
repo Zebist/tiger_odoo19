@@ -4,6 +4,24 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.safe_eval import safe_eval
 
+# 由装饰器在 import 时写入。
+# 同一个 code 重复注册时：后加载的模块覆盖先加载的（与 Odoo 模块加载顺序一致）。
+_approval_action_handler_map = {}
+
+
+def register_approval_action_code(code, label=None):
+    """注册 action code 对应的处理方法。
+
+    统一用法：直接使用本模块函数（含扩展模块）。
+
+    - 用法：``@register_approval_action_code('xxx', label=_('...'))``
+    """
+    def decorator(method):
+        label_ = label if label is not None else code
+        _approval_action_handler_map[code] = (label_, method.__name__)
+        return method
+    return decorator
+
 
 class ApprovalAction(models.Model):
     _name = 'approval.action'
@@ -30,9 +48,12 @@ class ApprovalAction(models.Model):
     def _get_code_map(self):
         """Return mapping: code -> (label, method_name).
 
-        Designed for extension by other modules via super().
+        由装饰器 :func:`register_approval_action_code` 在 import 时写入
+        :data:`_approval_action_handler_map`。
+
+        Other modules may still extend via ``super()._get_code_map()`` and merge keys.
         """
-        return {}
+        return dict(_approval_action_handler_map)
 
     def _run_by_code(self, document, runtime_line=None):
         self.ensure_one()
@@ -72,4 +93,3 @@ class ApprovalAction(models.Model):
         if (self.code or '').strip():
             return self._run_by_code(document=document, runtime_line=runtime_line)
         return self._run_by_python(document=document, runtime_line=runtime_line)
-

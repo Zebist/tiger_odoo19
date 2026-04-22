@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.base_flow.models.approval_action import register_approval_action_code  # type: ignore
 
 
 class TgHrRequisitionHiredPerson(models.Model):
@@ -144,3 +145,23 @@ class TgHrRequisition(models.Model):
             vals = dict(vals, replacement_partner_id=False)
 
         return super().write(vals)
+
+    @register_approval_action_code('hr_requisition_assigned', label=_('Hiring Manager Assign'))
+    def hr_requisition_assigned(self, document, runtime_line):
+        """审批动作：指派 Hiring Manager。
+
+        该方法由 `approval.action` 的 code=``hr_requisition_assigned`` 调用。
+        """
+        self.ensure_one()
+        self.write({'hiring_manager_id': self.env.uid})
+        return True
+
+    @register_approval_action_code('ceo_approve_on_job_is_manager', label=_('Hiring Manager Approve'))
+    def ceo_approve_on_job_is_manager(self, document, runtime_line):
+        """审批动作：当岗位是 manager 级别时，需要CEO 审批。
+
+        该方法由 `approval.action` 的 code=``ceo_approve_on_job_is_manager`` 调用。
+        """
+        self.ensure_one()
+        self.write({'hiring_manager_id': self.env.uid})
+        return True

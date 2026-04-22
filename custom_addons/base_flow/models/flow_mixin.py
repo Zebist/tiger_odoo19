@@ -135,6 +135,7 @@ class FlowMixin(models.AbstractModel):
         审批通过
         1. 进入下一级
         2. 如果没有下级，完成审批流
+        3. 执行审批动作 action
         """
         self = self._check_approve_perm(self.approval_runtime_id.current_line_id.node_id)
 
