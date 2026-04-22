@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 
 
 class TierValidation(models.AbstractModel):
-    _inherit = "tier.validation"
+    _inherit = "tier.validation.zb"
 
     def _server_action_tier(self, reviews, status):
         # Keep original behaviour (server actions) first.

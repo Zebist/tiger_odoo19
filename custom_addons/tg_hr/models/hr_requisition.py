@@ -5,13 +5,11 @@ from odoo.exceptions import ValidationError
 
 class TgHrRequisition(models.Model):
     _name = 'tg.hr.requisition'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'tier.validation']  # type: ignore
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'tier.validation.zb']  # type: ignore
     _description = 'Job Requisition'
     _order = 'sequence, id'
 
     _tier_validation_manual_config = False
-    # state 字段为 compute 时，Tier 校验需从 DB 取旧值才能正确判断状态迁移
-    _tier_validation_state_field_is_computed = True
 
     name = fields.Char(string='Title', required=True, help='e.g. role or project name for this requisition.', translate=True)
     sequence = fields.Integer(string='Sequence', default=10, required=True)

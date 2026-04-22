@@ -11,6 +11,7 @@
         'mail',
         'base_tier_validation',
         'base_tier_validation_server_action',
+        'base_tier_validation_extend_by_zb'
     ],
     'data': [
         'security/ir.model.access.csv',

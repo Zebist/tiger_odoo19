@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Extend Tier Validation buttons template -->
+    <template
+        id="tier_validation_buttons_inherit_restart_invisible"
+        inherit_id="base_tier_validation.tier_validation_buttons"
+    >   
+    <!-- TODO 需要加开关 -->
+        <xpath expr="//button[@name='restart_validation']" position="attributes">
+            <attribute name="invisible">not review_ids or hide_reviews or True</attribute>
+        </xpath>
+    </template>
+</odoo>

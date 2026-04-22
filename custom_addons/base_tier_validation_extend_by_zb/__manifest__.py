@@ -10,6 +10,8 @@
     "depends": [
         "base_tier_validation",
     ],
-    "data": [],
+    "data": [
+        "views/tier_validation_templates.xml",
+    ],
 }
 

@@ -2,17 +2,16 @@ from odoo import models, fields
 
 
 class TierValidation(models.AbstractModel):
+    _name = 'tier.validation.zb'
     _inherit = "tier.validation"
     # draft 和 approving 为了实现 submig
-    _state_from = ['draft', 'approving']
-    _state_to = ['approving', 'approved']
+    _state_from = ['approving']
+    _state_to = ['approved']
 
     state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
             ('approving', 'Approving'),
-            ('exception', 'Exception'),
-            ('rejected', 'Rejected'),
             ('approved', 'Approved'),
         ],
         string='Status',
@@ -29,9 +28,45 @@ class TierValidation(models.AbstractModel):
             return
         return super()._tier_validation_check_state_on_write(vals)
 
+    def _server_action_tier(self, reviews, status):
+        """审批节点回调：在 server action / stage 更新之后，同步维护业务 state。
+
+        说明：
+        - `base_tier_validation` 只维护 tier.review/validation_status，不会自动写业务 state。
+        - 我们在此统一将：
+          - 任意 reject -> state=rejected
+          - 全部通过（validation_status=validated） -> state=approved
+        """
+        res = super()._server_action_tier(reviews, status)  # type: ignore[attr-defined]
+
+        # 防止 state 写入再次触发同类逻辑（以及避免 tier 校验拦截）。
+        if self.env.context.get("tier_state_write"):
+            return res
+
+        for rec in self:
+            target_state = False
+            if status == "rejected":
+                target_state = "draft"
+            elif status == "approved" and rec.validation_status == "validated":
+                target_state = "approved"
+
+            if target_state and rec.state != target_state:
+                rec.sudo().with_context(
+                    tier_state_write=True,
+                    skip_tier_state_check=True,
+                    skip_validation_check=True,
+                ).write({"state": target_state})
+
+        return res
+
     def action_submit(self):
         """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
         for rec in self:
+            rec.sudo().with_context(
+                tier_state_write=True,
+                skip_tier_state_check=True,
+                skip_validation_check=True,
+            ).write({"state": "approving"})
             reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
             # 自动执行一次“当前用户可审批的层级”，以触发 server action（例如更新 stage）
             if reviews:
