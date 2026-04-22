@@ -70,7 +70,6 @@
                 <field name="stage_id" widget="badge" decoration-info="stage_code == 'draft'"
                        decoration-primary="stage_code == 'submitted'" decoration-warning="stage_code == 'hm_assigned'"
                        decoration-success="stage_code == 'hired'"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>
         </field>
     </record>
@@ -82,18 +81,10 @@
             <form string="Requisition">
                 <field name="stage_code" invisible="1"/>
                 <header>
-                    <field name="is_create_user" invisible="1"/>
                     <button name="action_submit" type="object" string="Submit" class="btn-primary"
-                            invisible="state != 'draft' or not is_create_user"
+                            invisible="stage_code != 'draft' or requester_id != uid"
                             groups="hr_recruitment.group_hr_recruitment_user"/>
-                    <button name="action_approve" type="object" string="Approve" class="btn-primary"
-                            invisible="state != 'approving' or not is_current_approver"/>
-                    <button name="action_open_reject_wizard" type="object" string="Reject" class="btn-secondary"
-                            invisible="state != 'approving' or not is_current_approver"/>
-                    <button name="action_reset_to_draft" type="object" string="Acknowledge Reason" class="btn-primary"
-                            invisible="state not in ('rejected', 'exception') or not is_create_user"
-                            groups="hr_recruitment.group_hr_recruitment_user"/>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    <field name="stage_id" widget="statusbar" readonly="1"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -103,15 +94,6 @@
                             <field name="name" placeholder="e.g. Customer Service for swap query handling"/>
                         </h1>
                     </div>
-                    <group string="Approval Info">
-                        <group>
-                            <field name="state"/>
-                            <field name="is_current_approver"/>
-                            <field name="approval_runtime_id"/>
-                            <field name="approve_note" placeholder="Reject/approve note..." class="text-danger"
-                                   invisible="state!='rejected'"/>
-                        </group>
-                    </group>
                     <group>
                         <group string="Request">
                             <field name="requester_id" widget="many2one_avatar_user"/>
@@ -128,7 +110,6 @@
                             <field name="hiring_type"/>
                             <field name="replacement_partner_id" invisible="hiring_type != 'replacement'"
                                    required="hiring_type == 'replacement'" options="{'no_create': True}"/>
-                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                         </group>
                     </group>
                     <group string="JOB DESCRIPTION">

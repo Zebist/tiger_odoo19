@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tier_definition_view_form_inherit_stage" model="ir.ui.view">
+        <field name="name">tier.definition.form.stage</field>
+        <field name="model">tier.definition</field>
+        <field name="inherit_id" ref="base_tier_validation_server_action.tier_definition_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='options']" position="after">
+                <page name="tier_stage" string="Stage" invisible="not stage_res_model">
+                    <group>
+                        <field name="stage_res_model" invisible="1" />
+                        <field name="stage_id" />
+                        <field name="rejected_stage_id" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

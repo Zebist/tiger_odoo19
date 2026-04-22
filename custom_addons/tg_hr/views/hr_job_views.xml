@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_job_form_inherit_tg_hr_is_manager" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit.tg.hr.is.manager</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='job']/field[@name='department_id']" position="after">
+                <field name="is_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_tree_inherit_tg_hr_is_manager" model="ir.ui.view">
+        <field name="name">hr.job.tree.inherit.tg.hr.is.manager</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='name']" position="after">
+                <field name="is_manager" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

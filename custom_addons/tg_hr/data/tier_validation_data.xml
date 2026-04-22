@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+    Tier Validation 配置（tg.hr.requisition）
+
+    拦截点：submitted -> hm_assigned
+    说明：Reviewer/Domain 都可在界面进一步调整，本文件提供默认基线。
+    -->
+
+    <!-- 审批通过后：自动写入 Hiring Manager，并推进 Stage 到 hm_assigned -->
+    <record id="server_action_requisition_to_hm_assigned" model="ir.actions.server">
+        <field name="name">Requisition: Assign HM &amp; Move to HM Assigned</field>
+        <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
+        <field name="state">code</field>
+        <field name="code">record.action_hr_assign()</field>
+    </record>
+
+    <!-- Tier Definition: HR（组：Recruitment Manager，可在 UI 调整） -->
+    <record id="tier_def_requisition_hr" model="tier.definition">
+        <field name="name">Requisition - HR</field>
+        <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="hr_recruitment.group_hr_recruitment_manager"/>
+        <field name="sequence">20</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="has_comment" eval="True"/>
+        <field name="server_action_id" ref="tg_hr.server_action_requisition_to_hm_assigned"/>
+    </record>
+
+    <!-- Tier Definition: CEO（示例：岗位名称包含 Manager 才触发；审批人组可在 UI 调整） -->
+    <record id="tier_def_requisition_ceo" model="tier.definition">
+        <field name="name">Requisition - CEO (Conditional)</field>
+        <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="hr_recruitment.group_hr_recruitment_manager"/>
+        <field name="sequence">30</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="has_comment" eval="True"/>
+        <field name="definition_domain">[('job_id.is_manager', '=', True)]</field>
+        <field name="server_action_id" ref="tg_hr.server_action_requisition_to_hm_assigned"/>
+    </record>
+</odoo>
+

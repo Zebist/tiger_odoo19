@@ -1,34 +1,17 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.addons.base_flow.models.approval_action import register_approval_action_code  # type: ignore
-
-
-class TgHrRequisitionHiredPerson(models.Model):
-    _name = 'tg.hr.requisition.hired.person'
-    _description = 'Job Requisition Hired Person'
-    _order = 'sequence, id'
-
-    requisition_id = fields.Many2one(
-        'tg.hr.requisition',
-        string='Requisition',
-        required=True,
-        ondelete='cascade',
-        index=True,
-    )
-    sequence = fields.Integer(default=10, required=True)
-    name = fields.Char(string='Hired Person Name', required=True)
-    contact = fields.Char(string='Contact Information')
-    joining_date = fields.Date(string='Joining Date')
-    cv = fields.Binary(string='Hired person CV')
-    cv_filename = fields.Char(string='Hired person CV Filename')
+from odoo.exceptions import ValidationError
 
 
 class TgHrRequisition(models.Model):
     _name = 'tg.hr.requisition'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'flow.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'tier.validation']  # type: ignore
     _description = 'Job Requisition'
     _order = 'sequence, id'
+
+    _tier_validation_manual_config = False
+    # state 字段为 compute 时，Tier 校验需从 DB 取旧值才能正确判断状态迁移
+    _tier_validation_state_field_is_computed = True
 
     name = fields.Char(string='Title', required=True, help='e.g. role or project name for this requisition.', translate=True)
     sequence = fields.Integer(string='Sequence', default=10, required=True)
@@ -51,7 +34,7 @@ class TgHrRequisition(models.Model):
         'res.users', string='Requested By', default=lambda self: self.env.user, required=True,
     )
     reporting_to_id = fields.Many2one('res.users', string='Reporting To', required=True)
-    hiring_manager_id = fields.Many2one('res.users', string='Hiring Manager')
+    hiring_manager_id = fields.Many2one('res.users', string='Hiring Manager', copy=False)
     hiring_type = fields.Selection(
         selection=[
             ('replacement', 'Replacement'),
@@ -146,22 +129,29 @@ class TgHrRequisition(models.Model):
 
         return super().write(vals)
 
-    @register_approval_action_code('hr_requisition_assigned', label=_('Hiring Manager Assign'))
-    def hr_requisition_assigned(self, document, runtime_line):
-        """审批动作：指派 Hiring Manager。
+    def action_hr_assign(self):
+        """HR审批时绑定 当前HR经理"""
+        for record in self:
+            record.with_context(skip_validation_check=True).write({
+                'hiring_manager_id': self.env.uid
+            })
 
-        该方法由 `approval.action` 的 code=``hr_requisition_assigned`` 调用。
-        """
-        self.ensure_one()
-        self.write({'hiring_manager_id': self.env.uid})
-        return True
 
-    @register_approval_action_code('ceo_approve_on_job_is_manager', label=_('Hiring Manager Approve'))
-    def ceo_approve_on_job_is_manager(self, document, runtime_line):
-        """审批动作：当岗位是 manager 级别时，需要CEO 审批。
+class TgHrRequisitionHiredPerson(models.Model):
+    _name = 'tg.hr.requisition.hired.person'
+    _description = 'Job Requisition Hired Person'
+    _order = 'sequence, id'
 
-        该方法由 `approval.action` 的 code=``ceo_approve_on_job_is_manager`` 调用。
-        """
-        self.ensure_one()
-        self.write({'hiring_manager_id': self.env.uid})
-        return True
+    requisition_id = fields.Many2one(
+        'tg.hr.requisition',
+        string='Requisition',
+        required=True,
+        ondelete='cascade',
+        index=True,
+    )
+    sequence = fields.Integer(default=10, required=True)
+    name = fields.Char(string='Hired Person Name', required=True)
+    contact = fields.Char(string='Contact Information')
+    joining_date = fields.Date(string='Joining Date')
+    cv = fields.Binary(string='Hired person CV')
+    cv_filename = fields.Char(string='Hired person CV Filename')
