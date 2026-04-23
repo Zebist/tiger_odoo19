@@ -7,7 +7,8 @@
     >   
     <!-- TODO 需要加开关 -->
         <xpath expr="//button[@name='restart_validation']" position="attributes">
-            <attribute name="invisible">not review_ids or hide_reviews or True</attribute>
+            <attribute name="invisible">not review_ids or hide_reviews</attribute>
+            <attribute name="groups">base.group_system</attribute>
         </xpath>
     </template>
 </odoo>

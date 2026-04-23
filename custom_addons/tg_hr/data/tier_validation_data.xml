@@ -15,9 +15,18 @@
         <field name="code">record.action_hr_assign()</field>
     </record>
 
+    <!-- 挂接本模块 tier.definition -->
+    <record id="approval_flow_requisition" model="base.approval.flow.zb">
+        <field name="name">TG HR Requisition Approval</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
+        <field name="stage_model_id" ref="tg_hr.model_tg_hr_requisition_stage"/>
+    </record>
+
     <!-- Tier Definition: HR（组：Recruitment Manager，可在 UI 调整） -->
     <record id="tier_def_requisition_hr" model="tier.definition">
         <field name="name">Requisition - HR</field>
+        <field name="flow_id" ref="tg_hr.approval_flow_requisition"/>
         <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="hr_recruitment.group_hr_recruitment_manager"/>
@@ -30,6 +39,7 @@
     <!-- Tier Definition: CEO（示例：岗位名称包含 Manager 才触发；审批人组可在 UI 调整） -->
     <record id="tier_def_requisition_ceo" model="tier.definition">
         <field name="name">Requisition - CEO (Conditional)</field>
+        <field name="flow_id" ref="tg_hr.approval_flow_requisition"/>
         <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="hr_recruitment.group_hr_recruitment_manager"/>
@@ -40,4 +50,3 @@
         <field name="server_action_id" ref="tg_hr.server_action_requisition_to_hm_assigned"/>
     </record>
 </odoo>
-

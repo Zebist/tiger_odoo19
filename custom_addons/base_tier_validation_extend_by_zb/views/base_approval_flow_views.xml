@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="tier_definition_view_form_inherit_stage" model="ir.ui.view">
+        <field name="name">tier.definition.form.stage</field>
+        <field name="model">tier.definition</field>
+        <field name="inherit_id" ref="base_tier_validation_server_action.tier_definition_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="tier_stage" string="Stage" invisible="not stage_res_model">
+                    <group>
+                        <field name="stage_res_model" invisible="1" />
+                        <field name="stage_id" />
+                        <field name="rejected_stage_id" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Primary copy of OCA tier.definition form: use form_view_ref on flow's o2m only -->
+    <record id="tier_definition_view_form_flow_zb" model="ir.ui.view">
+        <field name="name">tier.definition.form.flow.zb</field>
+        <field name="model">tier.definition</field>
+        <field name="inherit_id" ref="base_tier_validation_extend_by_zb.tier_definition_view_form_inherit_stage" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='model_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="base_approval_flow_zb_view_list" model="ir.ui.view">
+        <field name="name">base.approval.flow.zb.list</field>
+        <field name="model">base.approval.flow.zb</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="model_id" />
+                <field name="stage_model_id" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+    <record id="base_approval_flow_zb_view_form" model="ir.ui.view">
+        <field name="name">base.approval.flow.zb.form</field>
+        <field name="model">base.approval.flow.zb</field>
+        <field name="arch" type="xml">
+            <form string="Approval Flow">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <label for="name" string="Name" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Purchase Order Approval" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" />
+                            <field name="model_id" options="{'no_create': True}" />
+                            <field name="stage_model_id" options="{'no_create': True}" />
+                        </group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                                options="{'no_create': True}"
+                            />
+                            <field name="stage_model_field" invisible="1" />
+                            <field name="draft_stage_id" invisible="not stage_model_field" />
+                            <field name="submit_stage_id" invisible="not stage_model_field" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="nodes" string="Nodes">
+                            <field
+                                name="definition_ids"
+                                context="{'default_flow_id': id, 'default_model_id': model_id, 'default_company_id': company_id, 'form_view_ref': 'base_tier_validation_extend_by_zb.tier_definition_view_form_flow_zb'}"
+                            >
+                                <list default_order="sequence">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="sequence" />
+                                    <field name="name" />
+                                    <field name="review_type" />
+                                    <field name="reviewer_id" />
+                                    <field name="reviewer_group_id" />
+                                    <field name="reviewer_field_id" />
+                                    <field name="active" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="base_approval_flow_zb_view_search" model="ir.ui.view">
+        <field name="name">base.approval.flow.zb.search</field>
+        <field name="model">base.approval.flow.zb</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="model_id" />
+                <field name="stage_model_id" />
+                <separator />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+                <group>
+                    <filter
+                        string="Model"
+                        name="group_model"
+                        domain="[]"
+                        context="{'group_by': 'model_id'}"
+                    />
+                    <filter
+                        string="Company"
+                        name="group_company"
+                        domain="[]"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="base_approval_flow_zb_action" model="ir.actions.act_window">
+        <field name="name">Approval Flows</field>
+        <field name="res_model">base.approval.flow.zb</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="base_approval_flow_zb_view_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an approval flow
+            </p>
+            <p>
+                Configure the target document model, its stage model, and tier
+                definition nodes for this flow.
+            </p>
+        </field>
+    </record>
+    <menuitem
+        id="menu_base_approval_flow_zb_root"
+        name="Approval Flow Configuration"
+        sequence="25"
+        groups="base_tier_validation_extend_by_zb.group_tier_validation_extend_manager,base_tier_validation_extend_by_zb.group_tier_validation_extend_user,base.group_system"
+    />
+    <menuitem
+        id="menu_base_approval_flow_zb_flows"
+        name="Approval Flows"
+        parent="menu_base_approval_flow_zb_root"
+        action="base_approval_flow_zb_action"
+        sequence="10"
+    />
+</odoo>

@@ -9,8 +9,12 @@
     "installable": True,
     "depends": [
         "base_tier_validation",
+        "base_tier_validation_server_action",
     ],
     "data": [
+        "security/tier_validation_extend_security.xml",
+        "security/ir.model.access.csv",
+        "views/base_approval_flow_views.xml",
         "views/tier_validation_templates.xml",
     ],
 }

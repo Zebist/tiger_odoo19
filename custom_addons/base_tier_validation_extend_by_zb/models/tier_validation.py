@@ -1,17 +1,23 @@
+import logging
 from odoo import models, fields
+
+
+_logger = logging.getLogger(__name__)
 
 
 class TierValidation(models.AbstractModel):
     _name = 'tier.validation.zb'
     _inherit = "tier.validation"
     # draft 和 approving 为了实现 submig
-    _state_from = ['approving']
+    _state_from = ['rejected', 'approving']
     _state_to = ['approved']
 
+    flow_id = fields.Many2one('base.approval.flow.zb')
     state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
             ('approving', 'Approving'),
+            ('rejected', 'Rejected'),
             ('approved', 'Approved'),
         ],
         string='Status',
@@ -26,53 +32,8 @@ class TierValidation(models.AbstractModel):
     def _tier_validation_check_state_on_write(self, vals):
         if self.env.context.get("skip_tier_state_check"):
             return
+
         return super()._tier_validation_check_state_on_write(vals)
-
-    def _server_action_tier(self, reviews, status):
-        """审批节点回调：在 server action / stage 更新之后，同步维护业务 state。
-
-        说明：
-        - `base_tier_validation` 只维护 tier.review/validation_status，不会自动写业务 state。
-        - 我们在此统一将：
-          - 任意 reject -> state=rejected
-          - 全部通过（validation_status=validated） -> state=approved
-        """
-        res = super()._server_action_tier(reviews, status)  # type: ignore[attr-defined]
-
-        # 防止 state 写入再次触发同类逻辑（以及避免 tier 校验拦截）。
-        if self.env.context.get("tier_state_write"):
-            return res
-
-        for rec in self:
-            target_state = False
-            if status == "rejected":
-                target_state = "draft"
-            elif status == "approved" and rec.validation_status == "validated":
-                target_state = "approved"
-
-            if target_state and rec.state != target_state:
-                rec.sudo().with_context(
-                    tier_state_write=True,
-                    skip_tier_state_check=True,
-                    skip_validation_check=True,
-                ).write({"state": target_state})
-
-        return res
-
-    def action_submit(self):
-        """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
-        for rec in self:
-            rec.sudo().with_context(
-                tier_state_write=True,
-                skip_tier_state_check=True,
-                skip_validation_check=True,
-            ).write({"state": "approving"})
-            reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
-            # 自动执行一次“当前用户可审批的层级”，以触发 server action（例如更新 stage）
-            if reviews:
-                reviews._compute_can_review()
-                rec.with_context(dont_need_comment=True).validate_tier()  # 自动submit
-        return True
 
     def request_validation(self):
         """
@@ -125,3 +86,126 @@ class TierValidation(models.AbstractModel):
             return self._add_comment("validate", user_reviews)
         self._validate_tier(reviews)
         self._update_counter({"review_deleted": True})
+
+    def _server_action_tier(self, reviews, status):
+        """审批节点回调：在 server action / stage 更新之后，同步维护业务 state。
+
+        说明：
+        - `base_tier_validation` 只维护 tier.review/validation_status，不会自动写业务 state。
+        - 我们在此统一将：
+          - 任意 reject -> state=rejected
+          - 全部通过（validation_status=validated） -> state=approved
+        """
+        # Keep original behaviour (server actions) first.
+        res = super()._server_action_tier(reviews, status)
+
+        # Prevent recursion when stage write triggers tier validation again.
+        # if self.env.context.get("tier_stage_write"):
+        #     return res
+
+        for review in reviews:
+            definition = review.definition_id
+            stage = (
+                definition.stage_id
+                if status == "approved"
+                else definition.rejected_stage_id
+                if status == "rejected"
+                else False
+            )
+            if not stage:
+                continue
+
+            doc = self.env[review.model].browse(review.res_id)
+            if not doc:
+                continue
+
+            stage_field = doc._fields.get("stage_id")
+            if not stage_field:
+                _logger.exception(
+                    "Skip tier stage update: %s has no stage_id field",
+                    doc._name,
+                )
+                continue
+
+            if getattr(stage_field, "comodel_name", None) and (
+                stage_field.comodel_name != definition.stage_res_model
+            ):
+                _logger.exception(
+                    "Skip tier stage update: %s.stage_id comodel is %s, got %s",
+                    doc._name,
+                    stage_field.comodel_name,
+                    definition.stage_res_model,
+                )
+                continue
+
+            # Consistent with server action execution: run as superuser.
+            doc.sudo().with_context(
+                # tier_stage_write=True,
+                skip_tier_state_check=True,
+                skip_validation_check=True,
+            ).write({"stage_id": stage})
+
+        for rec in self:
+            target_state = False
+            if status == "rejected":
+                target_state = "rejected"
+            elif status == "approved" and rec.validation_status == "validated":
+                target_state = "approved"
+
+            if target_state and rec.state != target_state:
+                rec.sudo().with_context(
+                    # tier_state_write=True,
+                    skip_tier_state_check=True,
+                    skip_validation_check=True,
+                ).write({"state": target_state})
+
+        return res
+
+    def _action_draft(self):
+        """重置草稿"""
+        for rec in self:
+            if 'stage_id' not in rec._fields:
+                continue
+            if not rec.review_ids:
+                continue
+
+            self.sudo().with_context(
+                # tier_stage_write=True,
+                skip_tier_state_check=True,
+                skip_validation_check=True,
+            ).write({"stage_id": rec.review_ids[0].definition_id.flow_id.draft_stage_id})
+        self.sudo().with_context(
+            # tier_stage_write=True,
+            skip_tier_state_check=True,
+            skip_validation_check=True,
+        ).write({"state": 'draft'})
+
+    def action_submit(self):
+        """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
+        for rec in self:
+            rec.sudo().with_context(
+                # tier_state_write=True,
+                skip_tier_state_check=True,
+                skip_validation_check=True,
+            ).write({"state": "approving"})
+            reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
+            if not reviews:
+                continue
+            submit_stage_id = reviews[0].definition_id.flow_id.submit_stage_id
+            if 'stage_id' in rec._fields:
+                rec.sudo().with_context(
+                    skip_tier_state_check=True,
+                    skip_validation_check=True,
+                ).write({"stage_id": submit_stage_id})
+
+        return True
+
+    def action_ack(self):
+        """确认拒绝原因，回到草稿状态"""
+        self._action_draft()
+        self.restart_validation()
+
+    def action_draft(self):
+        """撤回到草稿状态"""
+        self._action_draft()
+        self.restart_validation()
