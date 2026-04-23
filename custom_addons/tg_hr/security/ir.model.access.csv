@@ -6,3 +6,6 @@ access_tg_hr_requisition_stage_user,tg.hr.requisition.stage recruitment user,mod
 access_tg_hr_requisition_stage_manager,tg.hr.requisition.stage recruitment manager,model_tg_hr_requisition_stage,hr_recruitment.group_hr_recruitment_manager,1,1,1,1
 access_tg_hr_requisition_hired_person_user,tg.hr.requisition.hired.person recruitment user,model_tg_hr_requisition_hired_person,hr_recruitment.group_hr_recruitment_user,1,1,1,1
 access_tg_hr_requisition_hired_person_system,tg.hr.requisition.hired.person system,model_tg_hr_requisition_hired_person,base.group_system,1,1,1,1
+access_tg_hr_applicant_review_wizard_user,tg.hr.applicant.review.wizard user,model_tg_hr_applicant_review_wizard,base.group_user,1,1,1,1
+access_tg_hr_applicant_first_contact_wizard_user,tg.hr.applicant.first.contact.wizard user,model_tg_hr_applicant_first_contact_wizard,base.group_user,1,1,1,1
+access_tg_hr_applicant_interview_wizard_user,tg.hr.applicant.interview.wizard user,model_tg_hr_applicant_interview_wizard,base.group_user,1,1,1,1

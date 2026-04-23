@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tg_hr_applicant_interview_wizard_form" model="ir.ui.view">
+        <field name="name">tg.hr.applicant.interview.wizard.form</field>
+        <field name="model">tg.hr.applicant.interview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Interview Details">
+                <group>
+                    <field name="applicant_id" invisible="1"/>
+                    <field name="interview_datetime"/>
+                    <field name="interview_type"/>
+                    <field name="meeting_url" required="interview_type=='online'" invisible="interview_type!='online'" placeholder="e.g. https://meet.google.com/..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
