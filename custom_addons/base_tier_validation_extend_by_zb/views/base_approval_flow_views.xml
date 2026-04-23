@@ -70,7 +70,8 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active" />
+                            <field name="active" invisible="1"/>
+                            <field name="allow_delete" />
                             <field name="model_id" options="{'no_create': True}" />
                             <field name="stage_model_id" options="{'no_create': True}" />
                         </group>
@@ -83,6 +84,8 @@
                             <field name="stage_model_field" invisible="1" />
                             <field name="draft_stage_id" invisible="not stage_model_field" />
                             <field name="submit_stage_id" invisible="not stage_model_field" />
+                            <field name="reject_stage_id" invisible="not stage_model_field" />
+                            <field name="approve_stage_id" invisible="not stage_model_field" />
                         </group>
                     </group>
                     <notebook>

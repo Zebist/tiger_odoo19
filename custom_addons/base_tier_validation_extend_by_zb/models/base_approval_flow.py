@@ -9,6 +9,7 @@ class BaseApprovalFlow(models.Model):
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True, required=True)
+    allow_delete = fields.Boolean(string='Allow delete', default=False)
     company_id = fields.Many2one(
         'res.company',
         required=True,
@@ -42,6 +43,14 @@ class BaseApprovalFlow(models.Model):
     )
     draft_stage_id = fields.Many2oneReference(
         string="Draft Stage",
+        model_field="stage_model_field",
+    )
+    reject_stage_id = fields.Many2oneReference(
+        string="Reject Stage",
+        model_field="stage_model_field",
+    )
+    approve_stage_id = fields.Many2oneReference(
+        string="Approved Stage",
         model_field="stage_model_field",
     )
 

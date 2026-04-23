@@ -1,5 +1,8 @@
 import logging
-from odoo import models, fields
+from lxml import etree
+
+from odoo import fields, models, _
+from odoo.exceptions import ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -28,6 +31,14 @@ class TierValidation(models.AbstractModel):
         tracking=True,
         readonly=True
     )
+
+    def _add_tier_validation_buttons(self, node, params):
+        """不通过 inherit 修改 OCA 的 ir.ui.view"""
+        str_element = self.env["ir.qweb"]._render(
+            "base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend", params
+        )
+        new_node = etree.fromstring(str_element)
+        return new_node
 
     def _tier_validation_check_state_on_write(self, vals):
         if self.env.context.get("skip_tier_state_check"):
@@ -60,6 +71,9 @@ class TierValidation(models.AbstractModel):
                     ],
                     order="sequence asc",
                 )
+                # 写入 flow_id 方便后续获取
+                rec.sudo().flow_id = tier_definitions.flow_id if tier_definitions else None
+
                 for td in tier_definitions:
                     if rec.evaluate_tier(td):
                         vals_list.append(rec._prepare_tier_review_vals(td, td.sequence))
@@ -106,9 +120,9 @@ class TierValidation(models.AbstractModel):
         for review in reviews:
             definition = review.definition_id
             stage = (
-                definition.stage_id
+                definition.stage_id or review.definition_id.flow_id.approve_stage_id
                 if status == "approved"
-                else definition.rejected_stage_id
+                else definition.rejected_stage_id or review.definition_id.flow_id.reject_stage_id
                 if status == "rejected"
                 else False
             )
@@ -161,9 +175,11 @@ class TierValidation(models.AbstractModel):
 
         return res
 
-    def _action_draft(self):
+    def _action_draft(self, dont_update_stage=False, dont_update_state=False):
         """重置草稿"""
         for rec in self:
+            if dont_update_stage:
+                continue
             if 'stage_id' not in rec._fields:
                 continue
             if not rec.review_ids:
@@ -173,26 +189,29 @@ class TierValidation(models.AbstractModel):
                 # tier_stage_write=True,
                 skip_tier_state_check=True,
                 skip_validation_check=True,
-            ).write({"stage_id": rec.review_ids[0].definition_id.flow_id.draft_stage_id})
-        self.sudo().with_context(
-            # tier_stage_write=True,
-            skip_tier_state_check=True,
-            skip_validation_check=True,
-        ).write({"state": 'draft'})
+            ).write({"stage_id": rec.flow_id.draft_stage_id})
 
-    def action_submit(self):
-        """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
-        for rec in self:
-            rec.sudo().with_context(
-                # tier_state_write=True,
+        if not dont_update_state:
+            self.sudo().with_context(
+                # tier_stage_write=True,
                 skip_tier_state_check=True,
                 skip_validation_check=True,
-            ).write({"state": "approving"})
+            ).write({"state": 'draft'})
+
+    def action_submit(self, dont_update_stage=False, dont_update_state=False):
+        """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
+        for rec in self:
+            if not dont_update_state:
+                rec.sudo().with_context(
+                    # tier_state_write=True,
+                    skip_tier_state_check=True,
+                    skip_validation_check=True,
+                ).write({"state": "approving"})
             reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
             if not reviews:
                 continue
-            submit_stage_id = reviews[0].definition_id.flow_id.submit_stage_id
-            if 'stage_id' in rec._fields:
+            submit_stage_id = rec.flow_id.submit_stage_id
+            if not dont_update_state and 'stage_id' in rec._fields:
                 rec.sudo().with_context(
                     skip_tier_state_check=True,
                     skip_validation_check=True,
@@ -205,7 +224,14 @@ class TierValidation(models.AbstractModel):
         self._action_draft()
         self.restart_validation()
 
-    def action_draft(self):
+    def action_draft(self, dont_update_stage=False, dont_update_state=False):
         """撤回到草稿状态"""
-        self._action_draft()
+        self._action_draft(dont_update_stage, dont_update_state)
         self.restart_validation()
+        self.review_ids.unlink()
+
+    def unlink(self):
+        for rec in self:
+            if not rec.flow_id.allow_delete and rec.state != 'draft':
+                raise ValidationError(_('This record cannot be deleted. Please archive it instead, or delete it while in draft state.'))
+        return super()

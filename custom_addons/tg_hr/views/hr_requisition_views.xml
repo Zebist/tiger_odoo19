@@ -79,14 +79,18 @@
         <field name="model">tg.hr.requisition</field>
         <field name="arch" type="xml">
             <form string="Requisition">
-                <field name="stage_code" invisible="1"/>
                 <header>
-                    <button name="action_submit" type="object" string="Submit" class="btn-primary"
-                            invisible="stage_code != 'draft' or requester_id != uid"
-                    />
-                    <button name="action_ack" type="object" string="Acknowledge &amp; Edit"  invisible="state != 'rejected' or requester_id != uid" />
-                    <button name="action_draft" type="object" string="Withdraw to Draft" invisible="state != 'approving' or requester_id != uid" />
                     <field name="stage_id" widget="statusbar" readonly="1" options="{'fold_field': 'fold'}"/>
+                    <button
+                        name="action_terminate_recruitment"
+                        type="object"
+                        string="Terminate Recruitment"
+                        class="btn-secondary"
+                        invisible="state not in ('approving', 'approved')"
+                        groups="tg_hr.group_tg_hr_requisition_terminate,base.group_system"
+                        confirm="This will terminate the requisition and reset the approval flow. Continue?"
+                    />
+                    <field name="state" invisible="1"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -98,7 +102,8 @@
                     </div>
                     <group>
                         <group string="Request">
-                            <field name="requester_id" widget="many2one_avatar_user"/>
+                            <field name="requester_id" widget="many2one_avatar_user"
+                                   options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
                             <field name="date_request"/>
                             <field name="priority"/>
                             <field name="reason_requisition"
@@ -106,12 +111,13 @@
                             <field name="date_join_expected"/>
                         </group>
                         <group string="Position">
-                            <field name="department_id"/>
-                            <field name="reporting_to_id" widget="many2one_avatar_user"/>
-                            <field name="job_id"/>
+                            <field name="department_id" options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
+                            <field name="reporting_to_id" widget="many2one_avatar_user"
+                                   options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
+                            <field name="job_id" options="{'no_quick_create': True, 'no_quick_create_edit': False}"/>
                             <field name="hiring_type"/>
                             <field name="replacement_partner_id" invisible="hiring_type != 'replacement'"
-                                   required="hiring_type == 'replacement'" options="{'no_create': True}"/>
+                                   required="hiring_type == 'replacement'" options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
                         </group>
                     </group>
                     <group string="JOB DESCRIPTION">
@@ -127,7 +133,8 @@
                     </group>
                     <group string="HIRING MANAGER">
                         <field name="hiring_status"/>
-                        <field name="hiring_manager_id" widget="many2one_avatar_user" invisible="not hiring_manager_id"/>
+                        <field name="hiring_manager_id" widget="many2one_avatar_user" invisible="not hiring_manager_id"
+                               options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
                     </group>
                     <group string="Hiring Information Person">
                         <field name="hired_person_ids" nolabel="1" colspan="4">

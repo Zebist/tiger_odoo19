@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 class TierDefinition(models.Model):
     _inherit = "tier.definition"
 
-    flow_id = fields.Many2one('base.approval.flow.zb')
+    flow_id = fields.Many2one('base.approval.flow.zb', ondelete='cascade')
     company_id = fields.Many2one(default=lambda r: r.flow_id.company_id.id)
     model_id = fields.Many2one(default=lambda r: r.flow_id.model_id.id)
     stage_res_model = fields.Char(

@@ -15,6 +15,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/tg_hr_groups.xml',
         'data/hr_requisition_stage_data.xml',
         'views/hr_requisition_stage_views.xml',
         'views/hr_requisition_views.xml',

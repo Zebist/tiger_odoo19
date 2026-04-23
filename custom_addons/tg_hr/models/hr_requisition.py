@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.exceptions import ValidationError
 
 
@@ -133,6 +134,16 @@ class TgHrRequisition(models.Model):
             record.with_context(skip_validation_check=True).write({
                 'hiring_manager_id': self.env.uid
             })
+
+    def action_terminate_recruitment(self):
+        """终止招聘：切换到终止 stage，并回到草稿（不回退 stage）。"""
+        terminated_stage = self.env.ref("tg_hr.requisition_stage_terminated", raise_if_not_found=False)
+        if terminated_stage:
+            self.sudo().with_context(
+                skip_tier_state_check=True,
+                skip_validation_check=True,
+            ).write({"stage_id": terminated_stage.id})
+        return self.action_draft(dont_update_stage=True)
 
 
 class TgHrRequisitionHiredPerson(models.Model):

@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Extend Tier Validation buttons template -->
-    <template
-        id="tier_validation_buttons_inherit_restart_invisible"
-        inherit_id="base_tier_validation.tier_validation_buttons"
-    >   
-    <!-- TODO 需要加开关 -->
-        <xpath expr="//button[@name='restart_validation']" position="attributes">
-            <attribute name="invisible">not review_ids or hide_reviews</attribute>
-            <attribute name="groups">base.group_system</attribute>
-        </xpath>
+    <!--
+        仅由 tier.validation.zb 的 get_view 渲染（见 _add_tier_validation_buttons）。
+        审批区 t-call OCA，不 inherit OCA 根模板
+    -->
+    <template id="tier_validation_buttons_base_tier_validation_extend">
+        <div>
+            <button
+                    name="action_submit"
+                    type="object"
+                    string="Submit"
+                    class="btn-primary"
+                    invisible="state != 'draft' or requester_id != uid"
+            />
+            <button
+                    name="action_ack"
+                    type="object"
+                    string="Acknowledge &amp; Edit"
+                    invisible="state != 'rejected' or requester_id != uid"
+            />
+            <button
+                    name="action_draft"
+                    type="object"
+                    string="Withdraw to Draft"
+                    invisible="state != 'approving' or requester_id != uid"
+            />
+
+            <field name="validation_status" invisible="1" />
+            <button
+                name="request_validation"
+                string="Request Validation"
+                invisible="1"
+                type="object"
+            />
+            <button
+                name="restart_validation"
+                string="Restart Validation"
+                invisible="1"
+                type="object"
+            />
+        </div>
     </template>
 </odoo>

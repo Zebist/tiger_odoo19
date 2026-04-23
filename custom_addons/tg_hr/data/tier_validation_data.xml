@@ -21,6 +21,10 @@
         <field name="company_id" ref="base.main_company"/>
         <field name="model_id" ref="tg_hr.model_tg_hr_requisition"/>
         <field name="stage_model_id" ref="tg_hr.model_tg_hr_requisition_stage"/>
+        <field name="draft_stage_id" ref="tg_hr.requisition_stage_draft" />
+        <field name="submit_stage_id" ref="tg_hr.requisition_stage_submitted" />
+        <field name="reject_stage_id" ref="tg_hr.requisition_stage_rejected" />
+        <field name="approve_stage_id" ref="tg_hr.requisition_stage_hm_assigned" />
     </record>
 
     <!-- Tier Definition: HR（组：Recruitment Manager，可在 UI 调整） -->
