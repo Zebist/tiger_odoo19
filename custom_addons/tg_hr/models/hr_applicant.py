@@ -6,6 +6,28 @@ from odoo.exceptions import ValidationError
 class HrApplicant(models.Model):
     _inherit = "hr.applicant"
 
+    _STAGE_SEQUENCE = [
+        "hr_recruitment.stage_job0",
+        "tg_hr.hr_recruitment_stage_tg_initital",
+        "tg_hr.hr_recruitment_stage_tg_contact",
+        "tg_hr.hr_recruitment_stage_tg_interview",
+        "tg_hr.hr_recruitment_stage_tg_offered",
+    ]
+
+    # 进入该阶段前必须满足的字段条件，后续阶段会累积检查前面所有阶段的条件
+    _STAGE_ENTRY_REQUIREMENTS = {
+        "tg_hr.hr_recruitment_stage_tg_contact": [
+            ("resume_reviewed", "Resume Review"),
+        ],
+        "tg_hr.hr_recruitment_stage_tg_interview": [
+            ("first_contact_made", "First Contact"),
+        ],
+        "tg_hr.hr_recruitment_stage_tg_offered": [
+            ("interview_datetime", "Interview Date & Time"),
+        ],
+    }
+
+    stage_id = fields.Many2one(default=lambda r: r.env.ref('hr_recruitment.stage_job0', raise_if_not_found=False))
     show_review_button = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
         compute_sudo=True,
@@ -112,7 +134,7 @@ class HrApplicant(models.Model):
         )
         init_stage_id = init_stage if init_stage else False
         contacted_stage = self.env.ref(
-            "tg_hr.hr_recruitment_stage_tg_contacted", raise_if_not_found=False
+            "tg_hr.hr_recruitment_stage_tg_contact", raise_if_not_found=False
         )
         contacted_stage_id = contacted_stage if contacted_stage else False
         interview_stage = self.env.ref(
@@ -177,29 +199,47 @@ class HrApplicant(models.Model):
             },
         }
 
-    @api.constrains("stage_id", "resume_reviewed")
-    def _check_resume_review_before_contacted(self):
-        contacted_stage = self.env.ref(
-            "tg_hr.hr_recruitment_stage_tg_contacted", raise_if_not_found=False
-        )
-        if not contacted_stage:
-            return
+    @api.constrains("stage_id")
+    def _check_stage_prerequisites(self):
+        stage_cache = {}
+
+        def get_stage(xml_id):
+            if xml_id not in stage_cache:
+                stage_cache[xml_id] = self.env.ref(xml_id, raise_if_not_found=False)
+            return stage_cache[xml_id]
+
         for applicant in self:
-            if applicant.stage_id.id == contacted_stage.id and not applicant.resume_reviewed:
+            target_index = next(
+                (i for i, xid in enumerate(self._STAGE_SEQUENCE)
+                 if (s := get_stage(xid)) and s.id == applicant.stage_id.id),
+                None,
+            )
+            if target_index is None:
+                continue
+
+            missing = [
+                label
+                for xid in self._STAGE_SEQUENCE[:target_index + 1]
+                for field_name, label in self._STAGE_ENTRY_REQUIREMENTS.get(xid, [])
+                if not applicant[field_name]
+            ]
+            if missing:
                 raise ValidationError(
-                    _("You must complete Resume Review before moving to Contacted.")
+                    _("Cannot move to this stage. Please complete: %s")
+                    % ", ".join(missing)
                 )
 
-    @api.constrains("stage_id", "first_contact_made")
-    def _check_first_contact_before_interview(self):
-        interview_stage = self.env.ref(
-            "tg_hr.hr_recruitment_stage_tg_interview", raise_if_not_found=False
-        )
-        if not interview_stage:
-            return
-        for applicant in self:
-            if applicant.stage_id.id == interview_stage.id and not applicant.first_contact_made:
-                raise ValidationError(
-                    _("You must complete First Contact before moving to Interview.")
-                )
+    @api.constrains("review_date")
+    def _check_review_date_not_future(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.review_date and rec.review_date > today:
+                raise ValidationError(_("Review Date cannot be in the future."))
+
+    @api.constrains("first_contact_date")
+    def _check_first_contact_date_not_future(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.first_contact_date and rec.first_contact_date > today:
+                raise ValidationError(_("First Contact Date cannot be in the future."))
 

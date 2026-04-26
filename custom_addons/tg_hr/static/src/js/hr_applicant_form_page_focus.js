@@ -16,15 +16,16 @@ class InterviewProcessPageFocusField extends Component {
         useEffect(
             (show) => {
                 if (!show || !anchorRef.el) return;
-                // 从当前元素向上找到 o_form_view，再定位对应 tab
-                const form = anchorRef.el.closest(".o_form_view");
-                if (!form) return;
-                const tab = form.querySelector(
-                    '.o_notebook_headers a[name="tg_hr_interview_process"]'
-                );
-                if (tab && !tab.classList.contains("active")) {
-                    tab.click();
-                }
+                Promise.resolve().then(() => {
+                    const form = anchorRef.el.closest(".o_form_view");
+                    if (!form) return;
+                    const tab = form.querySelector(
+                        '.o_notebook_headers a[name="tg_hr_interview_process"]'
+                    );
+                    if (tab && !tab.classList.contains("active")) {
+                        tab.click();
+                    }
+                });
             },
             () => [this.props.record.data.show_interview_process_page]
         );

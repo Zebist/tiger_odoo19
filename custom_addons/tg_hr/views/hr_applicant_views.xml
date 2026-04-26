@@ -10,7 +10,7 @@
                 <field name="show_first_contact_button" invisible="1"/>
                 <field name="show_interview_button" invisible="1"/>
                 <field name="is_in_interview_stage" invisible="1"/>
-                <field name="show_interview_process_page" widget="interview_process_page_focus" invisible="1"/>
+                <field name="show_interview_process_page" widget="interview_process_page_focus" />
                 <button name="action_open_review_wizard"
                         type="object"
                         string="Review"

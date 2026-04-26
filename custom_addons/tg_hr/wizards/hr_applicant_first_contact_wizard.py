@@ -11,7 +11,7 @@ class TgHrApplicantFirstContactWizard(models.TransientModel):
 
     def action_confirm(self):
         self.ensure_one()
-        contacted_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_contacted", raise_if_not_found=False)
+        contacted_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_contact", raise_if_not_found=False)
         self.applicant_id.write(
             {
                 "first_contact_made": True,
