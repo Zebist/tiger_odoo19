@@ -9,7 +9,9 @@
                 <field name="show_review_button" invisible="1"/>
                 <field name="show_first_contact_button" invisible="1"/>
                 <field name="show_interview_button" invisible="1"/>
+                <field name="show_pass_interview_button" invisible="1"/>
                 <field name="is_in_interview_stage" invisible="1"/>
+                <field name="interview_passed" invisible="1"/>
                 <field name="show_interview_process_page" widget="interview_process_page_focus" />
                 <button name="action_open_review_wizard"
                         type="object"
@@ -28,6 +30,12 @@
                         string="Set Interview"
                         class="btn-primary"
                         invisible="not show_interview_button"
+                        groups="base.group_user"/>
+                <button name="action_pass_interview"
+                        type="object"
+                        string="Pass Interview"
+                        class="btn-primary"
+                        invisible="not show_pass_interview_button"
                         groups="base.group_user"/>
             </xpath>
 
@@ -91,8 +99,10 @@
                 <field name="show_review_button" invisible="1"/>
                 <field name="show_first_contact_button" invisible="1"/>
                 <field name="show_interview_button" invisible="1"/>
+                <field name="show_pass_interview_button" invisible="1"/>
                 <field name="priority" invisible="1"/>
                 <field name="interview_score" invisible="1"/>
+                <field name="interview_passed" invisible="1"/>
             </xpath>
 
             <!-- Hide original priority stars in footer (we re-display them with labels) -->
@@ -153,6 +163,7 @@
         <field name="arch" type="xml">
             <button name="action_generate_offer" position="attributes">
                 <attribute name="string">Create Offer</attribute>
+                <attribute name="invisible">not active or application_status == 'hired' or is_pool_applicant or salary_offers_count > 0 or not is_in_interview_stage or not interview_passed</attribute>
             </button>
         </field>
     </record>

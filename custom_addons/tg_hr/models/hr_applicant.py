@@ -23,7 +23,7 @@ class HrApplicant(models.Model):
             ("first_contact_made", "First Contact"),
         ],
         "tg_hr.hr_recruitment_stage_tg_offered": [
-            ("interview_datetime", "Interview"),
+            ("interview_passed", "Interview Passed"),
         ],
     }
 
@@ -39,6 +39,11 @@ class HrApplicant(models.Model):
         store=False,
     )
     show_interview_button = fields.Boolean(
+        compute="_compute_tg_hr_stage_flags",
+        compute_sudo=True,
+        store=False,
+    )
+    show_pass_interview_button = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
         compute_sudo=True,
         store=False,
@@ -84,6 +89,12 @@ class HrApplicant(models.Model):
     first_contact_made = fields.Boolean(string="First Contact Made", default=False, tracking=True, compute='_compute_first_contact_made', readonly=True, compute_sudo=True)
     first_contact_date = fields.Date(string="First Contact Date", tracking=True)
 
+    interview_passed = fields.Boolean(
+        string="Interview Passed",
+        default=False,
+        tracking=True,
+    )
+
     interview_score = fields.Selection(
         selection=[
             ("0", "Not Rated"),
@@ -127,7 +138,7 @@ class HrApplicant(models.Model):
         for rec in self:
             rec.first_contact_made = bool(rec.first_contact_date)
 
-    @api.depends("stage_id", "resume_reviewed", "first_contact_made")
+    @api.depends("stage_id", "resume_reviewed", "first_contact_made", "interview_passed")
     def _compute_tg_hr_stage_flags(self):
         init_stage = self.env.ref(
             "tg_hr.hr_recruitment_stage_tg_initital", raise_if_not_found=False
@@ -152,6 +163,7 @@ class HrApplicant(models.Model):
             applicant.show_first_contact_button = bool(stage_id == init_stage_id and applicant.resume_reviewed)
             applicant.show_interview_button = bool(stage_id == contacted_stage_id and applicant.first_contact_made)
             applicant.is_in_interview_stage = bool(stage_id == interview_stage_id)
+            applicant.show_pass_interview_button = bool(stage_id == interview_stage_id and not applicant.interview_passed)
             # 有阶段且不是 New 阶段时显示 Interview Process 页
             applicant.show_interview_process_page = bool(stage_id and stage_id != new_stage_id)
 
@@ -198,6 +210,10 @@ class HrApplicant(models.Model):
                 "default_applicant_id": self.id,
             },
         }
+
+    def action_pass_interview(self):
+        self.ensure_one()
+        self.interview_passed = True
 
     def archive_applicant(self):
         res = super().archive_applicant()
