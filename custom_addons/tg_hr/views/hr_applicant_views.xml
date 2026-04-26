@@ -135,6 +135,17 @@
         </field>
     </record>
 
+    <record id="hr_applicant_view_form_inherit_tg_hr_stage_fold" model="ir.ui.view">
+        <field name="name">hr.applicant.form.inherit.tg.hr.stage.fold</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" widget="rotting_statusbar_duration" position="attributes">
+                <attribute name="options">{"clickable": "1", "fold_field": "fold"}</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="hr_applicant_view_form_inherit_tg_hr_offer_label" model="ir.ui.view">
         <field name="name">hr.applicant.form.inherit.tg.hr.offer.label</field>
         <field name="model">hr.applicant</field>
