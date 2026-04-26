@@ -11,6 +11,7 @@ class TierDefinition(models.Model):
         res = super()._get_tier_validation_model_names()
         res += [
             "tg.hr.requisition",
+            "hr.contract.salary.offer",
         ]
         return res
 

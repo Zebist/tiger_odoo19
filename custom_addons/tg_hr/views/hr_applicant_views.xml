@@ -156,6 +156,24 @@
         </field>
     </record>
 
+    <record id="hr_contract_salary_offer_view_form_inherit_tg_hr_approval" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.form.inherit.tg.hr.approval</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
+        <field name="arch" type="xml">
+            <!-- 隐藏原生 state statusbar -->
+            <field name="state" widget="statusbar" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <!-- 在 header 插入 approval_state statusbar -->
+            <field name="state" widget="statusbar" position="after">
+                <field name="approval_state" widget="statusbar"
+                       statusbar_visible="draft,approving,approved,rejected"
+                       readonly="1"/>
+            </field>
+        </field>
+    </record>
+
     <record id="hr_applicant_view_form_inherit_tg_hr_offer_label" model="ir.ui.view">
         <field name="name">hr.applicant.form.inherit.tg.hr.offer.label</field>
         <field name="model">hr.applicant</field>

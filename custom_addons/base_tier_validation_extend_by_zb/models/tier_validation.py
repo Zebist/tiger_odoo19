@@ -11,19 +11,19 @@ _logger = logging.getLogger(__name__)
 class TierValidation(models.AbstractModel):
     _name = 'tier.validation.zb'
     _inherit = "tier.validation"
-    # draft 和 approving 为了实现 submig
+    _state_field = "approval_state"
     _state_from = ['rejected', 'approving']
     _state_to = ['approved']
 
     flow_id = fields.Many2one('base.approval.flow.zb')
-    state = fields.Selection(
+    approval_state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
             ('approving', 'Approving'),
             ('rejected', 'Rejected'),
             ('approved', 'Approved'),
         ],
-        string='Status',
+        string='Approval Status',
         required=True,
         default='draft',
         index=True,
@@ -166,12 +166,12 @@ class TierValidation(models.AbstractModel):
             elif status == "approved" and rec.validation_status == "validated":
                 target_state = "approved"
 
-            if target_state and rec.state != target_state:
+            if target_state and rec.approval_state != target_state:
                 rec.sudo().with_context(
                     # tier_state_write=True,
                     skip_tier_state_check=True,
                     skip_validation_check=True,
-                ).write({"state": target_state})
+                ).write({"approval_state": target_state})
 
         return res
 
@@ -196,7 +196,7 @@ class TierValidation(models.AbstractModel):
                 # tier_stage_write=True,
                 skip_tier_state_check=True,
                 skip_validation_check=True,
-            ).write({"state": 'draft'})
+            ).write({"approval_state": 'draft'})
 
     def action_submit(self, dont_update_stage=False, dont_update_state=False):
         """从 Draft 提交到 Submitted（不触发 Tier 审批拦截）。"""
@@ -206,7 +206,7 @@ class TierValidation(models.AbstractModel):
                     # tier_state_write=True,
                     skip_tier_state_check=True,
                     skip_validation_check=True,
-                ).write({"state": "approving"})
+                ).write({"approval_state": "approving"})
             reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
             if not reviews:
                 continue
@@ -232,6 +232,6 @@ class TierValidation(models.AbstractModel):
 
     def unlink(self):
         for rec in self:
-            if not rec.flow_id.allow_delete and rec.state != 'draft':
+            if not rec.flow_id.allow_delete and rec.approval_state != 'draft':
                 raise ValidationError(_('This record cannot be deleted. Please archive it instead, or delete it while in draft state.'))
         return super()

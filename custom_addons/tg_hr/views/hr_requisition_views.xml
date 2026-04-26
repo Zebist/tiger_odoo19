@@ -86,11 +86,11 @@
                         type="object"
                         string="Terminate Recruitment"
                         class="btn-secondary"
-                        invisible="state not in ('approving', 'approved')"
+                        invisible="approval_state not in ('approving', 'approved')"
                         groups="tg_hr.group_tg_hr_requisition_terminate,base.group_system"
                         confirm="This will terminate the requisition and reset the approval flow. Continue?"
                     />
-                    <field name="state" invisible="1"/>
+                    <field name="approval_state" invisible="1"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
