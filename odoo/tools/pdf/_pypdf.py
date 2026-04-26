@@ -29,6 +29,13 @@ class PdfReader(_Reader):
     def isEncrypted(self):
         return self.is_encrypted
 
+    # 兼容：父类若仍提供 camelCase 的 getFields 则优先用；否则走 pypdf 3+ 的 get_fields
+    def getFields(self, *args, **kwargs):
+        super_getfields = getattr(super(), "getFields", None)
+        if callable(super_getfields):
+            return super_getfields(*args, **kwargs)
+        return self.get_fields(*args, **kwargs)
+
     def getPage(self, pageNumber):
         return self.pages[pageNumber]
 

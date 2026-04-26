@@ -139,6 +139,9 @@
                     <div class="d-flex align-items-center gap-2">
                         <span class="text-muted small">Interview</span>
                         <field name="interview_score" widget="priority"/>
+                        <span t-if="record.interview_passed.raw_value" class="badge text-bg-success ms-1">
+                            Interview Passed
+                        </span>
                     </div>
                 </div>
             </xpath>
@@ -161,6 +164,34 @@
         <field name="model">hr.contract.salary.offer</field>
         <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/header/button[@name='action_send_by_email']" position="after">
+                <button
+                    name="action_open_sign_document"
+                    type="object"
+                    string="Candidate Sign Link"
+                    class="btn btn-secondary"
+                    invisible="not id or state in ['refused', 'expired', 'cancelled'] or not sign_template_id"
+                />
+                <button
+                    name="action_open_company_sign_document"
+                    type="object"
+                    string="Company Sign Link"
+                    class="btn btn-secondary"
+                    invisible="not id or state in ['refused', 'expired', 'cancelled'] or not sign_template_id"
+                />
+            </xpath>
+            <xpath expr="//form/sheet/group/group[@name='group_offer']" position="after">
+                <group string="Offer Information">
+                    <field name="reporting_to_id" options="{'no_quick_create': True}"/>
+                    <field name="work_location"/>
+                    <field name="basic_salary"/>
+                    <field name="house_rent_allowance"/>
+                    <field name="medical_allowance"/>
+                    <field name="conveyance_allowance"/>
+                    <field name="offer_total_amount" readonly="1"/>
+                    <field name="basic_salary_upper_zh" />
+                </group>
+            </xpath>
             <!-- 隐藏原生 state statusbar -->
             <field name="state" widget="statusbar" position="attributes">
                 <attribute name="invisible">1</attribute>
