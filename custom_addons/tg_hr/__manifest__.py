@@ -25,9 +25,10 @@
         'wizards/hr_applicant_review_wizard_views.xml',
         'wizards/hr_applicant_first_contact_wizard_views.xml',
         'wizards/hr_applicant_interview_wizard_views.xml',
-        'views/hr_applicant_views.xml',
+'views/hr_applicant_views.xml',
         # Tier Validation 配置数据（审批流/动作）
         'data/tier_validation_data.xml',
+        'views/res_users_views.xml',
         'views/menuitems.xml',
     ],
     'assets': {
