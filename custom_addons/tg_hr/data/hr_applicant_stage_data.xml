@@ -6,8 +6,8 @@
         <field name="fold" eval="False"/>
         <field name="hired_stage" eval="False"/>
     </record>
-    <record id="hr_recruitment_stage_tg_contact" model="hr.recruitment.stage">
-        <field name="name">Contact</field>
+    <record id="hr_recruitment_stage_tg_contacted" model="hr.recruitment.stage">
+        <field name="name">Contacted</field>
         <field name="sequence">30</field>
         <field name="fold" eval="False"/>
         <field name="hired_stage" eval="False"/>
@@ -24,5 +24,11 @@
         <field name="fold" eval="False"/>
         <field name="hired_stage" eval="False"/>
     </record>
-    
+    <record id="hr_recruitment_stage_tg_refused" model="hr.recruitment.stage">
+        <field name="name">Refused</field>
+        <field name="sequence">90</field>
+        <field name="fold" eval="True"/>
+        <field name="hired_stage" eval="False"/>
+    </record>
+
 </odoo>

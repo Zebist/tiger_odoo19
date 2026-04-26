@@ -8,6 +8,7 @@
     'depends': [
         'hr',
         'hr_recruitment',
+        'hr_contract_salary',
         'mail',
         'base_tier_validation',
         'base_tier_validation_server_action',

@@ -9,21 +9,21 @@ class HrApplicant(models.Model):
     _STAGE_SEQUENCE = [
         "hr_recruitment.stage_job0",
         "tg_hr.hr_recruitment_stage_tg_initital",
-        "tg_hr.hr_recruitment_stage_tg_contact",
+        "tg_hr.hr_recruitment_stage_tg_contacted",
         "tg_hr.hr_recruitment_stage_tg_interview",
         "tg_hr.hr_recruitment_stage_tg_offered",
     ]
 
     # 进入该阶段前必须满足的字段条件，后续阶段会累积检查前面所有阶段的条件
     _STAGE_ENTRY_REQUIREMENTS = {
-        "tg_hr.hr_recruitment_stage_tg_contact": [
+        "tg_hr.hr_recruitment_stage_tg_contacted": [
             ("resume_reviewed", "Resume Review"),
         ],
         "tg_hr.hr_recruitment_stage_tg_interview": [
             ("first_contact_made", "First Contact"),
         ],
         "tg_hr.hr_recruitment_stage_tg_offered": [
-            ("interview_datetime", "Interview Date & Time"),
+            ("interview_datetime", "Interview"),
         ],
     }
 
@@ -134,7 +134,7 @@ class HrApplicant(models.Model):
         )
         init_stage_id = init_stage if init_stage else False
         contacted_stage = self.env.ref(
-            "tg_hr.hr_recruitment_stage_tg_contact", raise_if_not_found=False
+            "tg_hr.hr_recruitment_stage_tg_contacted", raise_if_not_found=False
         )
         contacted_stage_id = contacted_stage if contacted_stage else False
         interview_stage = self.env.ref(
@@ -198,6 +198,15 @@ class HrApplicant(models.Model):
                 "default_applicant_id": self.id,
             },
         }
+
+    def archive_applicant(self):
+        res = super().archive_applicant()
+        refused_stage = self.env.ref(
+            "tg_hr.hr_recruitment_stage_tg_refused", raise_if_not_found=False
+        )
+        if refused_stage:
+            res.setdefault("context", {})["refused_stage_id"] = refused_stage.id
+        return res
 
     @api.constrains("stage_id")
     def _check_stage_prerequisites(self):
