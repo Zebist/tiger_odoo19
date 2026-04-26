@@ -168,7 +168,7 @@
             <!-- 在 header 插入 approval_state statusbar -->
             <field name="state" widget="statusbar" position="after">
                 <field name="approval_state" widget="statusbar"
-                       statusbar_visible="draft,approving,approved,rejected"
+                       statusbar_visible="draft,approving,approved"
                        readonly="1"/>
             </field>
         </field>

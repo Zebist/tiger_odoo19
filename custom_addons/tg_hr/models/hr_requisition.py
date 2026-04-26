@@ -29,9 +29,6 @@ class TgHrRequisition(models.Model):
     )
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     job_id = fields.Many2one('hr.job', string='Job Position', required=True)
-    requester_id = fields.Many2one(
-        'res.users', string='Requested By', default=lambda self: self.env.user, required=True,
-    )
     reporting_to_id = fields.Many2one('res.users', string='Reporting To', required=True)
     hiring_manager_id = fields.Many2one('res.users', string='Hiring Manager', copy=False)
     hiring_type = fields.Selection(

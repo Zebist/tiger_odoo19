@@ -25,7 +25,6 @@ class BaseApprovalFlow(models.Model):
     stage_model_id = fields.Many2one(
         'ir.model',
         string='Stage Model',
-        required=True,
         ondelete='cascade',
         domain=[('transient', '=', False), ('name', 'ilike', '%stage%')],
     )
