@@ -7,12 +7,11 @@
         <field name="arch" type="xml">
             <field name="wage_type" position="before">
                 <field name="trial_date_end" />
-            </field>
-            <field name="wage" position="after">
-                <field name="expat_allowance"
-                       invisible="not expat_allowance"/>
-                <field name="expat_allowance_type"
-                       invisible="not expat_allowance"/>
+                <label for="expat_allowance" string="Expat Allowance" />
+                <div class="o_row" >
+                    <field name="expat_allowance" nolabel="1" class="o_hr_narrow_field"/>
+                    <field name="expat_allowance_type" nolabel="1"/>
+                </div>
             </field>
         </field>
     </record>
