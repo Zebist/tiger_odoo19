@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from datetime import timedelta
 
 from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError
@@ -331,3 +332,85 @@ class HrContractSalaryOffer(models.Model):
             })
 
         return sign_request, candidate_partner, company_partner
+
+    def action_set_applicant_offered(self, is_ceo=False):
+        """审批通过后将关联 applicant 的 stage 推进到 Offered。
+        manager 职位仅 ceo 可以推进
+        """
+        offered_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_offered", raise_if_not_found=False)
+        if not offered_stage:
+            return
+        for offer in self:
+            applicant = offer.applicant_id
+            if not applicant:
+                continue
+            if applicant.job_id.is_manager and not is_ceo:
+                continue
+            applicant.stage_id = offered_stage
+
+    @api.model
+    def _cron_notify_offer_start_t3(self):
+        today = fields.Date.context_today(self)
+        target_date = today + timedelta(days=3)
+
+        offers = self.search([
+            ('approval_state', '=', 'approved'),
+            ('state', '!=', 'refused'),
+            ('contract_start_date', '<=', target_date),
+            ('applicant_id', '!=', False),
+        ], order='applicant_id asc, id desc')
+
+        # 每个 applicant 只取最新一条 offer，去重
+        seen_applicants = set()
+        applicants = []
+        for offer in offers:
+            if offer.applicant_id.id not in seen_applicants:
+                seen_applicants.add(offer.applicant_id.id)
+                # 只有未采集完成的需要通知
+                if not offer.applicant_id.onboarding_complete:
+                    applicants.append(offer.applicant_id)
+
+        # 按 assigned_hr_id 分组，每个 HR 只发一封
+        hr_map = {}
+        for applicant in applicants:
+            hr = applicant.assigned_hr_id
+            if hr and hr.email:
+                hr_map.setdefault(hr, []).append(applicant)
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for hr_user, hr_applicants in hr_map.items():
+            self.env['mail.mail'].sudo().create({
+                'subject': f'[T-3 Reminder] {len(hr_applicants)} applicant(s) joining on {target_date}',
+                'email_to': hr_user.email,
+                'body_html': self._build_t3_email_body(hr_user, hr_applicants, target_date, base_url),
+                'auto_delete': True,
+            }).send()
+
+    def _build_t3_email_body(self, hr_user, applicants, target_date, base_url):
+        rows = ''
+        for a in applicants:
+            url = f'{base_url}/web#model=hr.applicant&id={a.id}&view_type=form'
+            rows += (
+                f'<tr>'
+                f'<td style="padding:6px 12px;border-bottom:1px solid #eee;">'
+                f'<a href="{url}" style="color:#017e84;text-decoration:none;font-weight:500;">{a.partner_name}</a>'
+                f'</td>'
+                f'<td style="padding:6px 12px;border-bottom:1px solid #eee;">{a.job_id.name or ""}</td>'
+                f'<td style="padding:6px 12px;border-bottom:1px solid #eee;">{a.department_id.name or ""}</td>'
+                f'</tr>'
+            )
+        return (
+            f'<p>Hi <strong>{hr_user.name}</strong>,</p>'
+            f'<p>The following applicant(s) are scheduled to join on '
+            f'<strong>{target_date}</strong> (3 days from now). '
+            f'Please ensure all pre-joining steps are completed.</p>'
+            f'<table style="border-collapse:collapse;width:100%;font-size:14px;">'
+            f'<thead><tr style="background:#f5f5f5;">'
+            f'<th style="padding:8px 12px;text-align:left;">Applicant</th>'
+            f'<th style="padding:8px 12px;text-align:left;">Position</th>'
+            f'<th style="padding:8px 12px;text-align:left;">Department</th>'
+            f'</tr></thead>'
+            f'<tbody>{rows}</tbody>'
+            f'</table>'
+            f'<p style="margin-top:16px;color:#888;font-size:12px;">Automated reminder — HR System</p>'
+        )

@@ -54,6 +54,22 @@
         <field name="server_action_id" ref="tg_hr.server_action_requisition_to_hm_assigned"/>
     </record>
 
+    <!-- Offer 审批通过后：推进 applicant stage 到 Offered（COO - 所有职位） -->
+    <record id="server_action_offer_to_offered_coo" model="ir.actions.server">
+        <field name="name">Offer COO Approved: Set Applicant Stage to Offered</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="state">code</field>
+        <field name="code">record.action_set_applicant_offered()</field>
+    </record>
+
+    <!-- Offer 审批通过后：推进 applicant stage 到 Offered（CEO - 仅 Manager 职位） -->
+    <record id="server_action_offer_to_offered_ceo" model="ir.actions.server">
+        <field name="name">Offer CEO Approved: Set Applicant Stage to Offered</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="state">code</field>
+        <field name="code">record.action_set_applicant_offered(is_ceo=True)</field>
+    </record>
+
     <!-- ==================== Offer Approval Flow (hr.contract.salary.offer) ==================== -->
 
     <record id="approval_flow_applicant_offer" model="base.approval.flow.zb">
@@ -93,6 +109,7 @@
         <field name="sequence">30</field>
         <field name="approve_sequence" eval="True"/>
         <field name="has_comment" eval="True"/>
+        <field name="server_action_id" ref="tg_hr.server_action_offer_to_offered_coo"/>
     </record>
 
     <!-- Tier 40: CEO（仅限经理级职位，reviewer group 由界面配置） -->
@@ -105,5 +122,6 @@
         <field name="approve_sequence" eval="True"/>
         <field name="has_comment" eval="True"/>
         <field name="definition_domain">[('applicant_id.job_id.is_manager', '=', True)]</field>
+        <field name="server_action_id" ref="tg_hr.server_action_offer_to_offered_ceo"/>
     </record>
 </odoo>

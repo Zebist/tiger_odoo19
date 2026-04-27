@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 员工本人：只能查看自己的 hr.employee 记录 -->
+    <record id="rule_hr_employee_self_read" model="ir.rule">
+        <field name="name">Employee: see own record</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 部门经理：可查看本部门员工记录 -->
+    <record id="rule_hr_employee_dept_manager_read" model="ir.rule">
+        <field name="name">Employee: department manager sees department</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_dept_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Onboarding 管理员：所有员工记录完整权限 -->
+    <record id="rule_hr_employee_onboarding_admin_all" model="ir.rule">
+        <field name="name">Employee: onboarding admin full access</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

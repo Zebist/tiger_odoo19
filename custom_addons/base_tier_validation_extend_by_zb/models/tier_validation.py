@@ -17,7 +17,7 @@ class TierValidation(models.AbstractModel):
 
     flow_id = fields.Many2one('base.approval.flow.zb')
     requester_id = fields.Many2one(
-        'res.users', string='Requested By', default=lambda self: self.env.user, required=True,
+        'res.users', string='Requested By', default=lambda self: self.env.user, required=True, copy=False
     )
     approval_state = fields.Selection(
         selection=[

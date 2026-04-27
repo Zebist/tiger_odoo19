@@ -9,3 +9,6 @@ access_tg_hr_requisition_hired_person_system,tg.hr.requisition.hired.person syst
 access_tg_hr_applicant_review_wizard_user,tg.hr.applicant.review.wizard user,model_tg_hr_applicant_review_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_first_contact_wizard_user,tg.hr.applicant.first.contact.wizard user,model_tg_hr_applicant_first_contact_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_interview_wizard_user,tg.hr.applicant.interview.wizard user,model_tg_hr_applicant_interview_wizard,base.group_user,1,1,1,1
+access_tg_hr_applicant_attachment_user,tg.hr.applicant.attachment recruitment user,model_tg_hr_applicant_attachment,hr_recruitment.group_hr_recruitment_user,1,1,1,1
+access_tg_hr_applicant_attachment_system,tg.hr.applicant.attachment system,model_tg_hr_applicant_attachment,base.group_system,1,1,1,1
+access_tg_hr_applicant_create_employee_wizard_user,tg.hr.applicant.create.employee.wizard user,model_tg_hr_applicant_create_employee_wizard,hr_recruitment.group_hr_recruitment_user,1,1,1,1

@@ -52,6 +52,9 @@
             <xpath expr="//group/group/field[@name='job_id']" position="after">
                 <field name="requisition_id"
                        options="{'no_quick_create': True, 'no_quick_create_edit': True}"/>
+                <field name="employee_id" readonly="1"
+                       options="{'no_open': False}"
+                       invisible="not employee_id"/>
             </xpath>
 
             <xpath expr="//notebook/page[1]" position="before">
@@ -215,6 +218,191 @@
                        statusbar_visible="draft,approving,approved"
                        readonly="1"/>
             </field>
+        </field>
+    </record>
+
+    <!-- ── Onboarding Preparation Page ─────────────────────────────────── -->
+    <record id="view_hr_applicant_form_inherit_tg_hr_onboarding" model="ir.ui.view">
+        <field name="name">hr.applicant.form.inherit.tg.hr.onboarding</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <!-- header 按钮：onboarding_complete 时才显示 Create Employee（原生按钮） -->
+            <xpath expr="//form//header" position="inside">
+                <field name="onboarding_complete" invisible="1"/>
+                <field name="show_onboarding_page" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <button name="action_sync_onboarding_defaults"
+                        type="object"
+                        string="Sync Defaults"
+                        class="btn-secondary"
+                        invisible="not show_onboarding_page"
+                        groups="base.group_system"/>
+            </xpath>
+
+            <!-- 原生 Create Employee 按钮永远隐藏，由 wizard 按钮替代 -->
+            <xpath expr="//button[@name='create_employee_from_applicant']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='create_employee_from_applicant']" position="after">
+                <button name="action_open_create_employee_wizard"
+                        type="object"
+                        string="Create Employee"
+                        class="btn-primary"
+                        invisible="not onboarding_complete or employee_id or not show_onboarding_page"
+                        groups="hr_recruitment.group_hr_recruitment_user"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[1]" position="before">
+                <page string="Onboarding Preparation" name="tg_hr_onboarding"
+                      invisible="not show_onboarding_page">
+
+                    <!-- 进度横幅 -->
+                    <div class="alert alert-warning mb-3"
+                         invisible="onboarding_complete">
+                        <field name="onboarding_done_count" readonly="1"/> / <field name="onboarding_total_count" readonly="1"/> items completed — please fill in all required information before creating the employee.
+                    </div>
+                    <div class="alert alert-success mb-3"
+                         invisible="not onboarding_complete">
+                        All onboarding items complete. You may now create the employee.
+                    </div>
+
+                    <!-- 区域 & 岗位类别 -->
+                    <group string="Region &amp; Position">
+                        <group>
+                            <field name="ob_region"/>
+                            <field name="ob_position_type"/>
+                        </group>
+                    </group>
+
+                    <!-- 个人信息 -->
+                    <group string="Personal Information">
+                        <group>
+                            <field name="partner_name" string="Name (English)" placeholder="Full name in English"/>
+                            <field name="ob_local_name"
+                                   placeholder="Local official name (Chinese / Bengali / ...) — optional"
+                                   help="Optional. The employee's official name in their local language or script (e.g. Chinese characters, Bengali script). Leave blank if not applicable."/>
+                            <field name="ob_sex"/>
+                            <field name="ob_birthday"/>
+                            <field name="ob_nationality_id" options="{'no_quick_create': True}"/>
+                            <field name="partner_phone" string="Phone"/>
+                            <field name="ob_emergency_contact"/>
+                            <field name="ob_emergency_phone"/>
+                        </group>
+                        <group>
+                            <field name="chk_personal_info" widget="boolean_toggle" readonly="1" string="✓ Personal Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 证件信息 -->
+                    <group string="ID Information">
+                        <group>
+                            <field name="ob_identification_id"
+                                   string="National ID (NID)"
+                                   required="ob_region in ['tb','tl'] or (ob_region in ['sg','cn'] and not ob_passport_id)"
+                                   invisible="ob_region not in ['sg','cn','tb','tl']"/>
+                            <field name="ob_passport_id"
+                                   required="ob_region in ['sg','cn'] and not ob_identification_id"
+                                   invisible="ob_region not in ['sg','cn']"/>
+                            <field name="ob_passport_expiration_date"
+                                   required="ob_passport_id and ob_region in ['sg','cn']"
+                                   invisible="not ob_passport_id or ob_region not in ['sg','cn']"/>
+                        </group>
+                        <group>
+                            <field name="chk_id_info" widget="boolean_toggle" readonly="1" string="✓ ID Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 银行信息 -->
+                    <group string="Bank Information">
+                        <group>
+                            <field name="ob_bank_name"/>
+                            <field name="ob_bank_account_number"/>
+                            <field name="ob_bank_account_holder"/>
+                            <field name="ob_swift_code"/>
+                        </group>
+                        <group>
+                            <field name="chk_bank_info" widget="boolean_toggle" readonly="1" string="✓ Bank Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 税务信息 -->
+                    <group string="Tax Information"
+                           invisible="ob_region not in ['tb','tl']">
+                        <group>
+                            <field name="ob_tin_number" string="TIN (Tax ID)"
+                                   required="ob_region in ['tb','tl']"/>
+                        </group>
+                        <group>
+                            <field name="chk_tax_info" widget="boolean_toggle" readonly="1" string="✓ Tax Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 合同信息 -->
+                    <group string="Contract Information">
+                        <group>
+                            <field name="ob_employee_type"/>
+                            <field name="job_id" options="{'no_quick_create': True}"/>
+                            <field name="department_id" options="{'no_quick_create': True}"/>
+                            <field name="ob_manager_id" options="{'no_quick_create': True}"/>
+                            <field name="salary_proposed" string="Proposed Salary"/>
+                            <field name="ob_trial_period_months"/>
+                        </group>
+                        <group>
+                            <field name="chk_contract_info" widget="boolean_toggle" readonly="1" string="✓ Contract Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 外派专项 -->
+                    <group string="Expat Information"
+                           invisible="ob_position_type != 'expat'">
+                        <group>
+                            <field name="ob_expat_allowance" />
+                            <field name="ob_expat_allowance_type"/>
+                            <field name="ob_visa_no"/>
+                            <field name="ob_visa_expire"/>
+                            <field name="ob_work_permit_expiration_date"/>
+                        </group>
+                        <group>
+                            <field name="chk_expat_info" widget="boolean_toggle" readonly="1" string="✓ Expat Info"/>
+                        </group>
+                    </group>
+
+                    <!-- 工厂专项：安全培训 -->
+                    <group string="Factory: Safety Training"
+                           invisible="ob_position_type != 'factory'">
+                        <group>
+                            <field name="chk_safety_training" widget="boolean_toggle" readonly="1" string="Safety Training Confirmed"/>
+                            <field name="ob_safety_training_notes"/>
+                        </group>
+                    </group>
+
+                    <!-- 附件上传 -->
+                    <group string="Onboarding Documents">
+                        <group col="1" colspan="2">
+                            <field name="onboarding_attachment_ids"
+                                   nolabel="1"
+                                   mode="list">
+                                <list editable="bottom">
+                                    <field name="attachment_type" required="1"/>
+                                    <field name="name" required="1"/>
+                                    <field name="file" widget="binary" filename="file_filename" required="1"/>
+                                    <field name="file_filename" optional="hide"/>
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="chk_id_documents" widget="boolean_toggle" readonly="1" string="✓ ID Scan Uploaded"/>
+                            <field name="chk_diploma" widget="boolean_toggle" readonly="1" string="✓ Diploma Uploaded"/>
+                            <field name="chk_resignation_proof" widget="boolean_toggle" readonly="1" string="✓ Resignation Proof Uploaded"/>
+                        </group>
+                    </group>
+
+
+                </page>
+            </xpath>
         </field>
     </record>
 

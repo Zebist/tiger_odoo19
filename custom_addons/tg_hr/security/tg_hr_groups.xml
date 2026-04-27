@@ -16,4 +16,25 @@
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
         <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
     </record>
+
+    <!-- Onboarding 权限 -->
+    <record id="res_groups_privilege_tg_hr_onboarding" model="res.groups.privilege">
+        <field name="name">Onboarding</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <!-- 部门经理：可查看本部门员工信息 -->
+    <record id="group_tg_hr_onboarding_dept_manager" model="res.groups">
+        <field name="name">Onboarding Department Manager</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Onboarding 管理员：完整权限（包含部门经理权限）-->
+    <record id="group_tg_hr_onboarding_admin" model="res.groups">
+        <field name="name">Onboarding Administrator</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+        <field name="implied_ids" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_dept_manager'))]"/>
+    </record>
 </odoo>

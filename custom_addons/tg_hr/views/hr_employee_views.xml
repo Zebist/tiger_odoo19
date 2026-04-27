@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_employee_form_inherit_tg_hr" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.tg.hr</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="wage_type" position="before">
+                <field name="trial_date_end" />
+            </field>
+            <field name="wage" position="after">
+                <field name="expat_allowance"
+                       invisible="not expat_allowance"/>
+                <field name="expat_allowance_type"
+                       invisible="not expat_allowance"/>
+            </field>
+        </field>
+    </record>
+</odoo>
