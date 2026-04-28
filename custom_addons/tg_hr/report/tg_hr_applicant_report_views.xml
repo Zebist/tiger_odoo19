@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <pivot string="Recruitment Analysis" sample="1">
                 <field name="assigned_hr_id" type="row"/>
-                <field name="stage_id" type="col"/>
                 <field name="is_reviewed" type="measure"/>
                 <field name="is_entered_interview" type="measure"/>
                 <field name="is_offered" type="measure"/>
