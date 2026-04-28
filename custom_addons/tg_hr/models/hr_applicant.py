@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
 import re
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 # TB = Tiger Battery (Bangladesh), TL = Tiger Lithium (Bangladesh)
 _BD_REGIONS = ('tb', 'tl')
@@ -126,11 +129,11 @@ class HrApplicant(models.Model):
         string="Initial Screening Score"
     )
 
-    resume_reviewed = fields.Boolean(string="Resume Reviewed", default=False, tracking=True, compute='_compute_resume_reviewd', readonly=True, compute_sudo=True)
+    resume_reviewed = fields.Boolean(string="Resume Reviewed", default=False, tracking=True, compute='_compute_resume_reviewd', readonly=True, compute_sudo=True, store=True)
     review_date = fields.Date(string="Review Date", tracking=True)
     initial_screening_notes = fields.Html(string="Initial Screening Notes", tracking=True)
 
-    first_contact_made = fields.Boolean(string="First Contact Made", default=False, tracking=True, compute='_compute_first_contact_made', readonly=True, compute_sudo=True)
+    first_contact_made = fields.Boolean(string="First Contact Made", default=False, tracking=True, compute='_compute_first_contact_made', readonly=True, compute_sudo=True, store=True)
     first_contact_date = fields.Date(string="First Contact Date", tracking=True)
 
     interview_passed = fields.Boolean(
@@ -661,12 +664,31 @@ class HrApplicant(models.Model):
         if not employee:
             return action
         self.employee_id = employee.id
+        self._load_contract_template_from_offer(employee)
         if self.ob_expat_allowance:
             employee.expat_allowance = self.ob_expat_allowance
             employee.expat_allowance_type = self.ob_expat_allowance_type
         self._create_employee_bank_account(employee)
         self._push_onboarding_attachments(employee)
         return action
+
+    def _load_contract_template_from_offer(self, employee):
+        offer = self.salary_offer_ids.filtered(
+            lambda o: o.approval_state == 'approved' and o.state != 'refused'
+        ).sorted('id', reverse=True)[:1]
+        if not offer:
+            _logger.warning('tg_hr: no approved offer found for applicant %s (id=%s)', self.partner_name, self.id)
+            return
+        template = offer.contract_template_id or offer.employee_version_id
+        if not template:
+            _logger.warning('tg_hr: offer %s has no contract_template_id or employee_version_id', offer.id)
+            return
+        vals = self.env['hr.version'].get_values_from_contract_template(template)
+        if not vals:
+            _logger.warning('tg_hr: get_values_from_contract_template returned empty for template %s', template.id)
+            return
+        employee.write(vals)
+        employee.version_id.contract_template_id = template
 
     def _create_employee_bank_account(self, employee):
         if not self.ob_bank_account_number:

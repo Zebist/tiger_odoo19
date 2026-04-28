@@ -37,6 +37,56 @@ class TgHrApplicantReport(models.Model):
         return rec.id if rec else 0
 
     def init(self):
+        # 招聘漏斗分析视图，核心逻辑：
+        # 从 mail_tracking_value 还原每个候选人的阶段变更历史，
+        # 计算在每个阶段的累计停留天数，并展开为分析宽表。
+        #
+        # CTE 流水线：
+        #
+        # 1. stage_field
+        #    取 hr.applicant.stage_id 字段的 ir_model_fields.id，
+        #    用于过滤 mail_tracking_value 只保留阶段变更记录。
+        #
+        # 2. tracking
+        #    从 mail_tracking_value + mail_message 读取所有候选人的
+        #    阶段变更记录（old_stage → new_stage，含时间戳）。
+        #    注：JOIN mail_message 用内连接，tracking_value 一定有对应 message。
+        #
+        # 3. first_tracking
+        #    DISTINCT ON 取每人最早一条变更的 old_stage，
+        #    还原创建时的真实初始阶段（hr_applicant.stage_id 只存当前值，
+        #    历史初始值只能从第一次变更的 old_value 反推）。
+        #
+        # 4. events
+        #    合并两类事件为完整时间线：
+        #    - 创建事件（t=create_date，stage=initial_stage，mid=0 排在最前）
+        #      COALESCE(ft.initial_stage, a.stage_id)：从未移动过的候选人
+        #      first_tracking 里没有记录，fallback 到当前 stage_id。
+        #      LEFT JOIN first_tracking 保留从未移动过阶段的候选人。
+        #    - 变更事件（t=变更时间，stage=new_stage）
+        #
+        # 5. segments
+        #    LEAD(at) 窗口函数，为每个事件计算"下一个事件的时间"作为离开时间。
+        #    最后一段 exited=NULL，表示候选人至今仍在该阶段。
+        #
+        # 6. seg_days
+        #    将每段区间转为天数（秒数/86400），
+        #    exited 为 NULL 时用 NOW() 持续计时。
+        #
+        # 7. stage_totals
+        #    按 (applicant_id, stage_id) 聚合，累加多次进出同一阶段的天数。
+        #
+        # 8. pivoted
+        #    行转列：
+        #    - SUM(CASE ...)   各阶段累计停留天数
+        #    - BOOL_OR(...)    是否曾经进入过某阶段（转化漏斗标记）
+        #
+        # 最终 SELECT
+        #    关联 hr_applicant 维度字段（部门/岗位/HR/公司）和
+        #    tg_hr_requisition（获取 hiring_manager_id）。
+        #    全部用 LEFT JOIN，保留：
+        #    - 没有招聘需求的候选人（requisition_id 为空）
+        #    - 从未移动过阶段的候选人（pivoted 里没有记录）
         tools.drop_view_if_exists(self.env.cr, self._table)
 
         initial = self._stage_id("tg_hr.hr_recruitment_stage_tg_initital")
