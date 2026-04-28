@@ -276,7 +276,18 @@ class HrApplicant(models.Model):
         for rec in self:
             rec.first_contact_made = bool(rec.first_contact_date)
 
+    def _can_review(self):
+        """Reviewer rule: assigned_hr empty → anyone may review;
+        otherwise only the assigned HR (or recruitment managers) may review."""
+        self.ensure_one()
+        if self.env.user.has_group("hr_recruitment.group_hr_recruitment_manager"):
+            return True
+        if not self.assigned_hr_id:
+            return True
+        return self.assigned_hr_id.id == self.env.uid
+
     @api.depends("stage_id", "resume_reviewed", "first_contact_made", "interview_passed",
+                 "assigned_hr_id",
                  "salary_offer_ids.approval_state", "salary_offer_ids.state")
     def _compute_tg_hr_stage_flags(self):
         init_stage = self.env.ref(
@@ -302,7 +313,11 @@ class HrApplicant(models.Model):
         offered_stage_id = offered_stage if offered_stage else False
         for applicant in self:
             stage_id = applicant.stage_id
-            applicant.show_review_button = bool(stage_id == init_stage_id and not applicant.resume_reviewed)
+            applicant.show_review_button = bool(
+                stage_id == init_stage_id
+                and not applicant.resume_reviewed
+                and applicant._can_review()
+            )
             applicant.show_first_contact_button = bool(stage_id == init_stage_id and applicant.resume_reviewed)
             applicant.show_interview_button = bool(stage_id == contacted_stage_id and applicant.first_contact_made)
             applicant.is_in_interview_stage = bool(stage_id == interview_stage_id)
@@ -320,6 +335,10 @@ class HrApplicant(models.Model):
 
     def action_open_review_wizard(self):
         self.ensure_one()
+        if not self._can_review():
+            raise UserError(_(
+                "Only the assigned HR (%s) can review this applicant."
+            ) % (self.assigned_hr_id.name or "-"))
         return {
             "name": self.env._("Resume Review"),
             "type": "ir.actions.act_window",

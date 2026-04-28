@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tg_hr_applicant_report_pivot" model="ir.ui.view">
+        <field name="name">tg.hr.applicant.report.pivot</field>
+        <field name="model">tg.hr.applicant.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Recruitment Analysis" sample="1">
+                <field name="assigned_hr_id" type="row"/>
+                <field name="stage_id" type="col"/>
+                <field name="is_reviewed" type="measure"/>
+                <field name="is_entered_interview" type="measure"/>
+                <field name="is_offered" type="measure"/>
+                <field name="is_contract_signed" type="measure"/>
+                <field name="is_refused" type="measure"/>
+                <field name="days_in_initial" type="measure"/>
+                <field name="days_in_contacted" type="measure"/>
+                <field name="days_in_interview" type="measure"/>
+                <field name="days_in_offered" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_tg_hr_applicant_report_graph" model="ir.ui.view">
+        <field name="name">tg.hr.applicant.report.graph</field>
+        <field name="model">tg.hr.applicant.report</field>
+        <field name="arch" type="xml">
+            <graph string="Recruitment Analysis" type="bar" sample="1">
+                <field name="stage_id"/>
+                <field name="is_reviewed" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_tg_hr_applicant_report_search" model="ir.ui.view">
+        <field name="name">tg.hr.applicant.report.search</field>
+        <field name="model">tg.hr.applicant.report</field>
+        <field name="arch" type="xml">
+            <search string="Recruitment Analysis">
+                <field name="applicant_id"/>
+                <field name="requisition_id"/>
+                <field name="hiring_manager_id"/>
+                <field name="assigned_hr_id"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="stage_id"/>
+                <filter string="Reviewed" name="filter_reviewed" domain="[('is_reviewed', '=', 1)]"/>
+                <filter string="Entered Interview" name="filter_entered_interview" domain="[('is_entered_interview', '=', 1)]"/>
+                <filter string="Offered" name="filter_offered" domain="[('is_offered', '=', 1)]"/>
+                <filter string="Contract Signed" name="filter_contract_signed" domain="[('is_contract_signed', '=', 1)]"/>
+                <filter string="Refused" name="filter_refused" domain="[('is_refused', '=', 1)]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Created On" name="filter_create_date" date="create_date"/>
+                <group>
+                    <filter string="Hiring Manager" name="group_hiring_manager" domain="[]" context="{'group_by': 'hiring_manager_id'}"/>
+                    <filter string="Assigned HR" name="group_assigned_hr" domain="[]" context="{'group_by': 'assigned_hr_id'}"/>
+                    <filter string="Requisition" name="group_requisition" domain="[]" context="{'group_by': 'requisition_id'}"/>
+                    <filter string="Job Position" name="group_job" domain="[]" context="{'group_by': 'job_id'}"/>
+                    <filter string="Department" name="group_department" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Current Stage" name="group_stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Company" name="group_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Created On" name="group_create_date" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tg_hr_applicant_report" model="ir.actions.act_window">
+        <field name="name">Recruitment Analysis</field>
+        <field name="res_model">tg.hr.applicant.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="view_tg_hr_applicant_report_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No data yet</p>
+            <p>Analyze recruitment by company, hiring manager, or assigned HR.</p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_tg_hr_applicant_report"
+        name="Recruitment Analysis"
+        parent="hr_recruitment.report_hr_recruitment"
+        action="action_tg_hr_applicant_report"
+        sequence="20"
+        groups="hr_recruitment.group_hr_recruitment_user"/>
+
+</odoo>

@@ -29,6 +29,8 @@ class TgHrApplicantReviewWizard(models.TransientModel):
             "resume_reviewed": True,
             "review_date": self.review_date,
         }
+        if not self.applicant_id.assigned_hr_id:
+            vals["assigned_hr_id"] = self.env.uid
         self.applicant_id.write(vals)
         return {"type": "ir.actions.act_window_close"}
 

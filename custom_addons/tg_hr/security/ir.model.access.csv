@@ -12,3 +12,5 @@ access_tg_hr_applicant_interview_wizard_user,tg.hr.applicant.interview.wizard us
 access_tg_hr_applicant_attachment_user,tg.hr.applicant.attachment recruitment user,model_tg_hr_applicant_attachment,hr_recruitment.group_hr_recruitment_user,1,1,1,1
 access_tg_hr_applicant_attachment_system,tg.hr.applicant.attachment system,model_tg_hr_applicant_attachment,base.group_system,1,1,1,1
 access_tg_hr_applicant_create_employee_wizard_user,tg.hr.applicant.create.employee.wizard user,model_tg_hr_applicant_create_employee_wizard,hr_recruitment.group_hr_recruitment_user,1,1,1,1
+access_tg_hr_applicant_report_user,tg.hr.applicant.report user,model_tg_hr_applicant_report,hr_recruitment.group_hr_recruitment_user,1,0,0,0
+access_tg_hr_applicant_report_manager,tg.hr.applicant.report manager,model_tg_hr_applicant_report,hr_recruitment.group_hr_recruitment_manager,1,0,0,0

@@ -37,6 +37,7 @@
         'data/tier_validation_data.xml',
         'views/res_users_views.xml',
         'views/menuitems.xml',
+        'report/tg_hr_applicant_report_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
