@@ -137,7 +137,8 @@ class HrPayslip(models.Model):
         ABS_days 取 ABS input（天）。
         """
         self.ensure_one()
-        standard_days = 26.0
+        st = self.version_id.structure_type_id
+        standard_days = st.working_days_per_month or 26.0
 
         abs_days = self._input_amount('ABS') or 0.0
         attendance_days = max(standard_days - abs_days, 0.0)

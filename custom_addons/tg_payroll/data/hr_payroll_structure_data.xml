@@ -737,6 +737,16 @@
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip._compute_late_ded()</field>
         </record>
+        <record id="tg_rule_bd_sales_ct_abs" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Absence Deduction</field>
+            <field name="code">ABS_DED</field>
+            <field name="sequence">110</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
+        </record>
         <record id="tg_rule_bd_sales_ct_net" model="hr.salary.rule">
             <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
             <field name="name">Net Salary</field>
