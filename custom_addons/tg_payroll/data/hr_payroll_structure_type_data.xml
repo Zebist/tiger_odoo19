@@ -26,5 +26,55 @@
             <field name="late_fixed_per_minute">0.7122</field>
         </record>
 
+        <!-- BD_HQ（本地职能） -->
+        <record id="tg_struct_type_bd_hq" model="hr.payroll.structure.type">
+            <field name="name">BD HQ</field>
+            <field name="wage_type">monthly</field>
+            <field name="working_days_per_month">26</field>
+            <field name="hra_pct">0.25</field>
+            <field name="medical_pct">0.15</field>
+            <field name="conveyance_pct">0.10</field>
+            <field name="absence_base">wage</field>
+            <field name="late_rate_mode">wage_based</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
+        <!-- BD_FAC.MGMT（工厂管理层/职能） -->
+        <record id="tg_struct_type_bd_fac_mgmt" model="hr.payroll.structure.type">
+            <field name="name">BD FAC MGMT</field>
+            <field name="wage_type">monthly</field>
+            <field name="working_days_per_month">26</field>
+            <field name="hra_pct">0.25</field>
+            <field name="medical_pct">0.15</field>
+            <field name="conveyance_pct">0.10</field>
+            <field name="absence_base">wage</field>
+            <field name="late_rate_mode">wage_based</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
+        <!-- BD_SALES_FT（销售全职） -->
+        <record id="tg_struct_type_bd_sales_ft" model="hr.payroll.structure.type">
+            <field name="name">BD Sales FT</field>
+            <field name="wage_type">monthly</field>
+            <field name="working_days_per_month">26</field>
+            <field name="hra_pct">0.25</field>
+            <field name="medical_pct">0.15</field>
+            <field name="conveyance_pct">0.10</field>
+            <field name="absence_base">wage</field>
+            <field name="late_rate_mode">wage_based</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
+        <!-- BD_SALES_CT（销售外包，日薪，固定迟到 0.7122） -->
+        <record id="tg_struct_type_bd_sales_ct" model="hr.payroll.structure.type">
+            <field name="name">BD Sales CT</field>
+            <field name="wage_type">monthly</field>
+            <field name="working_days_per_month">26</field>
+            <field name="absence_base">wage</field>
+            <field name="late_rate_mode">fixed</field>
+            <field name="late_fixed_per_minute">0.7122</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
     </data>
 </odoo>

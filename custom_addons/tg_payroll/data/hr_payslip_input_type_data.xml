@@ -69,4 +69,11 @@
         <field name="unit">amount</field>
     </record>
 
+    <!-- 销售提成（金额，BD_SALES_FT / BD_SALES_CT） -->
+    <record id="input_type_commission" model="hr.payslip.input.type">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="unit">amount</field>
+    </record>
+
 </odoo>

@@ -245,9 +245,131 @@
             <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
         </record>
 
-        <!-- 120: AIT — 调 payslip._compute_ait()，逻辑在 models/hr_payslip.py 统一维护 -->
-        <record id="tg_rule_bd_intern_ait" model="hr.salary.rule">
+        <!-- 999: Net Salary -->
+        <record id="tg_rule_bd_intern_net" model="hr.salary.rule">
             <field name="struct_id" ref="tg_struct_bd_intern"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
+        <!-- ============================================================
+             BD_HQ 薪资结构（本地职能）
+             ============================================================ -->
+
+        <record id="tg_struct_bd_hq" model="hr.payroll.structure">
+            <field name="name">BD_HQ</field>
+            <field name="type_id" ref="tg_struct_type_bd_hq"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_bd_hq" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_bd_hq"/>
+        </record>
+
+        <record id="tg_rule_bd_hq_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.basic_amount)</field>
+        </record>
+        <record id="tg_rule_bd_hq_hra" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+            <field name="sequence">20</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.hra_amount)</field>
+        </record>
+        <record id="tg_rule_bd_hq_medical" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Medical Allowance</field>
+            <field name="code">MEDICAL</field>
+            <field name="sequence">30</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.medical_amount)</field>
+        </record>
+        <record id="tg_rule_bd_hq_conv" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Conveyance Allowance</field>
+            <field name="code">CONV</field>
+            <field name="sequence">40</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.conveyance_amount)</field>
+        </record>
+        <record id="tg_rule_bd_hq_phone" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Phone Allowance</field>
+            <field name="code">PHONE_ATT</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.phone_allowance)</field>
+        </record>
+        <record id="tg_rule_bd_hq_kpi" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">KPI Bonus</field>
+            <field name="code">KPI_PAY</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_kpi_bonus"/>
+        </record>
+        <record id="tg_rule_bd_hq_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+        <record id="tg_rule_bd_hq_late" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Late Deduction</field>
+            <field name="code">LATE_DED</field>
+            <field name="sequence">100</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_late_ded()</field>
+        </record>
+        <record id="tg_rule_bd_hq_abs" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Absence Deduction</field>
+            <field name="code">ABS_DED</field>
+            <field name="sequence">110</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
+        </record>
+        <record id="tg_rule_bd_hq_ait" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
             <field name="name">AIT (Income Tax)</field>
             <field name="code">AIT</field>
             <field name="sequence">120</field>
@@ -256,10 +378,367 @@
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip._compute_ait()</field>
         </record>
+        <record id="tg_rule_bd_hq_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_hq"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
 
-        <!-- 999: Net Salary -->
-        <record id="tg_rule_bd_intern_net" model="hr.salary.rule">
-            <field name="struct_id" ref="tg_struct_bd_intern"/>
+        <!-- ============================================================
+             BD_FAC.MGMT 薪资结构（工厂管理层/职能）
+             ============================================================ -->
+
+        <record id="tg_struct_bd_fac_mgmt" model="hr.payroll.structure">
+            <field name="name">BD_FAC.MGMT</field>
+            <field name="type_id" ref="tg_struct_type_bd_fac_mgmt"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_bd_fac_mgmt" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_bd_fac_mgmt"/>
+        </record>
+
+        <record id="tg_rule_bd_fac_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.basic_amount)</field>
+        </record>
+        <record id="tg_rule_bd_fac_hra" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+            <field name="sequence">20</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.hra_amount)</field>
+        </record>
+        <record id="tg_rule_bd_fac_medical" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Medical Allowance</field>
+            <field name="code">MEDICAL</field>
+            <field name="sequence">30</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.medical_amount)</field>
+        </record>
+        <record id="tg_rule_bd_fac_conv" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Conveyance Allowance</field>
+            <field name="code">CONV</field>
+            <field name="sequence">40</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.conveyance_amount)</field>
+        </record>
+        <record id="tg_rule_bd_fac_phone" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Phone Allowance</field>
+            <field name="code">PHONE_ATT</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.phone_allowance)</field>
+        </record>
+        <record id="tg_rule_bd_fac_kpi" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">KPI Bonus</field>
+            <field name="code">KPI_PAY</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_kpi_bonus"/>
+        </record>
+        <record id="tg_rule_bd_fac_ot" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Overtime Pay</field>
+            <field name="code">OT_PAY</field>
+            <field name="sequence">65</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_ot()</field>
+        </record>
+        <record id="tg_rule_bd_fac_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+        <record id="tg_rule_bd_fac_late" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Late Deduction</field>
+            <field name="code">LATE_DED</field>
+            <field name="sequence">100</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_late_ded()</field>
+        </record>
+        <record id="tg_rule_bd_fac_abs" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Absence Deduction</field>
+            <field name="code">ABS_DED</field>
+            <field name="sequence">110</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
+        </record>
+        <record id="tg_rule_bd_fac_ait" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">AIT (Income Tax)</field>
+            <field name="code">AIT</field>
+            <field name="sequence">120</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_ait()</field>
+        </record>
+        <record id="tg_rule_bd_fac_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_fac_mgmt"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
+        <!-- ============================================================
+             BD_SALES_FT 薪资结构（销售全职）
+             ============================================================ -->
+
+        <record id="tg_struct_bd_sales_ft" model="hr.payroll.structure">
+            <field name="name">BD_SALES_FT</field>
+            <field name="type_id" ref="tg_struct_type_bd_sales_ft"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+                (4, ref('tg_payroll.input_type_commission')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_bd_sales_ft" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_bd_sales_ft"/>
+        </record>
+
+        <record id="tg_rule_bd_sales_ft_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.basic_amount)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_hra" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+            <field name="sequence">20</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.hra_amount)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_medical" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Medical Allowance</field>
+            <field name="code">MEDICAL</field>
+            <field name="sequence">30</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.medical_amount)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_conv" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Conveyance Allowance</field>
+            <field name="code">CONV</field>
+            <field name="sequence">40</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.conveyance_amount)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_phone" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Phone Allowance</field>
+            <field name="code">PHONE_ATT</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.phone_allowance)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_commission" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Commission</field>
+            <field name="code">COMM_PAY</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_commission"/>
+        </record>
+        <record id="tg_rule_bd_sales_ft_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_late" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Late Deduction</field>
+            <field name="code">LATE_DED</field>
+            <field name="sequence">100</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_late_ded()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_abs" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Absence Deduction</field>
+            <field name="code">ABS_DED</field>
+            <field name="sequence">110</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_ait" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">AIT (Income Tax)</field>
+            <field name="code">AIT</field>
+            <field name="sequence">120</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_ait()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ft_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ft"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
+        <!-- ============================================================
+             BD_SALES_CT 薪资结构（销售外包，日薪）
+             ============================================================ -->
+
+        <record id="tg_struct_bd_sales_ct" model="hr.payroll.structure">
+            <field name="name">BD_SALES_CT</field>
+            <field name="type_id" ref="tg_struct_type_bd_sales_ct"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+                (4, ref('tg_payroll.input_type_commission')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_bd_sales_ct" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_bd_sales_ct"/>
+        </record>
+
+        <!-- 10: Daily Wage — wage × (active/total)，复用 _prorate -->
+        <record id="tg_rule_bd_sales_ct_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Daily Wage</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.wage)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ct_phone" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Phone Allowance</field>
+            <field name="code">PHONE_ATT</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.phone_allowance)</field>
+        </record>
+        <record id="tg_rule_bd_sales_ct_commission" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Commission</field>
+            <field name="code">COMM_PAY</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_commission"/>
+        </record>
+        <record id="tg_rule_bd_sales_ct_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ct_late" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
+            <field name="name">Late Deduction</field>
+            <field name="code">LATE_DED</field>
+            <field name="sequence">100</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_late_ded()</field>
+        </record>
+        <record id="tg_rule_bd_sales_ct_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_sales_ct"/>
             <field name="name">Net Salary</field>
             <field name="code">NET</field>
             <field name="sequence">999</field>

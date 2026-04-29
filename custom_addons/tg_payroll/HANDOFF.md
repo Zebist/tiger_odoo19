@@ -212,13 +212,19 @@ custom_addons/tg_payroll/
 
 **已完成：**
 - ✅ `overtime` 字段补全（`models/hr_version.py` + `views/hr_version_views.xml`）
-- ✅ BD_WORKER 结构类型 + 薪资结构 + 全套规则（BASIC/HRA/MEDICAL/CONV/OT/PERF_ATT/ADJ/LATE_DED/ABS_DED/AIT/NET）
-- ✅ BD_IN 结构类型 + 薪资结构 + 规则（DAILY_WAGE/LATE_DED/NET）
-- ✅ AIT 完整实现（阶梯税表 + 性别分支 + 3% rebate + 年税 min 5000 + 跨月折算）
+- ✅ BD_WORKER 结构类型 + 薪资结构 + 全套规则（BASIC/HRA/MEDICAL/CONV/OT/PERF_ATT/ADJ/NIGHT_PAY/PROD_PAY/LATE_DED/ABS_DED/AIT/NET）
+- ✅ BD_IN 结构类型 + 薪资结构 + 规则（STIPEND/LATE_DED/ABS_DED/NET；无 AIT）
+- ✅ AIT 提取为 `_compute_ait()` 方法，所有 BD 结构（除 BD_IN）共用一行调用
+- ✅ NIGHT + PROD 独立 input type，BD_WORKER 规则直读（`amount_select=input`）
+- ✅ BD_HQ 结构类型 + 薪资结构 + 规则（BASIC/HRA/MEDICAL/CONV/PHONE_ATT/KPI_PAY/ADJ/LATE_DED/ABS_DED/AIT/NET）
+- ✅ BD_FAC.MGMT 结构类型 + 薪资结构 + 规则（BD_HQ 基础上加 OT_PAY）
+- ✅ BD_SALES_FT 结构类型 + 薪资结构 + 规则（BASIC/HRA/MEDICAL/CONV/PHONE_ATT/COMM_PAY/ADJ/LATE_DED/ABS_DED/AIT/NET）
+- ✅ BD_SALES_CT 结构类型 + 薪资结构 + 规则（BASIC=日薪/PHONE_ATT/COMM_PAY/ADJ/LATE_DED/NET；无 ABS_DED/AIT）
+- ✅ COMMISSION input type，关联 BD_SALES_FT + BD_SALES_CT 两个结构
 
 **剩余结构（用户确认后逐套录入）：**
 - CN_FT（中国正式）—— 用户说先不做
-- CN_CT / SG_MGMT / BD_HQ / BD_FAC.MGMT / BD_SALES_FT / BD_SALES_CT —— 后续
+- CN_CT / SG_MGMT —— 后续
 
 1. **预置 struct type 数据**（按 BD/CN/SG 三国法人 × 9 个结构）
    - 每个填好 working_days、三大项 pct、ot_rate、late_rate_mode、late_fixed_per_minute、absence_base
@@ -324,11 +330,11 @@ cd /Users/zebin/work/tiger/odoo-19.0+e.20250917
 >
 > 即使技术上更"干净"，只要会让线上 payslip 算出与老系统不一致的数字，就**必须先确认**。
 
-## 11. 老系统结构映射表（Phase 2 录入时参考）
+## 13. 老系统结构映射表（Phase 2 录入时参考）
 
 记录每套老系统薪资结构的规则、公式、所需 input、可复用的 Phase 1 基础设施。后续录入相同公式的结构时可以直接复用规则。
 
-### 11.1 BD_WORKER（孟加拉工人）
+### 13.1 BD_WORKER（孟加拉工人）
 
 > **状态**：分析完成，待用户确认 wage 语义后录入。
 
