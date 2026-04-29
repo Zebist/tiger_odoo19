@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payroll_structure_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.form.inherit.tg_payroll</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_structure_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <separator string="Payroll Configuration"/>
+                <group>
+                    <group string="Time Base">
+                        <field name="working_days_per_month"/>
+                        <field name="absence_base"/>
+                    </group>
+                    <group string="Salary Breakdown (% of wage)">
+                        <field name="hra_pct"/>
+                        <field name="medical_pct"/>
+                        <field name="conveyance_pct"/>
+                    </group>
+                    <group string="Overtime">
+                        <field name="ot_rate"/>
+                    </group>
+                    <group string="Late Deduction">
+                        <field name="late_rate_mode"/>
+                        <field name="late_fixed_per_minute"
+                               invisible="late_rate_mode != 'fixed'"
+                               required="late_rate_mode == 'fixed'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- 缺勤（天） -->
+    <record id="input_type_abs" model="hr.payslip.input.type">
+        <field name="name">Absence (Days)</field>
+        <field name="code">ABS</field>
+        <field name="unit">day</field>
+        <field name="is_quantity" eval="True"/>
+    </record>
+
+    <!-- 迟到（小时） -->
+    <record id="input_type_late" model="hr.payslip.input.type">
+        <field name="name">Late (Hours)</field>
+        <field name="code">LATE</field>
+        <field name="unit">hour</field>
+        <field name="is_quantity" eval="True"/>
+    </record>
+
+    <!-- 加班（小时） -->
+    <record id="input_type_ot" model="hr.payslip.input.type">
+        <field name="name">Overtime (Hours)</field>
+        <field name="code">OT</field>
+        <field name="unit">hour</field>
+        <field name="is_quantity" eval="True"/>
+    </record>
+
+    <!-- KPI 奖金（金额） -->
+    <record id="input_type_kpi_bonus" model="hr.payslip.input.type">
+        <field name="name">KPI Bonus</field>
+        <field name="code">KPIBONUS</field>
+        <field name="unit">amount</field>
+    </record>
+
+    <!-- 调整金额（金额） -->
+    <record id="input_type_adj" model="hr.payslip.input.type">
+        <field name="name">Adjustment</field>
+        <field name="code">ADJ</field>
+        <field name="unit">amount</field>
+    </record>
+
+    <!-- 外派津贴天数 -->
+    <record id="input_type_expat" model="hr.payslip.input.type">
+        <field name="name">Expat Days</field>
+        <field name="code">EXPAT</field>
+        <field name="unit">day</field>
+        <field name="is_quantity" eval="True"/>
+    </record>
+
+    <!-- 出差补助天数 -->
+    <record id="input_type_trip" model="hr.payslip.input.type">
+        <field name="name">Business Trip Days</field>
+        <field name="code">TRIP</field>
+        <field name="unit">day</field>
+        <field name="is_quantity" eval="True"/>
+    </record>
+
+</odoo>

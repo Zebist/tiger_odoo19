@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_contract_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.template.form.inherit.tg_payroll</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Payroll Allowances" name="tg_payroll_allowances"
+                      groups="hr_payroll.group_hr_payroll_user">
+                    <group>
+                        <group string="Salary Breakdown" name="tg_breakdown">
+                            <field name="basic_amount" readonly="1"/>
+                            <field name="hra_amount" readonly="1"/>
+                            <field name="medical_amount" readonly="1"/>
+                            <field name="conveyance_amount" readonly="1"/>
+                            <field name="daily_wage" readonly="1"/>
+                        </group>
+                        <group string="Standard Allowances" name="tg_allowances">
+                            <field name="kpi_base"/>
+                            <field name="phone_allowance"/>
+                            <field name="perfect_attend_amount"/>
+                            <field name="expat_daily"/>
+                            <field name="trip_daily"/>
+                            <field name="housing_allowance"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
