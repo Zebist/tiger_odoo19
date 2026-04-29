@@ -55,4 +55,18 @@
         <field name="is_quantity" eval="True"/>
     </record>
 
+    <!-- 夜班费（金额，BD_WORKER） -->
+    <record id="input_type_night" model="hr.payslip.input.type">
+        <field name="name">Night Shift Allowance</field>
+        <field name="code">NIGHT</field>
+        <field name="unit">amount</field>
+    </record>
+
+    <!-- 产量奖（金额，BD_WORKER） -->
+    <record id="input_type_prod" model="hr.payslip.input.type">
+        <field name="name">Production Award</field>
+        <field name="code">PROD</field>
+        <field name="unit">amount</field>
+    </record>
+
 </odoo>

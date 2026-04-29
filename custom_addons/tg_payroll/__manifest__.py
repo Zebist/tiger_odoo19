@@ -10,6 +10,8 @@
     ],
     'data': [
         'data/hr_payslip_input_type_data.xml',
+        'data/hr_payroll_structure_type_data.xml',
+        'data/hr_payroll_structure_data.xml',
         'views/hr_payroll_structure_type_views.xml',
         'views/hr_payslip_input_type_views.xml',
         'views/hr_version_views.xml',

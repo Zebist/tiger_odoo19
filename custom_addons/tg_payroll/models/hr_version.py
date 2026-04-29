@@ -39,6 +39,12 @@ class HrVersion(models.Model):
         groups=PAYROLL_GROUP,
         help="Fixed monthly housing allowance.",
     )
+    overtime = fields.Monetary(
+        string="Overtime Rate / Hour",
+        currency_field='currency_id',
+        groups=PAYROLL_GROUP,
+        help="Hourly overtime rate. Rule: OT_hours × overtime.",
+    )
 
     # ---- 三大项拆分（compute store） ------------------------------------
     basic_amount = fields.Monetary(

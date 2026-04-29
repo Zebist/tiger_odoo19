@@ -24,6 +24,7 @@
                             <field name="expat_daily"/>
                             <field name="trip_daily"/>
                             <field name="housing_allowance"/>
+                            <field name="overtime"/>
                         </group>
                     </group>
                 </page>

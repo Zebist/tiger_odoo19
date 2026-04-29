@@ -210,12 +210,15 @@ custom_addons/tg_payroll/
 
 ## 7. 待办（Phase 2）
 
-用户会逐套发老系统的薪资结构，需要做的：
+**已完成：**
+- ✅ `overtime` 字段补全（`models/hr_version.py` + `views/hr_version_views.xml`）
+- ✅ BD_WORKER 结构类型 + 薪资结构 + 全套规则（BASIC/HRA/MEDICAL/CONV/OT/PERF_ATT/ADJ/LATE_DED/ABS_DED/AIT/NET）
+- ✅ BD_IN 结构类型 + 薪资结构 + 规则（DAILY_WAGE/LATE_DED/NET）
+- ✅ AIT 完整实现（阶梯税表 + 性别分支 + 3% rebate + 年税 min 5000 + 跨月折算）
 
-0. **⚠️ 首先补完 Phase 1 遗漏字段**（在 `models/hr_version.py` 和 `views/hr_version_views.xml` 里加）：
-   - `overtime = fields.Monetary(string="Overtime Rate / Hour", currency_field='currency_id', groups=PAYROLL_GROUP)`
-   - 视图加入 Standard Allowances 组，放在 `housing_allowance` 旁边
-   - 迟到规则确认统一使用 wage-based 动态费率，struct type 的 `late_rate_mode` 默认 `wage_based`
+**剩余结构（用户确认后逐套录入）：**
+- CN_FT（中国正式）—— 用户说先不做
+- CN_CT / SG_MGMT / BD_HQ / BD_FAC.MGMT / BD_SALES_FT / BD_SALES_CT —— 后续
 
 1. **预置 struct type 数据**（按 BD/CN/SG 三国法人 × 9 个结构）
    - 每个填好 working_days、三大项 pct、ot_rate、late_rate_mode、late_fixed_per_minute、absence_base
@@ -263,7 +266,53 @@ cd /Users/zebin/work/tiger/odoo-19.0+e.20250917
 - 不要预置 demo 数据，用户偏好手工录入或后续给定。
 - 不主动建 markdown 文档，除非用户要求（本文件就是用户明确要求的）。
 
-## 10. ⚠️ 不破坏原有算薪流程的硬性要求
+## 10. Input 关联约定
+
+**所有薪资结构必须关联五大标准 input**（通过 `input_line_type_ids`）：
+
+| code | XML ID | 说明 |
+|---|---|---|
+| `ABS` | `tg_payroll.input_type_abs` | 缺勤天数 |
+| `LATE` | `tg_payroll.input_type_late` | 迟到小时 |
+| `OT` | `tg_payroll.input_type_ot` | 加班小时 |
+| `KPIBONUS` | `tg_payroll.input_type_kpi_bonus` | KPI 奖金 |
+| `ADJ` | `tg_payroll.input_type_adj` | 调整金额 |
+
+新增结构时在 `hr.payroll.structure` 记录里加：
+```xml
+<field name="input_line_type_ids" eval="[
+    (4, ref('tg_payroll.input_type_abs')),
+    (4, ref('tg_payroll.input_type_late')),
+    (4, ref('tg_payroll.input_type_ot')),
+    (4, ref('tg_payroll.input_type_kpi_bonus')),
+    (4, ref('tg_payroll.input_type_adj')),
+    <!-- 结构专属 input 接着加 -->
+]"/>
+```
+
+## 11. 薪资规则编写约定
+
+> 每条有逻辑的薪资规则在 `models/hr_payslip.py` 的 `HrPayslip` 类里对应一个方法，规则 XML 里只写一行调用。
+
+### 已有方法清单
+
+| 方法 | 规则用法 | 说明 |
+|---|---|---|
+| `_prorate(amount)` | `result = payslip._prorate(version.basic_amount)` | 按合同有效期在 payslip 期间折算（跨月入/离职） |
+| `_input_amount(code)` | 内部工具 | 取指定 code 的 input 金额，不存在返回 0 |
+| `_compute_ot()` | `result = payslip._compute_ot()` | OT_hours × version.overtime |
+| `_compute_perfect_attend()` | `result = payslip._compute_perfect_attend()` | ABS==0 → version.perfect_attend_amount |
+| `_compute_adj()` | `result = payslip._compute_adj()` | 直读 ADJ input |
+| `_compute_late_ded()` | `result = payslip._compute_late_ded()` | 迟到扣款，读 struct type late_rate_mode 分支 |
+| `_compute_abs_ded()` | `result = payslip._compute_abs_ded()` | ABS × (wage / working_days) |
+| `_compute_ait()` | `result = payslip._compute_ait()` | 孟加拉 AIT 阶梯税表（含跨月折算） |
+
+**新增结构时**：
+- 如果需要已有逻辑 → 直接在规则 XML 里调对应方法
+- 如果是全新逻辑 → 先在 `hr_payslip.py` 加方法，再写规则
+- AIT 算法变更前**必须让用户核对确认**，再改 `_compute_ait()`
+
+## 12. ⚠️ 不破坏原有算薪流程的硬性要求
 
 > **后续每次新增 / 修改薪资结构、规则、字段，都必须考虑：是否影响用户已经在跑的算薪流程？如果会有影响，必须先告诉用户、确认后才能动手，不能擅自改。**
 >
