@@ -35,6 +35,17 @@
 - `odoo.models.NewId` → `from odoo.api import NewId`
 - search view 老写法 `<group expand="0" string="...">` 在 19+ 可能报错，改用不带属性的 `<group>`
 
+## Odoo 测试执行踩坑
+- `--test-enable` 时的 **post tests** 只会对“本次实际安装/更新过”的模块组装 test suite（`registry.updated_modules`）。
+  - 模块已安装的情况下，用 `-i <module>` 往往不会进入 `updated_modules`，就会出现 `Starting post tests` 但 **0 post-tests**。
+  - 模块已安装时请用 `-u <module>` 强制更新，确保该模块被纳入 post tests。
+
+示例（模块已安装时）：
+
+```bash
+./odoo-bin -c odoo.conf -d <db_name> --test-enable --test-tags tg_payroll -u tg_payroll --stop-after-init
+```
+
 ## Python/Odoo 19 编码规范
 - 不用 `@api.multi` / `@api.one` 等废弃装饰器
 - override `create` 用 `@api.model_create_multi`，接收 `vals_list`

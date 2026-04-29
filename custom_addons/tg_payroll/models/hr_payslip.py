@@ -188,7 +188,8 @@ class HrPayslip(models.Model):
         tax_free = min(annual_income / 3.0, 450000.0)
         taxable = annual_income - tax_free
 
-        if self.employee_id.gender == 'male':
+        sex = self.employee_id.sex
+        if sex == 'male':
             slabs = [
                 (350000, 0.00),
                 (100000, 0.05),

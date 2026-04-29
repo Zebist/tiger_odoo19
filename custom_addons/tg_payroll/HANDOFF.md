@@ -257,6 +257,24 @@ cd /Users/zebin/work/tiger/odoo-19.0+e.20250917
 ./odoo-bin -c odoo.conf -u tg_payroll -d <db_name>
 ```
 
+### 8.1 自动化测试与结果输出脚本
+
+- 自动化测试：`custom_addons/tg_payroll/tests/`
+  - 说明文档：`custom_addons/tg_payroll/tests/README.md`
+  - 主要用例：`custom_addons/tg_payroll/tests/test_tg_payroll_structures.py`
+  - 运行（示例）：
+
+```bash
+./odoo-bin -c odoo.conf -d <db_name> --test-enable -i tg_payroll --stop-after-init
+```
+
+- 人工核对脚本（打印各 rule 结果）：`custom_addons/tg_payroll/scripts/run_tg_payroll_cases.py`
+  - 运行（示例）：
+
+```bash
+./odoo-bin shell -c odoo.conf -d <db_name> -i tg_payroll < custom_addons/tg_payroll/scripts/run_tg_payroll_cases.py
+```
+
 测试要点：
 1. 设个 BD struct type，填 hra=0.25, medical=0.15, conveyance=0.10
 2. 在该 struct type 下建合同，wage=50000，看 4 个拆分字段是否 25000/12500/7500/5000，且 basic 吸收尾差
