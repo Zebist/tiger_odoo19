@@ -120,6 +120,30 @@ class HrPayslip(models.Model):
         self.ensure_one()
         return self._input_amount('ADJ')
 
+    def _compute_expat_pay(self):
+        """外派津贴：EXPAT_days × version.expat_daily。"""
+        self.ensure_one()
+        return self._input_amount('EXPAT') * (self.version_id.expat_daily or 0.0)
+
+    def _compute_trip_pay(self):
+        """出差补助：TRIP_days × version.trip_daily。"""
+        self.ensure_one()
+        return self._input_amount('TRIP') * (self.version_id.trip_daily or 0.0)
+
+    def _compute_cn_ct_attendance_pay(self):
+        """中国外包（日薪×出勤）：
+        result = (monthly_wage / 26) × max(26 - ABS_days, 0)
+
+        ABS_days 取 ABS input（天）。
+        """
+        self.ensure_one()
+        standard_days = 26.0
+
+        abs_days = self._input_amount('ABS') or 0.0
+        attendance_days = max(standard_days - abs_days, 0.0)
+        monthly_wage = self.version_id.wage or 0.0
+        return (monthly_wage / standard_days) * attendance_days
+
     def _compute_late_ded(self):
         """迟到扣款：读 struct type 的 late_rate_mode 分支。
         wage_based: per_min = wage / (working_days × hours_per_day × 60)

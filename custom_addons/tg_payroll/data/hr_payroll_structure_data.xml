@@ -748,5 +748,228 @@
             <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
         </record>
 
+        <!-- ============================================================
+             CN_FT 薪资结构（中国正式）
+             ============================================================ -->
+
+        <record id="tg_struct_cn_ft" model="hr.payroll.structure">
+            <field name="name">CN_FT</field>
+            <field name="type_id" ref="tg_struct_type_cn_ft"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+                (4, ref('tg_payroll.input_type_expat')),
+                (4, ref('tg_payroll.input_type_trip')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_cn_ft" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_cn_ft"/>
+        </record>
+
+        <!-- 10: Basic Salary — 取 wage（按合同有效期折算） -->
+        <record id="tg_rule_cn_ft_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.wage)</field>
+        </record>
+
+        <!-- 50: Expat Allowance -->
+        <record id="tg_rule_cn_ft_expat" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Expat Allowance</field>
+            <field name="code">EXPAT_PAY</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_expat_pay()</field>
+        </record>
+
+        <!-- 60: Business Trip Allowance -->
+        <record id="tg_rule_cn_ft_trip" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Business Trip Allowance</field>
+            <field name="code">TRIP_PAY</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_trip_pay()</field>
+        </record>
+
+        <!-- 70: KPI Bonus（grade 模式会自动同步到 KPIBONUS input） -->
+        <record id="tg_rule_cn_ft_kpi" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">KPI Bonus</field>
+            <field name="code">KPI_PAY</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_kpi_bonus"/>
+        </record>
+
+        <!-- 110: Absence Deduction -->
+        <record id="tg_rule_cn_ft_abs" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Absence Deduction</field>
+            <field name="code">ABS_DED</field>
+            <field name="sequence">110</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_abs_ded()</field>
+        </record>
+
+        <!-- 999: Net Salary -->
+        <record id="tg_rule_cn_ft_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
+        <!-- ============================================================
+             CN_CT 薪资结构（中国外包：wage/26×(Attendance-ABS)）
+             ============================================================ -->
+
+        <record id="tg_struct_cn_ct" model="hr.payroll.structure">
+            <field name="name">CN_CT</field>
+            <field name="type_id" ref="tg_struct_type_cn_ct"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_cn_ct" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_cn_ct"/>
+        </record>
+
+        <!-- 10: Attendance Salary -->
+        <record id="tg_rule_cn_ct_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ct"/>
+            <field name="name">Attendance Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_cn_ct_attendance_pay()</field>
+        </record>
+
+        <!-- 999: Net Salary -->
+        <record id="tg_rule_cn_ct_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ct"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
+        <!-- ============================================================
+             SG_MGMT 薪资结构（新加坡管理层）
+             ============================================================ -->
+
+        <record id="tg_struct_sg_mgmt" model="hr.payroll.structure">
+            <field name="name">SG_MGMT</field>
+            <field name="type_id" ref="tg_struct_type_sg_mgmt"/>
+            <field name="country_id" eval="False"/>
+            <field name="rule_ids" eval="[]"/>
+            <field name="input_line_type_ids" eval="[
+                (4, ref('tg_payroll.input_type_abs')),
+                (4, ref('tg_payroll.input_type_late')),
+                (4, ref('tg_payroll.input_type_ot')),
+                (4, ref('tg_payroll.input_type_kpi_bonus')),
+                (4, ref('tg_payroll.input_type_adj')),
+                (4, ref('tg_payroll.input_type_expat')),
+                (4, ref('tg_payroll.input_type_trip')),
+            ]"/>
+        </record>
+        <record id="tg_struct_type_sg_mgmt" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="tg_struct_sg_mgmt"/>
+        </record>
+
+        <!-- 10: Basic Salary — 取 wage（按合同有效期折算） -->
+        <record id="tg_rule_sg_mgmt_basic" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.wage)</field>
+        </record>
+
+        <!-- 50: Expat Allowance -->
+        <record id="tg_rule_sg_mgmt_expat" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">Expat Allowance</field>
+            <field name="code">EXPAT_PAY</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_expat_pay()</field>
+        </record>
+
+        <!-- 70: KPI Bonus（grade 模式会自动同步到 KPIBONUS input） -->
+        <record id="tg_rule_sg_mgmt_kpi" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">KPI Bonus</field>
+            <field name="code">KPI_PAY</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="input_type_kpi_bonus"/>
+        </record>
+
+        <!-- 80: Housing Allowance（按合同有效期折算） -->
+        <record id="tg_rule_sg_mgmt_housing" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">Housing Allowance</field>
+            <field name="code">HOUSING</field>
+            <field name="sequence">80</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._prorate(version.housing_allowance)</field>
+        </record>
+
+        <!-- 999: Net Salary -->
+        <record id="tg_rule_sg_mgmt_net" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">Net Salary</field>
+            <field name="code">NET</field>
+            <field name="sequence">999</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        </record>
+
     </data>
 </odoo>
