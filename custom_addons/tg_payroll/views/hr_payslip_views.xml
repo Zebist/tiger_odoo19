@@ -6,8 +6,18 @@
         <field name="model">hr.payslip</field>
         <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
         <field name="arch" type="xml">
+            <!-- 右上角小标签：跟 run kanban 那个 badge 用同一组色，提示 slip 当前所属 run 的审批态 -->
+            <xpath expr="//sheet/field[@name='issues']" position="before">
+                <div class="text-end mb-2">
+                    <span class="badge text-bg-warning" invisible="run_approval_state != 'approving'">Approving</span>
+                    <span class="badge text-bg-success" invisible="run_approval_state != 'approved'">Approved</span>
+                    <span class="badge text-bg-danger" invisible="run_approval_state != 'rejected'">Rejected</span>
+                </div>
+            </xpath>
+
             <xpath expr="//field[@name='payslip_run_id']" position="after">
                 <field name="kpi_base" invisible="1"/>
+                <field name="run_approval_state" invisible="1"/>
                 <field name="kpi_grade"
                        invisible="not kpi_base"
                        readonly="state in ['cancel', 'validated', 'paid']"/>
@@ -19,14 +29,112 @@
                             type="object"
                             string="Apply to KPIBONUS"
                             class="btn-primary btn-sm ms-2"
-                            invisible="state in ['cancel', 'validated', 'paid']"/>
+                            invisible="state in ['cancel', 'validated', 'paid'] or run_approval_state != 'draft'"/>
                 </div>
                 <div class="alert alert-warning mb-0" role="alert" colspan="2"
                      invisible="not kpi_input_mismatch_message">
                     <field name="kpi_input_mismatch_message" nolabel="1" readonly="1"/>
                 </div>
             </xpath>
+
+            <!-- 隐藏原生确认/取消/置草稿，由 run 上的审批流接管 -->
+            <xpath expr="//button[@name='action_payslip_done']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_cancel']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Compute Sheet 两个按钮（初始计算 / 重算）：仅 run draft 时露出 -->
+            <xpath expr="//button[@name='compute_sheet'][hasclass('oe_highlight')]" position="attributes">
+                <attribute name="invisible">state != 'draft' or line_ids or credit_note or run_approval_state != 'draft'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='compute_sheet'][not(hasclass('oe_highlight'))]" position="attributes">
+                <attribute name="invisible">state != 'draft' or not line_ids or credit_note or run_approval_state != 'draft'</attribute>
+            </xpath>
+
+            <!--
+            原生几个"修正类"按钮，触发条件都要求 slip state in (validated|paid)，
+            而 slip 走到 validated/paid 必然 run.approval_state='approved'。
+            按"只在 draft 显示"语义，这些按钮在 draft 上原本也不会出现，所以
+            直接 invisible=1 — 等于完全禁用。审批后修正请新开 run。
+            -->
+            <!-- Revert / refund_sheet 两个 -->
+            <xpath expr="(//button[@name='refund_sheet'])[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//button[@name='refund_sheet'])[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- has_wrong_data alert（含 Adjust + Keep）整块隐藏 -->
+            <xpath expr="//div[@role='alert'][contains(@invisible, 'has_wrong_data')]" position="attributes">
+                <attribute name="invisible">(not has_wrong_data) or (is_refunded or is_corrected or keep_wrong_version or is_refund_payslip) or (run_approval_state != 'draft')</attribute>
+            </xpath>
+            <!-- is_wrong_version alert（含 Adjust + Keep）整块隐藏 -->
+            <xpath expr="//div[@role='alert'][contains(@invisible, 'is_wrong_version')]" position="attributes">
+                <attribute name="invisible">(not is_wrong_version) or (is_refunded or is_corrected or keep_wrong_version or is_refund_payslip) or (run_approval_state != 'draft')</attribute>
+            </xpath>
+            <!-- negative_net_to_report alert（含 Report）整块隐藏 -->
+            <xpath expr="//div[@role='alert'][contains(@invisible, 'negative_net_to_report_display')]" position="attributes">
+                <attribute name="invisible">(not negative_net_to_report_display) or (run_approval_state != 'draft')</attribute>
+            </xpath>
+            <!-- Inputs tab 底部 "Add Inputs"：仅 run draft 时露出 -->
+            <xpath expr="//button[@name='action_configure_payslip_inputs']" position="attributes">
+                <attribute name="invisible">run_approval_state != 'draft'</attribute>
+            </xpath>
+
+            <!-- Mark as paid / Create Payment Report 加守门：仅 run 已 approved 才显示 -->
+            <xpath expr="//button[@name='action_payslip_paid']" position="attributes">
+                <attribute name="invisible">state != 'validated' or run_approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_payment_report']" position="attributes">
+                <attribute name="invisible">state != 'validated' or run_approval_state != 'approved'</attribute>
+            </xpath>
         </field>
+    </record>
+
+    <!-- payslip 列表 header：隐藏原生 mass action（run 操作改在 PayRunCard 上做） -->
+    <record id="view_hr_payslip_tree_inherit_tg_payroll" model="ir.ui.view">
+        <field name="name">hr.payslip.list.inherit.tg_payroll</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_validate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_payslip_done']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_move_to_off_cycle']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 从 list/form 的 Action 下拉菜单里摘掉所有可能改动审批后数据的入口，由 run 审批流接管 -->
+    <record id="hr_payroll.action_hr_payroll_draft" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_hr_payroll_confirm_payroll" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_hr_payroll_cancel_payroll" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_edit_payslip_lines" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_hr_payroll_compute_payroll" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_hr_payroll_recompute_whole_sheet" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="hr_payroll.action_hr_payroll_remove_from_payrun" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
     </record>
 
 </odoo>

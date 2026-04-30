@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <!--
+    OCA base_tier_validation 的 Collapse 模板里
+    `review.requested_by[1]` / `review.done_by[1]` 没判空，
+    pending / waiting 状态的 done_by 是 undefined，访问 [1] 会抛
+    "Cannot read properties of undefined (reading '1')"。
+    这里 t-inherit 把这两处改成有条件渲染。
+    -->
+    <t t-name="base_tier_validation.Collapse"
+       t-inherit="base_tier_validation.Collapse"
+       t-inherit-mode="extension">
+        <xpath expr="//td[@name='td_requested_by']/span" position="replace">
+            <span t-if="review.requested_by" t-out="review.requested_by[1]"/>
+        </xpath>
+        <xpath expr="//td[@name='td_done_by']/span" position="replace">
+            <span t-if="review.done_by" t-out="review.done_by[1]"/>
+        </xpath>
+    </t>
+</templates>

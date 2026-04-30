@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- 仅 run.approval_state === 'draft' 时露出 Generate Payslips 链接 -->
+    <t t-name="hr_payroll.PayslipActionHelper" t-inherit="hr_payroll.PayslipActionHelper" t-inherit-mode="extension">
+        <xpath expr="//a[@t-on-click='props.onClickGenerate']" position="attributes">
+            <attribute name="t-if">runState.approvalState === 'draft'</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payslip_run_view_kanban_inherit_tg_payroll" model="ir.ui.view">
+        <field name="name">hr.payslip.run.kanban.inherit.tg_payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_view_kanban"/>
+        <field name="arch" type="xml">
+            <!-- 隐藏原生 Compute / Confirm / Set to Draft（由审批流接管）-->
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Mark as Paid / Payment Report 加守门：仅 approved 才显示 -->
+            <xpath expr="//button[@name='action_paid']" position="attributes">
+                <attribute name="invisible">state != '02_close' or approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_payment_report']" position="attributes">
+                <attribute name="invisible">state != '02_close' or approval_state != 'approved'</attribute>
+            </xpath>
+
+            <!-- Generate Payslips 加守门：原生只看 state，叠一层 approval_state == 'draft'，跟 PayRunCard slot 行为对齐 -->
+            <xpath expr="//button[@name='action_payroll_hr_version_list_view_payrun']" position="attributes">
+                <attribute name="invisible">state in ('02_close', '03_paid') or approval_state != 'draft'</attribute>
+            </xpath>
+
+            <!-- 暴露 approval_state 和 requester_id 给 invisible 表达式用 -->
+            <xpath expr="//field[@name='has_error']" position="after">
+                <field name="approval_state"/>
+                <field name="requester_id"/>
+                <field name="can_review"/>
+            </xpath>
+
+            <!-- approval_state badge 留在 state bubble 旁边（row 1 末尾的 o_payrun_state cell 内） -->
+            <xpath expr="//field[@name='state'][@widget='hr_payroll_status_bubble']" position="before">
+                <field name="approval_state" widget="badge"
+                       decoration-info="approval_state == 'draft'"
+                       decoration-warning="approval_state == 'approving'"
+                       decoration-success="approval_state == 'approved'"
+                       decoration-danger="approval_state == 'rejected'"/>
+            </xpath>
+
+            <!-- row 2：reviews widget 占满下方一整行 -->
+            <xpath expr="//div[hasclass('o_payrun_state')]" position="after">
+                <div class="o_payrun_reviews_row" invisible="not review_ids">
+                    <field name="review_ids" widget="tier_validation" nolabel="1"/>
+                </div>
+            </xpath>
+
+            <!-- 在原生按钮之前插入 5 个 tier 按钮，可见性按状态切换 -->
+            <xpath expr="//button[@name='action_confirm']" position="before">
+                <button name="action_submit"
+                        type="object"
+                        string="Submit"
+                        class="btn oe_highlight"
+                        invisible="approval_state != 'draft'"
+                        options="{'is_priority': True}"/>
+                <button name="validate_tier"
+                        type="object"
+                        string="Validate"
+                        class="btn btn-success"
+                        invisible="approval_state != 'approving' or not can_review"
+                        options="{'is_priority': True}"/>
+                <button name="reject_tier"
+                        type="object"
+                        string="Reject"
+                        class="btn btn-danger"
+                        invisible="approval_state != 'approving' or not can_review"
+                        options="{'is_priority': True}"/>
+                <button name="action_draft"
+                        type="object"
+                        string="Withdraw to Draft"
+                        class="btn btn-secondary"
+                        invisible="approval_state != 'approving'"
+                        options="{'is_priority': True}"/>
+                <button name="action_ack"
+                        type="object"
+                        string="Acknowledge &amp; Edit"
+                        class="btn btn-warning"
+                        invisible="approval_state != 'rejected'"
+                        options="{'is_priority': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+    "New Pay Run" 是个无 header / 无 sheet 的 dialog 小表单，OCA tier_validation 的
+    get_view 会跳过按钮/label 模板注入（xpath 不匹配），却仍把
+    `validation_status not in ('no', False)` 塞进每个字段的 readonly，导致前端报
+    Name 'validation_status' is not defined。这里手动把字段补进去即可。
+    -->
+    <record id="hr_payslip_run_form_inherit_tg_payroll" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherit.tg_payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group" position="before">
+                <field name="validation_status" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

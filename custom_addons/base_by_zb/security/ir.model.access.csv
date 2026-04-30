@@ -1,3 +1,1 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_base_company_region_user,base.company.region user,model_base_company_region,base.group_user,1,0,0,0
-access_base_company_region_system,base.company.region system,model_base_company_region,base.group_system,1,1,1,1

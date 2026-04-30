@@ -17,5 +17,11 @@
         "views/base_approval_flow_views.xml",
         "views/tier_validation_templates.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "base_tier_validation_extend_by_zb/static/src/tier_review_kanban_widget.esm.js",
+            "base_tier_validation_extend_by_zb/static/src/tier_review_template_fix.xml",
+        ],
+    },
 }
 

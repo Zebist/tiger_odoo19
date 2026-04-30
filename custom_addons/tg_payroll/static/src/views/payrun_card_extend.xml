@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+    Bug 修复：原生 PayRunButtonBox 在没有任何 additional/smart 按钮时，
+    依然渲染那个 ⋮ dropdown 触发器。这里加 t-if 让它在没东西可显示时收起来。
+    -->
+    <t t-name="hr_payroll.PayRunButtonBox" t-inherit="hr_payroll.PayRunButtonBox" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('oe_stat_button')][hasclass('position-relative')]" position="attributes">
+            <attribute name="t-if">additionalActionButtons.length || allSmartButtons.length</attribute>
+        </xpath>
+    </t>
+
+    <!--
+    PayRunCard：当 payslip list 顶部展示一个 run 的卡片时，跟 kanban 视觉对齐：
+    - 隐藏原生 Compute / Confirm / Set to Draft（被审批流接管）
+    - Mark as Paid / Payment Report 加 approval_state == 'approved' 守门
+    - 加 5 个 tier 按钮（Submit / Validate / Reject / Withdraw / Acknowledge & Edit）
+    -->
+    <t t-name="hr_payroll.PayRunCard" t-inherit="hr_payroll.PayRunCard" t-inherit-mode="extension">
+
+        <!-- 1. 隐藏被审批流接管的原生按钮 -->
+        <xpath expr="//t[@t-set-slot='compute']" position="attributes">
+            <attribute name="isVisible">false</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='confirm']" position="attributes">
+            <attribute name="isVisible">false</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='draft']" position="attributes">
+            <attribute name="isVisible">false</attribute>
+        </xpath>
+
+        <!-- Generate Payslips：原生只看 state，这里再叠一层 approval_state == 'draft' 的守门，
+             审批中/已审批/已驳回都不允许重新生成 -->
+        <xpath expr="//t[@t-set-slot='gen_payslip']" position="attributes">
+            <attribute name="isVisible">['01_ready', '04_cancel'].includes(payrun.state) &amp;&amp; payrun.approval_state === 'draft'</attribute>
+        </xpath>
+
+        <!-- 2. Mark as Paid / Payment Report 加 approval_state 守门 -->
+        <xpath expr="//t[@t-set-slot='paid_prio']" position="attributes">
+            <attribute name="isVisible">payrun.state === '02_close' &amp;&amp; payrun.approval_state === 'approved'</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='gen_report']" position="attributes">
+            <attribute name="isVisible">payrun.state === '02_close' &amp;&amp; payrun.approval_state === 'approved'</attribute>
+        </xpath>
+
+        <!-- 3. 在 compute slot 之前插入 5 个 tier 按钮 -->
+        <xpath expr="//t[@t-set-slot='compute']" position="before">
+            <t t-set-slot="tg_submit"
+               isVisible="payrun.approval_state === 'draft'"
+               isPriority="true">
+                <ViewButton className="'btn btn-primary'"
+                            clickParams="{type: 'object', name: 'action_submit'}"
+                            record="props.record"
+                            string.translate="Submit"/>
+            </t>
+            <t t-set-slot="tg_validate"
+               isVisible="payrun.approval_state === 'approving' &amp;&amp; payrun.can_review"
+               isPriority="true">
+                <ViewButton className="'btn btn-success'"
+                            clickParams="{type: 'object', name: 'validate_tier'}"
+                            record="props.record"
+                            string.translate="Validate"/>
+            </t>
+            <t t-set-slot="tg_reject"
+               isVisible="payrun.approval_state === 'approving' &amp;&amp; payrun.can_review"
+               isPriority="true">
+                <ViewButton className="'btn btn-danger'"
+                            clickParams="{type: 'object', name: 'reject_tier'}"
+                            record="props.record"
+                            string.translate="Reject"/>
+            </t>
+            <t t-set-slot="tg_withdraw"
+               isVisible="payrun.approval_state === 'approving'"
+               isPriority="true">
+                <ViewButton className="'btn btn-secondary'"
+                            clickParams="{type: 'object', name: 'action_draft'}"
+                            record="props.record"
+                            string.translate="Withdraw to Draft"/>
+            </t>
+            <t t-set-slot="tg_ack"
+               isVisible="payrun.approval_state === 'rejected'"
+               isPriority="true">
+                <ViewButton className="'btn btn-warning'"
+                            clickParams="{type: 'object', name: 'action_ack'}"
+                            record="props.record"
+                            string.translate="Acknowledge &amp; Edit"/>
+            </t>
+        </xpath>
+
+        <!-- 4. approval_state badge：放在 state bubble 前。
+             align-self-start 让 badge 只占内容宽度，不被父级 flex-column 拉满。
+             文案手动映射到 Title-Case，跟 kanban widget="badge" 的输出一致。 -->
+        <xpath expr="//div[hasclass('o_payrun_state')]/StatusBubble" position="before">
+            <span t-att-class="'badge align-self-start mb-1 ' + (
+                payrun.approval_state === 'approved' ? 'text-bg-success' :
+                payrun.approval_state === 'approving' ? 'text-bg-warning' :
+                payrun.approval_state === 'rejected' ? 'text-bg-danger' :
+                'text-bg-info'
+            )">
+                <t t-if="payrun.approval_state === 'approved'">Approved</t>
+                <t t-elif="payrun.approval_state === 'approving'">Approving</t>
+                <t t-elif="payrun.approval_state === 'rejected'">Rejected</t>
+                <t t-else="">Draft</t>
+            </span>
+        </xpath>
+
+        <!-- 5. reviews 行：跨满下方整行，跟 kanban 共用 .o_payrun_reviews_row 样式
+             OWL Field 用 type 做 widget 查找（不是 widget），这里要写 type='tier_validation' -->
+        <xpath expr="//div[hasclass('o_payrun_buttons')]" position="after">
+            <div class="o_payrun_reviews_row"
+                 t-if="payrun.review_ids and payrun.review_ids.records and payrun.review_ids.records.length"
+                 t-on-click.stop="() => {}">
+                <Field name="'review_ids'" record="props.record" type="'tier_validation'"/>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

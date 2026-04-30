@@ -363,9 +363,13 @@ class HrPayslipRun(models.Model):
                 date_from = slip_tz.localize(datetime.combine(slip.date_from, time.min)).astimezone(utc).replace(tzinfo=None)
                 date_to = slip_tz.localize(datetime.combine(slip.date_to, time.max)).astimezone(utc).replace(tzinfo=None)
                 if version_work_entries := all_work_entries.get(slip.version_id):
-                    version_work_entries.filtered_domain([
-                        ('date_stop', '<=', date_to),
-                        ('date_start', '>=', date_from),
+                    # @CODE_REFACTOR: 上游使用了 hr.work.entry 在 19.0 已不存在的 date_start/date_stop 字段，
+                    # 在已有 payslip 的 payrun 上重新点 generate payslips 时会抛 KeyError: 'date_stop'。
+                    # 19.0 中 hr.work.entry 只有单个 date 字段（见 hr_work_entry/models/hr_work_entry.py），
+                    # 这里改为按 date 过滤，并把过滤结果赋回去（原代码丢弃了返回值，是个隐藏 bug）。
+                    version_work_entries = version_work_entries.filtered_domain([
+                        ('date', '<=', date_to.date()),
+                        ('date', '>=', date_from.date()),
                     ])
                     version_work_entries._check_undefined_slots(slip.date_from, slip.date_to)
 

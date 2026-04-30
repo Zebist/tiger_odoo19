@@ -5,10 +5,27 @@ from odoo.exceptions import UserError
 KPI_INPUT_CODE = 'KPIBONUS'
 KPI_GRADE_RATES = {'A': 1.0, 'B': 0.5, 'C': 0.0}
 _KPI_SYNC_CTX = 'tg_payroll_kpi_sync'
+# tier server action 触发的 auto-confirm 通过此 context flag 绕过 run_approval_state 守门
+_AUTO_CONFIRM_CTX = 'tg_payroll_auto_confirm'
 
 
 class HrPayslip(models.Model):
-    _inherit = 'hr.payslip'
+    _inherit = ['hr.payslip', 'form.readonly.mixin']
+
+    payslip_run_id = fields.Many2one(required=True)
+    # related from run，供视图守门和后端检查使用
+    run_approval_state = fields.Selection(
+        related='payslip_run_id.approval_state',
+        store=False,
+    )
+
+    def _get_view_readonly_expr(self):
+        # run 进入审批 / 已审批后整张 form / 该 list row 自动只读，
+        # 由 run 上的审批流统一管控（mixin 在 form 和 list 两种视图里都生效）
+        return "run_approval_state in ('approving', 'approved')"
+
+    def _get_view_readonly_depends(self):
+        return ('run_approval_state',)
 
     kpi_grade = fields.Selection(
         [('A', 'A (100%)'), ('B', 'B (50%)'), ('C', 'C (0%)')],
@@ -130,7 +147,62 @@ class HrPayslip(models.Model):
             },
         }
 
+    # ==================================================================
+    # 守门：阻止从 import wizard 往非 draft 的 run 里塞 / 覆盖 slip
+    # OCA tier 在 hr.payslip.run 上已挡了 ORM write，但 hr.payslip 没装 mixin，
+    # import 是最容易被忽略的绕审批流通道。这里在 load() 出口处统一兜底。
+    # 合法迁移场景（如初始导入历史 slip 到已 archive 的 run）走 ctx 旁路。
+    # ==================================================================
 
+    @api.model
+    def load(self, fields, data):
+        res = super().load(fields, data)
+        if self.env.context.get('tg_payroll_allow_import'):
+            return res
+        ids = res.get('ids') or []
+        if not ids:
+            return res
+        slips = self.browse(ids)
+        locked = slips.filtered(lambda s: s.payslip_run_id and s.payslip_run_id.approval_state != 'draft')
+        if locked:
+            raise UserError(_(
+                "Cannot import payslips into pay run(s) that are not in draft state: %(runs)s.\n"
+                "Imports are only allowed for draft runs. Use the approval flow for changes.",
+                runs=', '.join(sorted(set(locked.payslip_run_id.mapped('display_name')))),
+            ))
+        return res
+
+    # ==================================================================
+    # 审批流守门 + delegation 到 run
+    # ==================================================================
+
+    def action_payslip_done(self):
+        # 仅 run 审批通过后才允许 confirm；server action 通过 _AUTO_CONFIRM_CTX 绕过
+        for slip in self:
+            if self.env.context.get(_AUTO_CONFIRM_CTX):
+                continue
+            if slip.run_approval_state != 'approved':
+                raise UserError(_(
+                    "Pay run must be fully approved before confirming payslips. "
+                    "Submit the pay run for approval first."
+                ))
+        return super().action_payslip_done()
+
+    def action_payslip_paid(self):
+        for slip in self:
+            if slip.run_approval_state != 'approved':
+                raise UserError(_(
+                    "Pay run must be approved before marking payslip as paid."
+                ))
+        return super().action_payslip_paid()
+
+    def action_payslip_payment_report(self, export_format='csv'):
+        for slip in self:
+            if slip.run_approval_state != 'approved':
+                raise UserError(_(
+                    "Payment report requires pay run approval."
+                ))
+        return super().action_payslip_payment_report(export_format=export_format)
 
     # ------------------------------------------------------------------
     # 薪资规则辅助方法

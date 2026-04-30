@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+    Pay Run 审批流（hr.payslip.run）
+    流程：Submit (Finance) → HR (sequence 10) → COO (sequence 20) → 自动 confirm + 发邮件
+    所有 reviewer_group_id 留空，由用户在 UI（Settings → Tier Validation → Definitions）配置。
+    -->
+
+    <!-- 通过最后一道审批后，自动 run.action_validate()：
+         - payslip draft → validated
+         - run.state 01_ready → 02_close
+         - 排队生成 PDF + 发邮件给员工
+         传 tg_payroll_auto_confirm=True 让 hr.payslip 守门放行 -->
+    <record id="server_action_payrun_auto_confirm" model="ir.actions.server">
+        <field name="name">Pay Run: Auto-confirm + send emails after final approval</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_run"/>
+        <field name="state">code</field>
+        <field name="code">record.with_context(payslip_generate_pdf=True, tg_payroll_auto_confirm=True).action_validate()</field>
+    </record>
+
+    <record id="approval_flow_payrun" model="base.approval.flow.zb">
+        <field name="name">Pay Run Approval</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_run"/>
+    </record>
+
+    <!-- Tier 10: HR -->
+    <record id="tier_def_payrun_hr" model="tier.definition">
+        <field name="name">Pay Run - HR</field>
+        <field name="flow_id" ref="approval_flow_payrun"/>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_run"/>
+        <field name="review_type">group</field>
+        <field name="sequence">10</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="has_comment" eval="True"/>
+    </record>
+
+    <!-- Tier 20: COO（last tier，挂 server action 自动 confirm） -->
+    <record id="tier_def_payrun_coo" model="tier.definition">
+        <field name="name">Pay Run - COO</field>
+        <field name="flow_id" ref="approval_flow_payrun"/>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_run"/>
+        <field name="review_type">group</field>
+        <field name="sequence">20</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="has_comment" eval="True"/>
+        <field name="server_action_id" ref="server_action_payrun_auto_confirm"/>
+    </record>
+
+</odoo>

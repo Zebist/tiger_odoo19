@@ -1,0 +1,9 @@
+// 在 hr.payslip.run kanban 卡片下方新增一整行展示 tier reviews。
+// 父容器是 grid + grid-auto-flow: column，本类显式跨满所有列并强制第二行。
+.o_payrun_card .o_payrun_reviews_row {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    width: 100%;
+    padding: 0 1rem 0.5rem;
+    cursor: default;
+}

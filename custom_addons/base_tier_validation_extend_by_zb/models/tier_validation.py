@@ -237,4 +237,4 @@ class TierValidation(models.AbstractModel):
         for rec in self:
             if not rec.flow_id.allow_delete and rec.approval_state != 'draft':
                 raise ValidationError(_('This record cannot be deleted. Please archive it instead, or delete it while in draft state.'))
-        return super()
+        return super().unlink()
