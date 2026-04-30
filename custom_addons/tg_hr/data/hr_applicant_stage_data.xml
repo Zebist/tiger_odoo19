@@ -30,5 +30,4 @@
         <field name="fold" eval="True"/>
         <field name="hired_stage" eval="False"/>
     </record>
-
 </odoo>

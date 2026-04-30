@@ -72,6 +72,9 @@ class TestTGPayrollStructures(TransactionCase):
             'input_line_ids': input_cmds,
             'kpi_grade': kpi_grade,
         })
+        # KPI Grade 同步现已改为按钮触发，测试需显式调用一次
+        if kpi_grade:
+            slip.action_apply_kpi_grade()
         slip.compute_sheet()
         return slip
 

@@ -15,7 +15,6 @@
                 (4, ref('tg_payroll.input_type_abs')),
                 (4, ref('tg_payroll.input_type_late')),
                 (4, ref('tg_payroll.input_type_ot')),
-                (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
                 (4, ref('tg_payroll.input_type_night')),
                 (4, ref('tg_payroll.input_type_prod')),
@@ -35,8 +34,6 @@
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
                 (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
-                (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
             ]"/>
         </record>
@@ -221,6 +218,18 @@
             <field name="amount_python_compute">result = payslip._prorate(version.wage)</field>
         </record>
 
+        <!-- 70: Adjustment -->
+        <record id="tg_rule_bd_intern_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_bd_intern"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+
         <!-- 100: Late Deduction -->
         <record id="tg_rule_bd_intern_late" model="hr.salary.rule">
             <field name="struct_id" ref="tg_struct_bd_intern"/>
@@ -269,7 +278,6 @@
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
                 (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
                 (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
             ]"/>
@@ -543,8 +551,6 @@
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
                 (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
-                (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
                 (4, ref('tg_payroll.input_type_commission')),
             ]"/>
@@ -676,8 +682,6 @@
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
                 (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
-                (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
                 (4, ref('tg_payroll.input_type_commission')),
             ]"/>
@@ -769,8 +773,6 @@
             <field name="rule_ids" eval="[]"/>
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
-                (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
                 (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
                 (4, ref('tg_payroll.input_type_expat')),
@@ -829,6 +831,18 @@
             <field name="amount_other_input_id" ref="input_type_kpi_bonus"/>
         </record>
 
+        <!-- 80: Adjustment -->
+        <record id="tg_rule_cn_ft_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ft"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">80</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
+        </record>
+
         <!-- 110: Absence Deduction -->
         <record id="tg_rule_cn_ft_abs" model="hr.salary.rule">
             <field name="struct_id" ref="tg_struct_cn_ft"/>
@@ -864,9 +878,6 @@
             <field name="rule_ids" eval="[]"/>
             <field name="input_line_type_ids" eval="[
                 (4, ref('tg_payroll.input_type_abs')),
-                (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
-                (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
             ]"/>
         </record>
@@ -884,6 +895,18 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip._compute_cn_ct_attendance_pay()</field>
+        </record>
+
+        <!-- 70: Adjustment -->
+        <record id="tg_rule_cn_ct_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_cn_ct"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">70</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
         </record>
 
         <!-- 999: Net Salary -->
@@ -908,13 +931,9 @@
             <field name="country_id" eval="False"/>
             <field name="rule_ids" eval="[]"/>
             <field name="input_line_type_ids" eval="[
-                (4, ref('tg_payroll.input_type_abs')),
-                (4, ref('tg_payroll.input_type_late')),
-                (4, ref('tg_payroll.input_type_ot')),
                 (4, ref('tg_payroll.input_type_kpi_bonus')),
                 (4, ref('tg_payroll.input_type_adj')),
                 (4, ref('tg_payroll.input_type_expat')),
-                (4, ref('tg_payroll.input_type_trip')),
             ]"/>
         </record>
         <record id="tg_struct_type_sg_mgmt" model="hr.payroll.structure.type">
@@ -967,6 +986,18 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip._prorate(version.housing_allowance)</field>
+        </record>
+
+        <!-- 90: Adjustment -->
+        <record id="tg_rule_sg_mgmt_adj" model="hr.salary.rule">
+            <field name="struct_id" ref="tg_struct_sg_mgmt"/>
+            <field name="name">Adjustment</field>
+            <field name="code">ADJ</field>
+            <field name="sequence">90</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip._compute_adj()</field>
         </record>
 
         <!-- 999: Net Salary -->

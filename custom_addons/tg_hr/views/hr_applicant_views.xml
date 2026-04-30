@@ -200,10 +200,12 @@
                 <group string="Offer Information">
                     <field name="reporting_to_id" options="{'no_quick_create': True}"/>
                     <field name="work_location"/>
-                    <field name="basic_salary"/>
-                    <field name="house_rent_allowance"/>
-                    <field name="medical_allowance"/>
-                    <field name="conveyance_allowance"/>
+                    <field name="structure_type_id" readonly="1"/>
+                    <field name="wage"/>
+                    <field name="basic_salary" readonly="1"/>
+                    <field name="house_rent_allowance" readonly="1"/>
+                    <field name="medical_allowance" readonly="1"/>
+                    <field name="conveyance_allowance" readonly="1"/>
                     <field name="offer_total_amount" readonly="1"/>
                     <field name="basic_salary_upper_zh" />
                 </group>
@@ -357,8 +359,6 @@
                     <group string="Expat Information"
                            invisible="ob_position_type != 'expat'">
                         <group>
-                            <field name="ob_expat_allowance" />
-                            <field name="ob_expat_allowance_type"/>
                             <field name="ob_visa_no"/>
                             <field name="ob_visa_expire"/>
                             <field name="ob_work_permit_expiration_date"/>
@@ -413,7 +413,7 @@
         <field name="arch" type="xml">
             <button name="action_generate_offer" position="attributes">
                 <attribute name="string">Create Offer</attribute>
-                <attribute name="invisible">not active or application_status == 'hired' or is_pool_applicant or salary_offers_count > 0 or not is_in_interview_stage or not interview_passed</attribute>
+                <attribute name="invisible">not active or application_status == 'hired' or is_pool_applicant or has_active_offer or (not is_in_interview_stage and not is_in_offered_stage) or not interview_passed</attribute>
             </button>
         </field>
     </record>

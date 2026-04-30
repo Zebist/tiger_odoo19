@@ -64,6 +64,8 @@ def _create_slip(env, struct_xmlid, emp_name, wage, date_from, date_to, *, input
         'input_line_ids': input_cmds,
         'kpi_grade': kpi_grade,
     })
+    if kpi_grade:
+        slip.action_apply_kpi_grade()
     slip.compute_sheet()
     return slip
 

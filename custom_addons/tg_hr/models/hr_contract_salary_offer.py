@@ -15,10 +15,19 @@ class HrContractSalaryOffer(models.Model):
     reporting_to_id = fields.Many2one("hr.employee", string="Reporting To", required=True)
     work_location = fields.Char(string="Location", required=True)
 
-    basic_salary = fields.Monetary(string="Basic Salary", required=True, default=0.0, currency_field="currency_id")
-    house_rent_allowance = fields.Monetary(string="House Rent Allowance", required=True, default=0.0, currency_field="currency_id")
-    medical_allowance = fields.Monetary(string="Medical Allowance", required=True, default=0.0, currency_field="currency_id")
-    conveyance_allowance = fields.Monetary(string="Conveyance Allowance", required=True, default=0.0, currency_field="currency_id")
+    wage = fields.Monetary(string="Wage", required=True, default=0.0, currency_field="currency_id")
+    structure_type_id = fields.Many2one(
+        'hr.payroll.structure.type',
+        string="Salary Structure Type",
+        related="contract_template_id.structure_type_id",
+        store=True,
+        readonly=True,
+    )
+
+    basic_salary = fields.Monetary(string="Basic Salary", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
+    house_rent_allowance = fields.Monetary(string="House Rent Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
+    medical_allowance = fields.Monetary(string="Medical Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
+    conveyance_allowance = fields.Monetary(string="Conveyance Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
 
     offer_total_amount = fields.Monetary(
         string="Total",
@@ -57,6 +66,32 @@ class HrContractSalaryOffer(models.Model):
         "COMPANY NAME": lambda o: o.company_id.name or "",
         "BASIC SALARY（UPPER）": lambda o: o.basic_salary_upper_zh or "",
     }
+
+    @api.onchange("department_id")
+    def _onchange_department_id_set_reporting_to(self):
+        # 表单里切换部门时，仅在 Reporting To 为空时回填部门 manager
+        for offer in self:
+            if not offer.reporting_to_id and offer.department_id.manager_id:
+                offer.reporting_to_id = offer.department_id.manager_id
+
+    @api.depends(
+        "wage",
+        "structure_type_id",
+        "structure_type_id.hra_pct",
+        "structure_type_id.medical_pct",
+        "structure_type_id.conveyance_pct",
+    )
+    def _compute_salary_breakdown(self):
+        # 复用 hr.version 上的同款拆分算法，确保 offer 与合同一致
+        Version = self.env['hr.version']
+        for offer in self:
+            basic, hra, med, conv = Version._split_wage(
+                offer.wage, offer.structure_type_id, offer.currency_id
+            )
+            offer.basic_salary = basic
+            offer.house_rent_allowance = hra
+            offer.medical_allowance = med
+            offer.conveyance_allowance = conv
 
     @api.depends("basic_salary", "house_rent_allowance", "medical_allowance", "conveyance_allowance")
     def _compute_offer_total_amount(self):

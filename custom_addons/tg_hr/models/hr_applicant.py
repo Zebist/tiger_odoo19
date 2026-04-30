@@ -95,6 +95,12 @@ class HrApplicant(models.Model):
         compute_sudo=True,
         store=False,
     )
+    # 是否处于 Offered 阶段（与 is_in_interview_stage 对称，用于按钮显隐）
+    is_in_offered_stage = fields.Boolean(
+        compute="_compute_tg_hr_stage_flags",
+        compute_sudo=True,
+        store=False,
+    )
     # 非 New 阶段时为 True（控制 Interview Process 页显隐）
     show_interview_process_page = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
@@ -103,6 +109,12 @@ class HrApplicant(models.Model):
     )
     # 处于 Offered 阶段时为 True（控制 Onboarding Preparation 页显隐）
     show_onboarding_page = fields.Boolean(
+        compute="_compute_tg_hr_stage_flags",
+        compute_sudo=True,
+        store=False,
+    )
+    # 是否存在未被拒绝的 offer（用于控制 Create Offer 按钮显隐）
+    has_active_offer = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
         compute_sudo=True,
         store=False,
@@ -226,11 +238,6 @@ class HrApplicant(models.Model):
     ob_trial_period_months = fields.Integer(string='Trial Period (Months)', tracking=True, default=6)
 
     # ── Onboarding: 外派专项（position_type == expat）────────────────────
-    ob_expat_allowance = fields.Float(string='Expat Allowance', tracking=True)
-    ob_expat_allowance_type = fields.Selection(
-        [('monthly', 'Monthly'), ('annual', 'Annual')],
-        string='Allowance Period', tracking=True, default='monthly',
-    )
     ob_visa_no = fields.Char(string='Visa No', tracking=True)
     ob_visa_expire = fields.Date(string='Visa Expiry', tracking=True)
     ob_work_permit_expiration_date = fields.Date(string='Work Permit Expiry', tracking=True)
@@ -324,6 +331,7 @@ class HrApplicant(models.Model):
             applicant.show_first_contact_button = bool(stage_id == init_stage_id and applicant.resume_reviewed)
             applicant.show_interview_button = bool(stage_id == contacted_stage_id and applicant.first_contact_made)
             applicant.is_in_interview_stage = bool(stage_id == interview_stage_id)
+            applicant.is_in_offered_stage = bool(stage_id == offered_stage_id)
             applicant.show_pass_interview_button = bool(stage_id == interview_stage_id and not applicant.interview_passed)
             # 有阶段且不是 New 阶段时显示 Interview Process 页
             applicant.show_interview_process_page = bool(stage_id and stage_id != new_stage_id)
@@ -335,6 +343,7 @@ class HrApplicant(models.Model):
                 and latest_offer.state != 'refused'
             )
             applicant.show_onboarding_page = bool(stage_id == offered_stage_id and offer_approved)
+            applicant.has_active_offer = any(o.state != 'refused' for o in applicant.salary_offer_ids)
 
     def action_open_review_wizard(self):
         self.ensure_one()
@@ -387,6 +396,13 @@ class HrApplicant(models.Model):
     def action_pass_interview(self):
         self.ensure_one()
         self.interview_passed = True
+
+    def _get_offer_values(self):
+        # Reporting To 默认取部门 manager
+        vals = super()._get_offer_values()
+        if not vals.get("reporting_to_id") and self.department_id.manager_id:
+            vals["reporting_to_id"] = self.department_id.manager_id.id
+        return vals
 
     def archive_applicant(self):
         res = super().archive_applicant()
@@ -664,10 +680,11 @@ class HrApplicant(models.Model):
         if not employee:
             return action
         self.employee_id = employee.id
+        # 回写 employee 到该 applicant 的所有 offer，便于追溯
+        offers_to_link = self.salary_offer_ids.filtered(lambda o: not o.employee_id)
+        if offers_to_link:
+            offers_to_link.sudo().write({'employee_id': employee.id})
         self._load_contract_template_from_offer(employee)
-        if self.ob_expat_allowance:
-            employee.expat_allowance = self.ob_expat_allowance
-            employee.expat_allowance_type = self.ob_expat_allowance_type
         self._create_employee_bank_account(employee)
         self._push_onboarding_attachments(employee)
         return action
@@ -768,6 +785,3 @@ class HrApplicant(models.Model):
             newest = work_permit_atts.sorted('id', reverse=True)[0]
             employee.sudo().has_work_permit = newest.file
 
-    @api.onchange('ob_position_type')
-    def onchange_position(self):
-        self.ob_expat_allowance = 0

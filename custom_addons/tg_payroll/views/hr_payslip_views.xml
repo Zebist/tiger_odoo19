@@ -7,10 +7,24 @@
         <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payslip_run_id']" position="after">
-                <field name="kpi_grade" readonly="state in ['cancel', 'validated', 'paid']"/>
-                <field name="kpi_grade_amount"
-                       invisible="not kpi_grade"
-                       readonly="1"/>
+                <field name="kpi_base" invisible="1"/>
+                <field name="kpi_grade"
+                       invisible="not kpi_base"
+                       readonly="state in ['cancel', 'validated', 'paid']"/>
+                <label for="kpi_grade_amount" string="KPI Preview"
+                       invisible="not kpi_base or not kpi_grade"/>
+                <div class="o_row" invisible="not kpi_base or not kpi_grade">
+                    <field name="kpi_grade_amount" nolabel="1" readonly="1"/>
+                    <button name="action_apply_kpi_grade"
+                            type="object"
+                            string="Apply to KPIBONUS"
+                            class="btn-primary btn-sm ms-2"
+                            invisible="state in ['cancel', 'validated', 'paid']"/>
+                </div>
+                <div class="alert alert-warning mb-0" role="alert" colspan="2"
+                     invisible="not kpi_input_mismatch_message">
+                    <field name="kpi_input_mismatch_message" nolabel="1" readonly="1"/>
+                </div>
             </xpath>
         </field>
     </record>

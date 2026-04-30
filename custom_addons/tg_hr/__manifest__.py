@@ -9,6 +9,7 @@
         'base_by_zb',
         'hr',
         'hr_payroll',
+        'tg_payroll',
         'hr_recruitment',
         'hr_contract_salary',
         'documents',

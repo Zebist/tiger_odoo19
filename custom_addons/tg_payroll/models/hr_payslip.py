@@ -22,6 +22,12 @@ class HrPayslip(models.Model):
         compute='_compute_kpi_grade_amount',
         help="Auto-computed KPI bonus based on KPI Grade and the contract's KPI Base.",
     )
+    # 视图绑定用：合同没配 KPI Base 时整块 KPI Grade 区域不显示
+    kpi_base = fields.Monetary(related='version_id.kpi_base', readonly=True)
+    # KPIBONUS 输入与 KPI Grade 预期值不一致时的提示文案，空字符串表示一致或无需检查
+    kpi_input_mismatch_message = fields.Char(
+        compute='_compute_kpi_input_mismatch_message',
+    )
 
     @api.depends('kpi_grade', 'version_id.kpi_base')
     def _compute_kpi_grade_amount(self):
@@ -32,55 +38,104 @@ class HrPayslip(models.Model):
             rate = KPI_GRADE_RATES.get(slip.kpi_grade, 0.0)
             slip.kpi_grade_amount = (slip.version_id.kpi_base or 0.0) * rate
 
-    @api.onchange('kpi_grade')
-    def _onchange_kpi_grade(self):
-        # 客户端预览：即时反映在 input 行
-        kpi_type = self.env['hr.payslip.input.type'].search(
-            [('code', '=', KPI_INPUT_CODE)], limit=1)
+    @api.depends('kpi_grade', 'kpi_grade_amount', 'input_line_ids.amount', 'input_line_ids.code')
+    def _compute_kpi_input_mismatch_message(self):
         for slip in self:
-            existing = slip.input_line_ids.filtered(lambda l: l.code == KPI_INPUT_CODE)
-            if slip.kpi_grade:
-                amount = slip.kpi_grade_amount
-                if existing:
-                    existing[0].amount = amount
-                    if len(existing) > 1:
-                        slip.input_line_ids -= existing[1:]
-                elif kpi_type:
-                    slip.input_line_ids = [(0, 0, {
-                        'input_type_id': kpi_type.id,
-                        'amount': amount,
-                        'name': kpi_type.name,
-                    })]
-            elif existing:
-                slip.input_line_ids -= existing
+            if not slip.kpi_grade:
+                slip.kpi_input_mismatch_message = False
+                continue
+            kpi_inputs = slip.input_line_ids.filtered(lambda l: l.code == KPI_INPUT_CODE)
+            if not kpi_inputs:
+                slip.kpi_input_mismatch_message = False
+                continue
+            actual = sum(kpi_inputs.mapped('amount'))
+            currency = slip.currency_id or slip.company_id.currency_id
+            if currency and currency.compare_amounts(actual, slip.kpi_grade_amount) != 0:
+                slip.kpi_input_mismatch_message = _(
+                    "KPIBONUS input is %(actual)s, but KPI Grade %(grade)s expects %(expected)s. "
+                    "Click Apply to sync, or adjust the input manually.",
+                    actual=currency.format(actual),
+                    grade=slip.kpi_grade,
+                    expected=currency.format(slip.kpi_grade_amount),
+                )
+            else:
+                slip.kpi_input_mismatch_message = False
 
-    def _sync_kpi_grade_input(self):
-        # 服务端落库同步（保险一手，覆盖直接 write 的场景）
-        kpi_type = self.env['hr.payslip.input.type'].search(
-            [('code', '=', KPI_INPUT_CODE)], limit=1)
-        for slip in self:
-            existing = slip.input_line_ids.filtered(lambda l: l.code == KPI_INPUT_CODE)
-            if slip.kpi_grade:
-                amount = slip.kpi_grade_amount
-                ctx_self = self.env['hr.payslip.input'].with_context(**{_KPI_SYNC_CTX: True})
-                if existing:
-                    existing[0].with_context(**{_KPI_SYNC_CTX: True}).write({'amount': amount})
-                    if len(existing) > 1:
-                        existing[1:].with_context(**{_KPI_SYNC_CTX: True}).unlink()
-                elif kpi_type:
-                    ctx_self.create({
-                        'payslip_id': slip.id,
-                        'input_type_id': kpi_type.id,
-                        'amount': amount,
-                        'name': kpi_type.name,
-                    })
-            elif existing:
-                existing.with_context(**{_KPI_SYNC_CTX: True}).unlink()
+    def action_apply_kpi_grade(self):
+        """显式按钮：根据 KPI Grade 添加/更新 KPIBONUS input 行，落 chatter + 弹通知。"""
+        self.ensure_one()
+        if self.state in ('cancel', 'validated', 'paid'):
+            raise UserError(_("Cannot modify KPIBONUS when the payslip is %s.", self.state))
+        if not self.kpi_grade:
+            raise UserError(_("Please select a KPI Grade first."))
+
+        kpi_type = self.env['hr.payslip.input.type'].search([('code', '=', KPI_INPUT_CODE)], limit=1)
+        if not kpi_type:
+            raise UserError(_(
+                "KPIBONUS payslip input type not found. "
+                "Please ensure the input type with code '%s' exists.", KPI_INPUT_CODE))
+
+        existing = self.input_line_ids.filtered(lambda l: l.code == KPI_INPUT_CODE)
+        old_amount = existing[0].amount if existing else None
+        new_amount = self.kpi_grade_amount
+
+        # 写入 / 创建（带 sync ctx 绕过 _check_kpi_grade_conflict）
+        if existing:
+            existing[0].with_context(**{_KPI_SYNC_CTX: True}).write({'amount': new_amount})
+            if len(existing) > 1:
+                existing[1:].with_context(**{_KPI_SYNC_CTX: True}).unlink()
+        else:
+            self.env['hr.payslip.input'].with_context(**{_KPI_SYNC_CTX: True}).create({
+                'payslip_id': self.id,
+                'input_type_id': kpi_type.id,
+                'amount': new_amount,
+                'name': kpi_type.name,
+            })
+
+        # 无 version 的草稿 payslip 上 currency_id 为 False，回退到公司币
+        currency = self.currency_id or self.company_id.currency_id
+        kpi_base = self.version_id.kpi_base or 0.0
+        if old_amount is None:
+            title = _("KPIBONUS added")
+            body = _("Added KPIBONUS input: %(amt)s (Grade %(grade)s × Base %(base)s)",
+                     amt=currency.format(new_amount or 0.0),
+                     grade=self.kpi_grade,
+                     base=currency.format(kpi_base))
+        elif old_amount != new_amount:
+            title = _("KPIBONUS updated")
+            body = _("Updated KPIBONUS input: %(old)s → %(new)s (Grade %(grade)s × Base %(base)s)",
+                     old=currency.format(old_amount),
+                     new=currency.format(new_amount or 0.0),
+                     grade=self.kpi_grade,
+                     base=currency.format(kpi_base))
+        else:
+            title = _("KPIBONUS unchanged")
+            body = _("KPIBONUS already equals %(amt)s — nothing to update.",
+                     amt=currency.format(new_amount or 0.0))
+
+        self.message_post(body=body, subtype_xmlid='mail.mt_note')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': title,
+                'message': body,
+                'type': 'success',
+                'sticky': False,
+                'next': {
+
+                    'type': 'ir.actions.client',
+                    'tag': 'soft_reload',
+                }
+            },
+        }
+
+
 
     # ------------------------------------------------------------------
     # 薪资规则辅助方法
     # 设计原则：每条有逻辑的薪资规则在这里对应一个方法，规则 XML 只调一行。
-    # 后续新结构需要相同逻辑时直接复用方法，不重复写 Python 代码。
+    # 后续新结构需要相同逻辑时直接复用方法，不重复写 Python 代码。x
     # ------------------------------------------------------------------
 
     def _prorate(self, amount):
@@ -129,6 +184,7 @@ class HrPayslip(models.Model):
         """出差补助：TRIP_days × version.trip_daily。"""
         self.ensure_one()
         return self._input_amount('TRIP') * (self.version_id.trip_daily or 0.0)
+
 
     def _compute_cn_ct_attendance_pay(self):
         """中国外包（日薪×出勤）：
@@ -228,45 +284,38 @@ class HrPayslip(models.Model):
             monthly_tax = monthly_tax / total_days * active_days
         return -monthly_tax
 
-    def write(self, vals):
-        res = super().write(vals)
-        if 'kpi_grade' in vals or 'version_id' in vals:
-            self._sync_kpi_grade_input()
-        return res
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        slips = super().create(vals_list)
-        slips_with_grade = slips.filtered('kpi_grade')
-        if slips_with_grade:
-            slips_with_grade._sync_kpi_grade_input()
-        return slips
-
-
 class HrPayslipInput(models.Model):
     _inherit = 'hr.payslip.input'
 
-    def _check_kpi_grade_conflict(self):
+    def _check_kpi_input_conflict(self):
+        """KPIBONUS 唯一性守门：同一 payslip 上 KPIBONUS 行唯一，
+        防重复导入 / 重复手填导致双倍发钱。
+        Apply 按钮通过 _KPI_SYNC_CTX 绕过此检查（按钮内部走 update 而非 create）。"""
         if self.env.context.get(_KPI_SYNC_CTX):
             return
         for inp in self:
-            if inp.code == KPI_INPUT_CODE and inp.payslip_id.kpi_grade:
+            if inp.code != KPI_INPUT_CODE:
+                continue
+            siblings = inp.payslip_id.input_line_ids.filtered(
+                lambda l: l.code == KPI_INPUT_CODE and l.id != inp.id
+            )
+            if siblings:
                 raise UserError(_(
-                    "Cannot set KPIBONUS input on payslip '%(slip)s' while KPI Grade "
-                    "is selected (%(grade)s). Clear the KPI Grade first to allow manual "
-                    "or imported KPIBONUS values.",
+                    "Payslip '%(slip)s' already has a KPIBONUS input "
+                    "(amount %(amt)s). KPIBONUS must be unique per payslip — "
+                    "update the existing line instead of adding a new one.",
                     slip=inp.payslip_id.display_name,
-                    grade=inp.payslip_id.kpi_grade,
+                    amt=siblings[0].amount,
                 ))
 
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        records._check_kpi_grade_conflict()
+        records._check_kpi_input_conflict()
         return records
 
     def write(self, vals):
         res = super().write(vals)
         if {'amount', 'input_type_id', 'payslip_id'} & set(vals):
-            self._check_kpi_grade_conflict()
+            self._check_kpi_input_conflict()
         return res

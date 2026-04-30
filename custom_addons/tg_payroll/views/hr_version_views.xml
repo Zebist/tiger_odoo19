@@ -32,4 +32,44 @@
         </field>
     </record>
 
+    <record id="hr_employee_form_view_inherit_tg_payroll" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.tg_payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- 把 Breakdown 嵌到 payroll_group 里作为右列，与 wage(左列) 视觉对齐 -->
+            <xpath expr="//page[@name='payroll_information']//group[@name='contract']" position="after">
+                <group name="tg_breakdown" style="padding-top: 20px;"
+                       groups="hr_payroll.group_hr_payroll_user">
+                    <div colspan="2" class="row">
+                        <span class="col-12 text-uppercase fw-bolder small">Salary Breakdown</span>
+                        <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"/>
+                    </div>
+                    <field name="basic_amount" readonly="1"/>
+                    <field name="hra_amount" readonly="1"/>
+                    <field name="medical_amount" readonly="1"/>
+                    <field name="conveyance_amount" readonly="1"/>
+                    <field name="daily_wage" readonly="1"/>
+                </group>
+            </xpath>
+            <!-- Standard Allowances 与 wage 关系较弱，下方独立成段 -->
+            <xpath expr="//page[@name='payroll_information']//group[@name='payroll_group']" position="after">
+                <group string="Standard Allowances" name="tg_allowances"
+                       groups="hr_payroll.group_hr_payroll_user">
+                    <group>
+                        <field name="kpi_base"/>
+                        <field name="phone_allowance"/>
+                        <field name="perfect_attend_amount"/>
+                        <field name="housing_allowance"/>
+                    </group>
+                    <group>
+                        <field name="expat_daily"/>
+                        <field name="trip_daily"/>
+                        <field name="overtime"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
