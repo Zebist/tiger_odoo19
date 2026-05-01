@@ -4,6 +4,7 @@ import logging
 from datetime import timedelta
 
 from odoo import _, api, fields, models, Command
+from odoo.addons.base_by_zb.tools.amount import amount_to_chinese_upper
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -60,6 +61,7 @@ class HrContractSalaryOffer(models.Model):
         compute="_compute_working_time_text",
         store=True,
         readonly=False,
+        tracking=True,
         help="Working hours text shown in the offer email, e.g. '9:30 to 18:30'.",
     )
     offer_email_recipient = fields.Char(
@@ -88,7 +90,6 @@ class HrContractSalaryOffer(models.Model):
         "LOCATION": lambda o: o.work_location or "",
         "JOB LOCATION": lambda o: o.work_location or "",
         "DATE OF JOINING": lambda o: o.contract_start_date or "",
-        "DATE OF JOING": lambda o: o.contract_start_date or "",
         "DATE START": lambda o: o.contract_start_date or "",
         "DATE END": lambda o: o.contract_end_date or _("Unlimited"),
         "BASIC SALARY": lambda o: o.basic_salary,
@@ -139,15 +140,15 @@ class HrContractSalaryOffer(models.Model):
     @api.depends("basic_salary", "currency_id")
     def _compute_basic_salary_upper_zh(self):
         for offer in self:
-            offer.basic_salary_upper_zh = offer._amount_to_chinese_upper(offer.basic_salary or 0.0)
+            offer.basic_salary_upper_zh = amount_to_chinese_upper(offer.basic_salary or 0.0)
 
     @api.depends("company_id")
     def _compute_email_template_id(self):
-        # 根据公司挑选默认 offer 邮件模板：模板 company_ids 包含当前公司即匹配
+        # 根据公司挑选默认 offer 邮件模板：模板 company_ids 包含当前公司即匹配。
+        # readonly=False 允许手动覆盖；公司变化时会重算（覆盖手选）—— 简单策略，
+        # 用户切换公司后请重新检查模板是否需要再调整。
         Template = self.env["mail.template"].sudo()
         for offer in self:
-            if offer.email_template_id:
-                continue
             if not offer.company_id:
                 offer.email_template_id = False
                 continue
@@ -156,6 +157,7 @@ class HrContractSalaryOffer(models.Model):
                     ("model", "=", "hr.contract.salary.offer"),
                     ("company_ids", "in", offer.company_id.id),
                 ],
+                order="id asc",
                 limit=1,
             )
             offer.email_template_id = tmpl or False
@@ -184,67 +186,6 @@ class HrContractSalaryOffer(models.Model):
             h += 1
             m = 0
         return "%d:%02d" % (h, m)
-
-    def _amount_to_chinese_upper(self, amount):
-        """将金额转中文大写（人民币格式：元/角/分）。"""
-        # 仅用于展示与预填，非会计核算；简化实现满足合同模板场景。
-        cn_num = "零壹贰叁肆伍陆柒捌玖"
-        cn_unit = ["", "拾", "佰", "仟"]
-        cn_group = ["", "万", "亿", "兆"]
-        amount = round(float(amount or 0.0), 2)
-        if amount == 0:
-            return "零元整"
-        sign = "负" if amount < 0 else ""
-        amount = abs(amount)
-        integer = int(amount)
-        fraction = int(round((amount - integer) * 100))
-        jiao = fraction // 10
-        fen = fraction % 10
-
-        def _four_to_cn(n):
-            s = ""
-            zero = False
-            for i in range(4):
-                d = n % 10
-                if d == 0:
-                    if not zero and s:
-                        s = cn_num[0] + s
-                    zero = True
-                else:
-                    s = cn_num[d] + cn_unit[i] + s
-                    zero = False
-                n //= 10
-            return s.strip(cn_num[0])
-
-        groups = []
-        g_idx = 0
-        while integer > 0:
-            part = integer % 10000
-            if part:
-                part_cn = _four_to_cn(part)
-                if part_cn:
-                    groups.insert(0, part_cn + cn_group[g_idx])
-            else:
-                groups.insert(0, "")
-            integer //= 10000
-            g_idx += 1
-
-        int_cn = "".join([g for g in groups if g])
-        # 处理中间断层的零（简化：用正则压缩多个零）
-        int_cn = int_cn.replace("零零", "零")
-        int_cn = int_cn.rstrip("零")
-        int_cn = int_cn or cn_num[0]
-        result = sign + int_cn + "元"
-
-        if jiao == 0 and fen == 0:
-            return result + "整"
-        if jiao:
-            result += cn_num[jiao] + "角"
-        elif fen:
-            result += "零"
-        if fen:
-            result += cn_num[fen] + "分"
-        return result
 
     def action_open_sign_document(self):
         """打开候选人签署页面（手动流程）。"""
@@ -300,7 +241,6 @@ class HrContractSalaryOffer(models.Model):
             lambda i: i.responsible_id == company_item.role_id and i.type_id.item_type == "signature"
         )
         if sig_items:
-            import base64 as _b64
             sig_bytes = company_item.sudo()._get_user_signature()
             if not sig_bytes:
                 raise UserError(_(
@@ -482,14 +422,19 @@ class HrContractSalaryOffer(models.Model):
         return list(set(res + self._TIER_VALIDATION_EXTRA_FIELDS))
 
     # ── Offer Email Sending ──────────────────────────────────────────────
-    def _check_offer_email_ready(self):
-        """检查 offer 邮件渲染所需字段是否齐全。返回缺失字段的 label 列表。"""
+    def _get_missing_offer_email_fields(self):
+        """返回邮件渲染所需但当前缺失的字段 label 列表（空 list 表示就绪）。"""
         self.ensure_one()
         missing = []
         if not self.email_template_id:
             missing.append(_("Email Template"))
-        if not self.applicant_id or not self.applicant_id.email_from:
-            missing.append(_("Applicant Email"))
+        if not self.applicant_id:
+            missing.append(_("Applicant"))
+        else:
+            if not self.applicant_id.email_from:
+                missing.append(_("Applicant Email"))
+            if not self.applicant_id.partner_name:
+                missing.append(_("Applicant Name"))
         if not (self.employee_job_id or self.job_title):
             missing.append(_("Job Title"))
         if not self.department_id:
@@ -504,8 +449,6 @@ class HrContractSalaryOffer(models.Model):
             missing.append(_("Joining Date"))
         if not (self.contract_template_id and self.contract_template_id.hr_responsible_id):
             missing.append(_("HR Responsible (signer)"))
-        if not (self.applicant_id and self.applicant_id.partner_name):
-            missing.append(_("Applicant Name"))
         return missing
 
     def _handle_offer_email_failure(self, reason, silent_fail):
@@ -538,7 +481,7 @@ class HrContractSalaryOffer(models.Model):
     def _send_offer_email(self, silent_fail=False):
         """发送 offer 邮件。silent_fail=True：失败仅留言+activity，不抛异常（自动场景）。"""
         self.ensure_one()
-        missing = self._check_offer_email_ready()
+        missing = self._get_missing_offer_email_fields()
         if missing:
             return self._handle_offer_email_failure(
                 _("Missing required information: %s", ", ".join(missing)),
@@ -573,7 +516,13 @@ class HrContractSalaryOffer(models.Model):
         return True
 
     def action_send_offer_email(self):
-        """手动发送/重发 offer 邮件按钮。失败抛 UserError 触发前端 notification。"""
+        """手动发送/重发 offer 邮件按钮。失败抛 UserError 触发前端 notification。
+
+        注意：当前按钮单选触发；如果未来要改成多选/批量，需要在循环里独立 try/except，
+        否则中途某条失败会触发事务回滚——前面已 SMTP 投递的邮件无法回滚，但
+        offer_email_sent_date / state 等数据库字段会被 rollback，造成"邮件发了但
+        DB 显示未发"的脏状态。
+        """
         if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
             raise UserError(_("You are not allowed to send offer emails."))
         for offer in self:
