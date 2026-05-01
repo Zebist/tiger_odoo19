@@ -25,6 +25,8 @@
         'data/hr_requisition_stage_data.xml',
         'data/hr_applicant_stage_data.xml',
         'data/cron_offer_t3_warning.xml',
+        'data/resource_calendar_bd_data.xml',
+        'data/mail_template_offer_data.xml',
         'views/hr_requisition_stage_views.xml',
         'views/hr_requisition_views.xml',
         'views/hr_job_views.xml',
@@ -37,6 +39,7 @@
         # Tier Validation 配置数据（审批流/动作）
         'data/tier_validation_data.xml',
         'views/res_users_views.xml',
+        'views/mail_template_views.xml',
         'views/menuitems.xml',
         'report/tg_hr_applicant_report_views.xml',
     ],

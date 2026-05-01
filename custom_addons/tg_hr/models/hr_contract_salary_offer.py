@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import logging
 from datetime import timedelta
 
 from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class HrContractSalaryOffer(models.Model):
@@ -41,6 +44,36 @@ class HrContractSalaryOffer(models.Model):
         compute="_compute_basic_salary_upper_zh",
         store=True,
         readonly=False
+    )
+
+    # ── Offer Email ──────────────────────────────────────────────────────
+    email_template_id = fields.Many2one(
+        "mail.template",
+        string="Offer Email Template",
+        compute="_compute_email_template_id",
+        store=True,
+        readonly=False,
+        domain="[('model', '=', 'hr.contract.salary.offer'), '|', ('company_ids', '=', False), ('company_ids', 'in', company_id)]",
+    )
+    working_time_text = fields.Char(
+        string="Working Time",
+        compute="_compute_working_time_text",
+        store=True,
+        readonly=False,
+        help="Working hours text shown in the offer email, e.g. '9:30 to 18:30'.",
+    )
+    offer_email_recipient = fields.Char(
+        string="Recipient Email",
+        related="applicant_id.email_from",
+        readonly=True,
+    )
+    offer_email_sent_date = fields.Datetime(string="Offer Email Sent On", readonly=True, copy=False)
+    offer_email_state = fields.Selection(
+        [("not_sent", "Not Sent"), ("sent", "Sent"), ("failed", "Failed")],
+        string="Offer Email Status",
+        default="not_sent",
+        readonly=True,
+        copy=False,
     )
 
     SIGN_PREFILL_MAPPING = {
@@ -107,6 +140,50 @@ class HrContractSalaryOffer(models.Model):
     def _compute_basic_salary_upper_zh(self):
         for offer in self:
             offer.basic_salary_upper_zh = offer._amount_to_chinese_upper(offer.basic_salary or 0.0)
+
+    @api.depends("company_id")
+    def _compute_email_template_id(self):
+        # 根据公司挑选默认 offer 邮件模板：模板 company_ids 包含当前公司即匹配
+        Template = self.env["mail.template"].sudo()
+        for offer in self:
+            if offer.email_template_id:
+                continue
+            if not offer.company_id:
+                offer.email_template_id = False
+                continue
+            tmpl = Template.search(
+                [
+                    ("model", "=", "hr.contract.salary.offer"),
+                    ("company_ids", "in", offer.company_id.id),
+                ],
+                limit=1,
+            )
+            offer.email_template_id = tmpl or False
+
+    @api.depends("contract_template_id.resource_calendar_id")
+    def _compute_working_time_text(self):
+        for offer in self:
+            calendar = offer.contract_template_id.resource_calendar_id
+            attendances = calendar.attendance_ids if calendar else False
+            if attendances:
+                hour_from = min(attendances.mapped("hour_from"))
+                hour_to = max(attendances.mapped("hour_to"))
+                offer.working_time_text = "%s to %s" % (
+                    self._format_hour(hour_from),
+                    self._format_hour(hour_to),
+                )
+            else:
+                offer.working_time_text = "9:30 to 18:30"
+
+    @staticmethod
+    def _format_hour(value):
+        # 0.5 -> "0:30", 9.0 -> "9:00", 18.5 -> "18:30"
+        h = int(value)
+        m = int(round((value - h) * 60))
+        if m == 60:
+            h += 1
+            m = 0
+        return "%d:%02d" % (h, m)
 
     def _amount_to_chinese_upper(self, amount):
         """将金额转中文大写（人民币格式：元/角/分）。"""
@@ -369,19 +446,139 @@ class HrContractSalaryOffer(models.Model):
         return sign_request, candidate_partner, company_partner
 
     def action_set_applicant_offered(self, is_ceo=False):
-        """审批通过后将关联 applicant 的 stage 推进到 Offered。
-        manager 职位仅 ceo 可以推进
+        """审批通过后：① 推进 applicant stage 到 Offered ② 自动发送 offer 邮件。
+        manager 职位仅 CEO 通过时才执行（COO 通过时跳过，等 CEO）。
         """
         offered_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_offered", raise_if_not_found=False)
-        if not offered_stage:
-            return
         for offer in self:
             applicant = offer.applicant_id
             if not applicant:
                 continue
             if applicant.job_id.is_manager and not is_ceo:
                 continue
-            applicant.stage_id = offered_stage
+            if offered_stage:
+                applicant.stage_id = offered_stage
+            offer._send_offer_email(silent_fail=True)
+
+    # ── Tier Validation 字段白名单 ───────────────────────────────────────
+    # OCA 的 view 改写用 _get_all_validation_exceptions（→ _get_validation_exceptions），
+    # write 校验用 _get_under/after_validation_exceptions（也走 _get_validation_exceptions），
+    # 所以只需 override 公共入口一次即可同时解除"只读"和"写入拦截"。
+    _TIER_VALIDATION_EXTRA_FIELDS = [
+        "email_template_id",
+        "offer_email_state",
+        "offer_email_sent_date",
+        # 原生字段：审批中/审批后仍允许变化（如拒绝、状态推进）
+        "state",
+        "refusal_reason",
+        "refusal_date",
+    ]
+
+    @api.model
+    def _get_validation_exceptions(self, extra_domain=None, add_base_exceptions=True):
+        res = super()._get_validation_exceptions(
+            extra_domain=extra_domain, add_base_exceptions=add_base_exceptions
+        )
+        return list(set(res + self._TIER_VALIDATION_EXTRA_FIELDS))
+
+    # ── Offer Email Sending ──────────────────────────────────────────────
+    def _check_offer_email_ready(self):
+        """检查 offer 邮件渲染所需字段是否齐全。返回缺失字段的 label 列表。"""
+        self.ensure_one()
+        missing = []
+        if not self.email_template_id:
+            missing.append(_("Email Template"))
+        if not self.applicant_id or not self.applicant_id.email_from:
+            missing.append(_("Applicant Email"))
+        if not (self.employee_job_id or self.job_title):
+            missing.append(_("Job Title"))
+        if not self.department_id:
+            missing.append(_("Department"))
+        if not self.work_location:
+            missing.append(_("Work Location"))
+        if not self.working_time_text:
+            missing.append(_("Working Time"))
+        if not self.reporting_to_id:
+            missing.append(_("Reporting To"))
+        if not self.contract_start_date:
+            missing.append(_("Joining Date"))
+        if not (self.contract_template_id and self.contract_template_id.hr_responsible_id):
+            missing.append(_("HR Responsible (signer)"))
+        if not (self.applicant_id and self.applicant_id.partner_name):
+            missing.append(_("Applicant Name"))
+        return missing
+
+    def _handle_offer_email_failure(self, reason, silent_fail):
+        """统一失败处理：chatter 留言 + activity + 状态置 failed。"""
+        self.ensure_one()
+        self.offer_email_state = "failed"
+        body = _("Offer email NOT sent. Reason: %s", reason)
+        self.message_post(body=body, message_type="comment")
+
+        # 创建 activity 提醒 HR 处理
+        responsible = (
+            (self.applicant_id and self.applicant_id.assigned_hr_id)
+            or self.create_uid
+            or self.env.user
+        )
+        try:
+            self.activity_schedule(
+                "mail.mail_activity_data_todo",
+                user_id=responsible.id,
+                summary=_("Offer email failed — please fix and resend"),
+                note=reason,
+            )
+        except Exception:
+            _logger.exception("Failed to schedule activity for offer email failure (offer %s)", self.id)
+
+        if not silent_fail:
+            raise UserError(reason)
+        return False
+
+    def _send_offer_email(self, silent_fail=False):
+        """发送 offer 邮件。silent_fail=True：失败仅留言+activity，不抛异常（自动场景）。"""
+        self.ensure_one()
+        missing = self._check_offer_email_ready()
+        if missing:
+            return self._handle_offer_email_failure(
+                _("Missing required information: %s", ", ".join(missing)),
+                silent_fail,
+            )
+
+        try:
+            mail_id = self.email_template_id.sudo().send_mail(
+                self.id,
+                force_send=True,
+                email_layout_xmlid="mail.mail_notification_layout",
+            )
+        except Exception as e:
+            _logger.exception("Offer email send_mail raised for offer %s", self.id)
+            return self._handle_offer_email_failure(
+                _("SMTP error: %s", e), silent_fail
+            )
+
+        mail = self.env["mail.mail"].sudo().browse(mail_id)
+        if mail.exists() and mail.state == "exception":
+            return self._handle_offer_email_failure(
+                _("Mail server reported exception: %s", mail.failure_reason or _("unknown")),
+                silent_fail,
+            )
+
+        self.offer_email_sent_date = fields.Datetime.now()
+        self.offer_email_state = "sent"
+        self.message_post(body=_(
+            "Offer email dispatched to %s. Delivery confirmation depends on the recipient mail server.",
+            self.applicant_id.email_from,
+        ))
+        return True
+
+    def action_send_offer_email(self):
+        """手动发送/重发 offer 邮件按钮。失败抛 UserError 触发前端 notification。"""
+        if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
+            raise UserError(_("You are not allowed to send offer emails."))
+        for offer in self:
+            offer._send_offer_email(silent_fail=False)
+        return {"type": "ir.actions.client", "tag": "soft_reload"}
 
     @api.model
     def _cron_notify_offer_start_t3(self):

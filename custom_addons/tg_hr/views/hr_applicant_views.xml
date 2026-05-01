@@ -173,7 +173,36 @@
         <field name="model">hr.contract.salary.offer</field>
         <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/header/button[@name='action_send_by_email']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- 隐藏 Send By Email 的 disabled 占位按钮（无 name，仅 data-hotkey） -->
+            <xpath expr="//form/header/button[@data-hotkey='shift+e' and not(@name)]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- 隐藏 Salary Configurator 按钮（含 disabled 占位，data-hotkey=shift+g 且无 name） -->
+            <xpath expr="//form/header/button[@name='action_jump_to_offer']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form/header/button[@data-hotkey='shift+g' and not(@name)]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- 隐藏 Copy link 按钮（header 里有两个 url widget，分别隐藏） -->
+            <xpath expr="(//form/header/field[@name='url'])[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="(//form/header/field[@name='url'])[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//form/header/button[@name='action_send_by_email']" position="after">
+                <button
+                    name="action_send_offer_email"
+                    type="object"
+                    string="Send Offer Email"
+                    class="btn btn-primary"
+                    groups="tg_hr.group_hr_offer_email_sender,base.group_system"
+                    invisible="approval_state != 'approved'"
+                />
                 <button
                     name="action_auto_sign_as_company"
                     type="object"
@@ -200,6 +229,7 @@
                 <group string="Offer Information">
                     <field name="reporting_to_id" options="{'no_quick_create': True}"/>
                     <field name="work_location"/>
+                    <field name="working_time_text"/>
                     <field name="structure_type_id" readonly="1"/>
                     <field name="wage"/>
                     <field name="basic_salary" readonly="1"/>
@@ -208,6 +238,12 @@
                     <field name="conveyance_allowance" readonly="1"/>
                     <field name="offer_total_amount" readonly="1"/>
                     <field name="basic_salary_upper_zh" />
+                </group>
+                <group string="Offer Email">
+                    <field name="email_template_id" options="{'no_quick_create': True}"/>
+                    <field name="offer_email_recipient"/>
+                    <field name="offer_email_state"/>
+                    <field name="offer_email_sent_date"/>
                 </group>
             </xpath>
             <!-- 隐藏原生 state statusbar -->

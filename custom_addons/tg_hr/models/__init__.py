@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from . import mail_template
 from . import hr_requisition_stage
 from . import hr_requisition
 from . import hr_job

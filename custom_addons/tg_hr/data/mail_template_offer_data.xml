@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- 中文：上海佐津商贸 -->
+    <record id="mail_template_offer_zh_zuojin" model="mail.template">
+        <field name="name">Offer Letter - 中文（佐津）</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="subject">【{{ object.company_id.name }}】录用通知 - {{ object.applicant_id.partner_name }}</field>
+        <field name="email_from">{{ object.contract_template_id.hr_responsible_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_to">{{ object.applicant_id.email_from }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="False"/>
+        <field name="lang">{{ object.applicant_id.partner_id.lang or user.lang }}</field>
+        <field name="body_html" type="html">
+<div style="margin:0px; padding:0px; font-size:14px; line-height:1.7; color:#333;">
+    <p>
+        <t t-out="object.applicant_id.partner_name or ''"/>，您好！
+    </p>
+    <p>
+        恭喜你，你已顺利通过<strong t-out="object.company_id.name or ''"/>面试。<br/>
+        如你确认入职，后续我们将发送正式劳动合同，安排线上 / 线下签约。
+    </p>
+    <p>请你提前整理并提供、准备以下入职所需资料及个人信息：</p>
+    <ol>
+        <li>本人联系电话、常用邮箱</li>
+        <li>身份证复印件</li>
+        <li>学历、学位证书复印件</li>
+        <li>上家单位离职证明</li>
+        <li>紧急联系人姓名 + 紧急联系电话</li>
+        <li>本人名下银行卡信息（卡号 + 完整开户行名称）</li>
+    </ol>
+    <p>后续如有任何问题，欢迎随时和我沟通。</p>
+    <br/>
+    <p style="margin-bottom:0;">
+        <strong t-out="object.company_id.name or ''"/><br/>
+        人力资源部
+    </p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- 英文：Tiger 集团 / Bangladesh -->
+    <record id="mail_template_offer_en_tiger" model="mail.template">
+        <field name="name">Offer Letter - English (Tiger)</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="subject">Offer Letter - {{ object.applicant_id.partner_name }} - {{ object.company_id.name }}</field>
+        <field name="email_from">{{ object.contract_template_id.hr_responsible_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_to">{{ object.applicant_id.email_from }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="False"/>
+        <field name="lang">{{ object.applicant_id.partner_id.lang or user.lang }}</field>
+        <field name="body_html" type="html">
+<div style="margin:0px; padding:0px; font-size:14px; line-height:1.6; color:#333;">
+    <p>Dear <t t-out="object.applicant_id.partner_name or ''"/>,</p>
+    <p>
+        Greetings from HRD of <t t-out="object.company_id.name or ''"/>, a sister concern of Tiger New Energy Co., Ltd.!
+    </p>
+    <p>
+        Congratulations! You have been selected as a
+        <strong t-out="object.employee_job_id.name or object.job_title or ''"/>
+        under the <strong t-out="object.department_id.name or ''"/>
+        of <strong t-out="object.company_id.name or ''"/>.
+        Your job location will be <strong t-out="object.work_location or ''"/>.
+    </p>
+    <p>
+        Your working hour will be <strong t-out="object.working_time_text or ''"/>
+        from Saturday to Thursday, 6 days in a week.
+    </p>
+    <p style="margin-bottom:4px;"><strong>Salary:</strong></p>
+    <ul style="margin-top:0;">
+        <li>Wage: <t t-out="object.wage or 0"/> <t t-out="object.currency_id.name or ''"/> / month</li>
+        <li>TADA: In station: As per company policy</li>
+        <li>TADA: Out station: At actual cost</li>
+        <li>Performance Bonus: As per company policy</li>
+        <li>Festival bonuses: 2 (Per year)</li>
+        <li>Mobile Allowance: As per company policy</li>
+        <li>Leave Encashment: As per organizational policy</li>
+    </ul>
+    <p>Your Supervisor: <strong t-out="object.reporting_to_id.name or ''"/></p>
+    <p>
+        You are requested to submit the required documents as per the list of documents we have provided hereby.
+        Also, you are requested to join us on
+        <strong t-out="object.contract_start_date or ''"/>
+        at 9:30 am at our head office
+        (20F, Suvastu Muskan Tower, Plot 56, Gulshan Avenue, Gulshan 1, Dhaka-1212.)
+    </p>
+    <p>Please fill up the below-mentioned documents and send them back to us through the mail. Give us a reply if you accept the offer.</p>
+    <br/>
+    <p style="margin-bottom:0;">
+        Warm Regards,<br/>
+        <strong t-out="object.contract_template_id.hr_responsible_id.name or ''"/><br/>
+        <t t-out="object.contract_template_id.hr_responsible_id.job_title or ''"/><br/>
+        Human Resources Department<br/>
+        <t t-out="object.company_id.name or ''"/>
+    </p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>

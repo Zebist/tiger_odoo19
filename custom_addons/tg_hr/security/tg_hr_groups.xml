@@ -37,4 +37,18 @@
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
         <field name="implied_ids" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_dept_manager'))]"/>
     </record>
+
+    <!-- Offer Email 权限 -->
+    <record id="res_groups_privilege_tg_hr_offer_email" model="res.groups.privilege">
+        <field name="name">Offer Email</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <!-- 允许手动发送/重发 Offer 邮件 -->
+    <record id="group_hr_offer_email_sender" model="res.groups">
+        <field name="name">Offer Email Sender</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_offer_email"/>
+        <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
 </odoo>

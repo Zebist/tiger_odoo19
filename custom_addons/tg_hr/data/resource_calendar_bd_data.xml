@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+    Bangladesh Standard Working Schedule
+    48 hours / week, Saturday to Thursday (Friday off)
+    Daily: 8:30-12:30 (morning) + 14:30-18:30 (afternoon)
+    2-hour lunch break (12:30-14:30) — 8 working hours per day
+    -->
+    <record id="resource_calendar_bd_standard" model="resource.calendar">
+        <field name="name">Standard 48 hours/week (BD)</field>
+        <field name="hours_per_day">8.0</field>
+        <field name="full_time_required_hours">48.0</field>
+        <field name="tz">Asia/Dhaka</field>
+        <field name="two_weeks_calendar" eval="False"/>
+        <field name="attendance_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'name': 'Saturday Morning',    'sequence': 1,  'dayofweek': '5', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Saturday Afternoon',  'sequence': 2,  'dayofweek': '5', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+            (0, 0, {'name': 'Sunday Morning',      'sequence': 3,  'dayofweek': '6', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Sunday Afternoon',    'sequence': 4,  'dayofweek': '6', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+            (0, 0, {'name': 'Monday Morning',      'sequence': 5,  'dayofweek': '0', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Monday Afternoon',    'sequence': 6,  'dayofweek': '0', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+            (0, 0, {'name': 'Tuesday Morning',     'sequence': 7,  'dayofweek': '1', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Tuesday Afternoon',   'sequence': 8,  'dayofweek': '1', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+            (0, 0, {'name': 'Wednesday Morning',   'sequence': 9,  'dayofweek': '2', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Wednesday Afternoon', 'sequence': 10, 'dayofweek': '2', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+            (0, 0, {'name': 'Thursday Morning',    'sequence': 11, 'dayofweek': '3', 'day_period': 'morning',   'hour_from':  8.5, 'hour_to': 12.5}),
+            (0, 0, {'name': 'Thursday Afternoon',  'sequence': 12, 'dayofweek': '3', 'day_period': 'afternoon', 'hour_from': 14.5, 'hour_to': 18.5}),
+        ]"/>
+    </record>
+
+</odoo>
