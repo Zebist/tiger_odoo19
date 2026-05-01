@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_offer_mark_signed_offline_wizard_form" model="ir.ui.view">
+        <field name="name">hr.offer.mark.signed.offline.wizard.form</field>
+        <field name="model">hr.offer.mark.signed.offline.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Mark Employee Signed Offline">
+                <sheet>
+                    <div class="alert alert-info">
+                        Upload the scanned PDF of the contract signed by the employee.
+                        The file will be attached to the applicant (and to the employee if already created).
+                        The current sign request will be cancelled and the offer marked as fully signed.
+                    </div>
+                    <group>
+                        <field name="offer_id" invisible="1"/>
+                        <field name="signed_file" filename="signed_filename"/>
+                        <field name="signed_filename" invisible="1"/>
+                        <field name="note" placeholder="Optional note (e.g. signed on 2026-05-01 in HR office)"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Confirm"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

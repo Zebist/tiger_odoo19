@@ -5,9 +5,43 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+
+            <!-- 顶部横幅：当前 version 的合同开始日期为空 → 提示 HR 走 Confirm Contract -->
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="version_contract_date_start">
+                    <i class="fa fa-exclamation-triangle me-2"/>
+                    Please review and confirm the contract dates at the bottom of the
+                    <strong>Payroll</strong> tab via <strong>Confirm Contract</strong>.
+                </div>
+                <field name="version_contract_date_start" invisible="1"/>
+            </xpath>
+
+            <!-- Work Information page 末尾加 Onboarding 区（含 Join Date） -->
+            <xpath expr="//page[@name='work_information']//div[@id='o_work_information']" position="inside">
+                <group string="Onboarding">
+                    <field name="join_date"/>
+                </group>
+            </xpath>
+
+            <!-- Payroll tab 既有字段：保留 trial_date_end / grade -->
             <field name="wage_type" position="before">
-                <field name="trial_date_end" />
+                <field name="trial_date_end"/>
+                <field name="grade"/>
             </field>
+
+            <!-- Payroll tab 底部加 Confirm Contract 按钮（checklist 在 wizard 里填，form 不显示） -->
+            <xpath expr="//page[@name='payroll_information']" position="inside">
+                <div class="text-center mt-3 mb-2"
+                     invisible="version_contract_date_start">
+                    <button name="action_open_confirm_contract_wizard"
+                            type="object"
+                            string="Confirm Contract"
+                            class="btn btn-primary"
+                            groups="tg_hr.group_hr_employee_contract_confirm,base.group_system"/>
+                </div>
+            </xpath>
+
         </field>
     </record>
 </odoo>

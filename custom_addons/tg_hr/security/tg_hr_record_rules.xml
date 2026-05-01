@@ -35,4 +35,16 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
+
+    <!-- 系统管理员：可查看所有 Salary Package Offer（避免标准模块 record rule 误伤） -->
+    <record id="rule_hr_contract_salary_offer_system_all_read" model="ir.rule">
+        <field name="name">Salary Package Offer: system can see all</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </odoo>

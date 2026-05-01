@@ -34,6 +34,8 @@
         'wizards/hr_applicant_first_contact_wizard_views.xml',
         'wizards/hr_applicant_interview_wizard_views.xml',
         'wizards/hr_applicant_create_employee_wizard_views.xml',
+        'wizards/hr_offer_mark_signed_offline_wizard_views.xml',
+        'wizards/hr_employee_confirm_contract_wizard_views.xml',
         'views/hr_applicant_views.xml',
         'views/hr_employee_views.xml',
         # Tier Validation 配置数据（审批流/动作）

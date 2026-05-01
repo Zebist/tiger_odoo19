@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_employee_confirm_contract_wizard_form" model="ir.ui.view">
+        <field name="name">hr.employee.confirm.contract.wizard.form</field>
+        <field name="model">hr.employee.confirm.contract.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Contract">
+                <sheet>
+                    <field name="employee_id" invisible="1"/>
+                    <field name="trial_in_progress" invisible="1"/>
+
+                    <group string="Contract Dates">
+                        <field name="contract_date_start"/>
+                        <field name="trial_period_months"/>
+                        <field name="trial_date_end"/>
+                        <!-- 试用期未结束：contract_date_end readonly + 强制 = trial_date_end；过了可编辑 -->
+                        <field name="contract_date_end"
+                               readonly="trial_in_progress"
+                               force_save="1"/>
+                    </group>
+
+                    <group string="Onboarding Checklist">
+                        <div class="alert alert-info" role="alert" colspan="2">
+                            <i class="fa fa-info-circle me-2"/>
+                            Items auto-detected by the system don't need a note. Manually checked items must include a note.
+                        </div>
+
+                        <group>
+                            <label for="chk_contract_signed" string="合同签署"/>
+                            <div>
+                                <field name="chk_contract_signed" class="d-inline-block"/>
+                                <field name="is_auto_contract_signed" invisible="1"/>
+                                <span invisible="not is_auto_contract_signed" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_contract_signed" placeholder="Note (required if manual)"
+                                       invisible="is_auto_contract_signed"
+                                       required="chk_contract_signed and not is_auto_contract_signed"
+                                       class="d-block mt-1"/>
+                            </div>
+
+                            <label for="chk_equipment_issued" string="设备发放"/>
+                            <div>
+                                <field name="chk_equipment_issued" class="d-inline-block"/>
+                                <field name="is_auto_equipment_issued" invisible="1"/>
+                                <span invisible="not is_auto_equipment_issued" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_equipment_issued" placeholder="Note (required if manual)"
+                                       invisible="is_auto_equipment_issued"
+                                       required="chk_equipment_issued and not is_auto_equipment_issued"
+                                       class="d-block mt-1"/>
+                            </div>
+
+                            <label for="chk_lark_account" string="Lark 开通"/>
+                            <div>
+                                <field name="chk_lark_account" class="d-inline-block"/>
+                                <field name="is_auto_lark_account" invisible="1"/>
+                                <span invisible="not is_auto_lark_account" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_lark_account" placeholder="Note (required if manual)"
+                                       invisible="is_auto_lark_account"
+                                       required="chk_lark_account and not is_auto_lark_account"
+                                       class="d-block mt-1"/>
+                            </div>
+
+                            <label for="chk_odoo_account" string="Odoo 账号"/>
+                            <div>
+                                <field name="chk_odoo_account" class="d-inline-block"/>
+                                <field name="is_auto_odoo_account" invisible="1"/>
+                                <span invisible="not is_auto_odoo_account" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_odoo_account" placeholder="Note (required if manual)"
+                                       invisible="is_auto_odoo_account"
+                                       required="chk_odoo_account and not is_auto_odoo_account"
+                                       class="d-block mt-1"/>
+                            </div>
+
+                            <label for="chk_training_completed" string="培训完成"/>
+                            <div>
+                                <field name="chk_training_completed" class="d-inline-block"/>
+                                <field name="is_auto_training_completed" invisible="1"/>
+                                <span invisible="not is_auto_training_completed" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_training_completed" placeholder="Note (required if manual)"
+                                       invisible="is_auto_training_completed"
+                                       required="chk_training_completed and not is_auto_training_completed"
+                                       class="d-block mt-1"/>
+                            </div>
+
+                            <label for="chk_buddy_assigned" string="Buddy 对接"/>
+                            <div>
+                                <field name="chk_buddy_assigned" class="d-inline-block"/>
+                                <field name="is_auto_buddy_assigned" invisible="1"/>
+                                <span invisible="not is_auto_buddy_assigned" class="badge text-bg-success ms-2">auto</span>
+                                <field name="note_buddy_assigned" placeholder="Note (required if manual)"
+                                       invisible="is_auto_buddy_assigned"
+                                       required="chk_buddy_assigned and not is_auto_buddy_assigned"
+                                       class="d-block mt-1"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

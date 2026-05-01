@@ -6,7 +6,7 @@
         <field name="name">Offer Letter - 中文（佐津）</field>
         <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
         <field name="subject">【{{ object.company_id.name }}】录用通知 - {{ object.applicant_id.partner_name }}</field>
-        <field name="email_from">{{ object.contract_template_id.hr_responsible_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_from">{{ object.company_signer_id.email_formatted or user.email_formatted }}</field>
         <field name="email_to">{{ object.applicant_id.email_from }}</field>
         <field name="partner_to" eval="False"/>
         <field name="use_default_to" eval="False"/>
@@ -45,7 +45,7 @@
         <field name="name">Offer Letter - English (Tiger)</field>
         <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
         <field name="subject">Offer Letter - {{ object.applicant_id.partner_name }} - {{ object.company_id.name }}</field>
-        <field name="email_from">{{ object.contract_template_id.hr_responsible_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_from">{{ object.company_signer_id.email_formatted or user.email_formatted }}</field>
         <field name="email_to">{{ object.applicant_id.email_from }}</field>
         <field name="partner_to" eval="False"/>
         <field name="use_default_to" eval="False"/>
@@ -61,7 +61,7 @@
         <strong t-out="object.employee_job_id.name or object.job_title or ''"/>
         under the <strong t-out="object.department_id.name or ''"/>
         of <strong t-out="object.company_id.name or ''"/>.
-        Your job location will be <strong t-out="object.work_location or ''"/>.
+        Your job location will be <strong t-out="(object.work_location_id.name if object.work_location_id else '')"/>.
     </p>
     <p>
         Your working hour will be <strong t-out="object.working_time_text or ''"/>
@@ -89,8 +89,8 @@
     <br/>
     <p style="margin-bottom:0;">
         Warm Regards,<br/>
-        <strong t-out="object.contract_template_id.hr_responsible_id.name or ''"/><br/>
-        <t t-out="object.contract_template_id.hr_responsible_id.job_title or ''"/><br/>
+        <strong t-out="object.company_signer_id.name or ''"/><br/>
+        <t t-out="object.company_signer_id.job_title or ''"/><br/>
         Human Resources Department<br/>
         <t t-out="object.company_id.name or ''"/>
     </p>

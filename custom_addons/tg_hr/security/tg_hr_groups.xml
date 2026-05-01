@@ -14,7 +14,7 @@
     <record id="group_tg_hr_requisition_terminate" model="res.groups">
         <field name="name">Terminate Recruitment</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
-        <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <!-- Onboarding 权限 -->
@@ -45,10 +45,26 @@
         <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
     </record>
 
-    <!-- 允许手动发送/重发 Offer 邮件 -->
+    <!-- 允许手动发送/重发 Offer 邮件、操作 sign 流程（Company Sign / Send Sign Link / Recreate Sign Request 等） -->
     <record id="group_hr_offer_email_sender" model="res.groups">
         <field name="name">Offer Email Sender</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_offer_email"/>
-        <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="implied_ids" eval="[
+            (4, ref('sign.group_sign_user')),
+        ]"/>
+    </record>
+
+    <!-- Employee Onboarding 权限（Confirm Contract 等） -->
+    <record id="res_groups_privilege_tg_hr_employee_onboard" model="res.groups.privilege">
+        <field name="name">Employee Onboarding</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <!-- 允许 confirm employee 合同（首次入职走 wizard 填写日期 + onboarding checklist） -->
+    <record id="group_hr_employee_contract_confirm" model="res.groups">
+        <field name="name">Employee Contract Confirm</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_employee_onboard"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
     </record>
 </odoo>

@@ -17,9 +17,38 @@ class HrContractSalaryOffer(models.Model):
     _tier_validation_manual_config = False
 
     reporting_to_id = fields.Many2one("hr.employee", string="Reporting To", required=True, tracking=True)
-    work_location = fields.Char(string="Location", required=True, tracking=True)
+    work_location_id = fields.Many2one(
+        "hr.work.location",
+        string="Location",
+        required=True,
+        tracking=True,
+        compute="_compute_work_location_id_default_from_applicant",
+        store=True,
+        readonly=False,
+        domain="[('company_id', 'in', [False, company_id])]",
+    )
 
-    wage = fields.Monetary(string="Wage", required=True, default=0.0, currency_field="currency_id", tracking=True)
+    company_signer_id = fields.Many2one(
+        "res.users",
+        string="Company Signer",
+        compute="_compute_company_signer_id",
+        store=True,
+        readonly=False,
+        tracking=True,
+        help="The company-side signer for the offer letter. Defaults to the HR Responsible "
+             "configured on the contract template; can be overridden per offer.",
+    )
+
+    wage = fields.Monetary(
+        string="Wage",
+        required=True,
+        default=0.0,
+        currency_field="currency_id",
+        compute="_compute_wage_default_from_applicant",
+        store=True,
+        readonly=False,
+        tracking=True,
+    )
     structure_type_id = fields.Many2one(
         'hr.payroll.structure.type',
         string="Salary Structure Type",
@@ -78,6 +107,48 @@ class HrContractSalaryOffer(models.Model):
         copy=False,
     )
 
+    # ── Sign Request 状态字段（用于按钮 invisible + 视觉显示） ─────────────
+    has_sign_request = fields.Boolean(
+        string="Has Active Sign Request",
+        compute="_compute_sign_request_state",
+        store=True,
+    )
+    is_company_signed = fields.Boolean(
+        string="Company Signed",
+        compute="_compute_sign_request_state",
+        store=True,
+    )
+    is_employee_signed = fields.Boolean(
+        string="Employee Signed",
+        compute="_compute_sign_request_state",
+        store=True,
+    )
+    sign_invite_sent_to_employee = fields.Datetime(
+        string="Sign Invitation Sent On",
+        readonly=True,
+        copy=False,
+        help="Timestamp of the last time HR sent the sign link to the candidate.",
+    )
+    sign_type = fields.Selection(
+        [("online", "Online"), ("offline", "Offline")],
+        string="Sign Type",
+        readonly=True,
+        copy=False,
+        help="How the offer was signed: online (Odoo Sign flow) or offline (paper signed, scan uploaded).",
+    )
+    is_offer_for_current_user = fields.Boolean(
+        compute="_compute_is_offer_for_current_user",
+        compute_sudo=True,
+        help="True when the current logged-in user is the applicant of this offer "
+             "(used to gate the Employee Sign button to the candidate only).",
+    )
+    offline_sign_note = fields.Text(
+        string="Offline Sign Note",
+        readonly=True,
+        copy=False,
+        help="Optional note recorded by HR when marking offline signed.",
+    )
+
     SIGN_PREFILL_MAPPING = {
         "EMPLOYEE NAME": lambda o: o.applicant_id.partner_name or "",
         "POSITION": lambda o: o.employee_job_id.name or o.job_title or "",
@@ -87,8 +158,8 @@ class HrContractSalaryOffer(models.Model):
             o.department_id.name or "",
         ])),
         "REPORTING TO": lambda o: o.reporting_to_id.name or "",
-        "LOCATION": lambda o: o.work_location or "",
-        "JOB LOCATION": lambda o: o.work_location or "",
+        "LOCATION": lambda o: (o.work_location_id.name or "") if o.work_location_id else "",
+        "JOB LOCATION": lambda o: (o.work_location_id.name or "") if o.work_location_id else "",
         "DATE OF JOINING": lambda o: o.contract_start_date or "",
         "DATE START": lambda o: o.contract_start_date or "",
         "DATE END": lambda o: o.contract_end_date or _("Unlimited"),
@@ -162,6 +233,39 @@ class HrContractSalaryOffer(models.Model):
             )
             offer.email_template_id = tmpl or False
 
+    @api.depends("applicant_id.work_location_id")
+    def _compute_work_location_id_default_from_applicant(self):
+        # 创建 / 关联 applicant 时，若 work_location_id 为空，自动取 applicant.work_location_id 作默认值。
+        # readonly=False 允许 HR 后续调整。
+        for offer in self:
+            if not offer.work_location_id and offer.applicant_id.work_location_id:
+                offer.work_location_id = offer.applicant_id.work_location_id
+
+    @api.depends("applicant_id.salary_proposed")
+    def _compute_wage_default_from_applicant(self):
+        # 创建 / 关联 applicant 时，若 wage 为 0/空，自动取 applicant.salary_proposed 作默认值。
+        # readonly=False 允许 HR 后续手动调整且不会被覆盖（条件是 wage 已非 0）。
+        for offer in self:
+            if not offer.wage and offer.applicant_id.salary_proposed:
+                offer.wage = offer.applicant_id.salary_proposed
+
+    @api.depends("applicant_id.partner_id")
+    @api.depends_context("uid")
+    def _compute_is_offer_for_current_user(self):
+        # 仅当登录用户的 partner 与 applicant.partner_id 一致时为 True
+        user_partner = self.env.user.partner_id
+        for offer in self:
+            applicant_partner = offer.applicant_id.partner_id
+            offer.is_offer_for_current_user = bool(
+                applicant_partner and applicant_partner == user_partner
+            )
+
+    @api.depends("contract_template_id.hr_responsible_id")
+    def _compute_company_signer_id(self):
+        # 默认从合同模板的 HR Responsible 取；用户可手动覆盖（公司变化重算覆盖手选）
+        for offer in self:
+            offer.company_signer_id = offer.contract_template_id.hr_responsible_id or False
+
     @api.depends("contract_template_id.resource_calendar_id")
     def _compute_working_time_text(self):
         for offer in self:
@@ -176,6 +280,40 @@ class HrContractSalaryOffer(models.Model):
                 )
             else:
                 offer.working_time_text = "9:30 to 18:30"
+
+    @api.depends(
+        "state",
+        "sign_request_ids",
+        "sign_request_ids.state",
+        "sign_request_ids.request_item_ids.state",
+        "sign_request_ids.request_item_ids.role_id.name",
+    )
+    def _compute_sign_request_state(self):
+        # offer.state == 'full_signed' 兜底（覆盖电子签 + 线下签）；否则按 sign_request 实际状态算
+        for offer in self:
+            if offer.state == "full_signed":
+                offer.has_sign_request = True
+                offer.is_company_signed = True
+                offer.is_employee_signed = True
+                continue
+            active = offer.sign_request_ids.filtered(
+                lambda r: r.state not in ("canceled", "refused")
+            )[:1]
+            offer.has_sign_request = bool(active)
+            if not active:
+                offer.is_company_signed = False
+                offer.is_employee_signed = False
+                continue
+            company_items = active.request_item_ids.filtered(
+                lambda i: (i.role_id.name or "").strip().upper() == "COMPANY"
+            )
+            employee_items = active.request_item_ids - company_items
+            offer.is_company_signed = bool(company_items) and all(
+                i.state == "completed" for i in company_items
+            )
+            offer.is_employee_signed = bool(employee_items) and all(
+                i.state == "completed" for i in employee_items
+            )
 
     @staticmethod
     def _format_hour(value):
@@ -209,7 +347,15 @@ class HrContractSalaryOffer(models.Model):
         }
 
     def action_auto_sign_as_company(self):
-        """自动完成公司签署，然后候选人可通过邮件链接查看并签署。"""
+        """[DEPRECATED] 自动完成公司签署。
+
+        现行流程改为 HR 在 offer form 上手动点 "Company Sign" 进入签署页签字
+        （见 action_open_company_sign_document），更安全可控。
+        本方法及对应 view 按钮保留代码以备将来需要"一键签"场景时复活，
+        但视图层永久 invisible="1"。请勿移除内部 SIGN_PREFILL_MAPPING 中
+        date / signature 相关 key —— 它们仍被 _create_offer_sign_request 的
+        text 字段预填逻辑共享。
+        """
         self.ensure_one()
         sign_request, candidate_partner, company_partner = self._get_or_create_offer_sign_request()
 
@@ -278,7 +424,7 @@ class HrContractSalaryOffer(models.Model):
         active = self.sign_request_ids.filtered(lambda r: r.state not in ("canceled", "refused"))[:1]
         if active:
             candidate_partner = self.applicant_id.partner_id
-            company_partner = (self.contract_template_id.hr_responsible_id.partner_id or self.env.user.partner_id)
+            company_partner = (self.company_signer_id.partner_id or self.env.user.partner_id)
             return active, candidate_partner, company_partner
         return self._create_offer_sign_request()
 
@@ -306,7 +452,7 @@ class HrContractSalaryOffer(models.Model):
             _("Position"): (self.employee_job_id.name or self.job_title),
             _("Department"): self.department_id.name if self.department_id else None,
             _("Reporting To"): self.reporting_to_id.name if self.reporting_to_id else None,
-            _("Location"): self.work_location,
+            _("Location"): self.work_location_id.name if self.work_location_id else None,
             _("Date of Joining"): self.contract_start_date,
             _("Company Name"): self.company_id.name if self.company_id else None,
         }
@@ -326,7 +472,7 @@ class HrContractSalaryOffer(models.Model):
         if not candidate_partner.email:
             raise UserError(_("The applicant must have a valid email address to sign the document."))
 
-        company_partner = (self.contract_template_id.hr_responsible_id.partner_id or self.env.user.partner_id)
+        company_partner = (self.company_signer_id.partner_id or self.env.user.partner_id)
         if not company_partner.email:
             raise UserError(_("The company signer must have a valid email address to sign the document."))
 
@@ -386,7 +532,8 @@ class HrContractSalaryOffer(models.Model):
         return sign_request, candidate_partner, company_partner
 
     def action_set_applicant_offered(self, is_ceo=False):
-        """审批通过后：① 推进 applicant stage 到 Offered ② 自动发送 offer 邮件。
+        """审批通过后：① 推进 applicant stage 到 Offered ② 发送 offer 邮件 ③ 静默创建 sign_request
+        ④ 同步 onboarding 默认值到 applicant。
         manager 职位仅 CEO 通过时才执行（COO 通过时跳过，等 CEO）。
         """
         offered_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_offered", raise_if_not_found=False)
@@ -399,6 +546,80 @@ class HrContractSalaryOffer(models.Model):
             if offered_stage:
                 applicant.stage_id = offered_stage
             offer._send_offer_email(silent_fail=True)
+            offer._create_sign_request_silently(silent_fail=True)
+            offer._sync_applicant_onboarding_defaults()
+
+    def _sync_applicant_onboarding_defaults(self):
+        """审批通过后把 offer 上的关键字段同步到 applicant 的 onboarding 默认值。
+        失败仅 chatter 留言（用户友好文案）+ log error，不阻塞其它流程。
+        """
+        self.ensure_one()
+        applicant = self.applicant_id
+        if not applicant:
+            return
+        try:
+            vals = {}
+            # salary_proposed: 仅当 applicant 端为 0/空时回填 offer.wage
+            if not applicant.salary_proposed and self.wage:
+                vals["salary_proposed"] = self.wage
+            # ob_employee_type: 从合同模板（hr.version）的 employee_type 字段取，selection 完全兼容
+            if self.contract_template_id and self.contract_template_id.employee_type:
+                vals["ob_employee_type"] = self.contract_template_id.employee_type
+            # ob_manager_id: 仅当 applicant 端为空时从 department.manager 兜底
+            if (
+                not applicant.ob_manager_id
+                and applicant.department_id
+                and applicant.department_id.manager_id
+            ):
+                vals["ob_manager_id"] = applicant.department_id.manager_id.id
+            if vals:
+                applicant.write(vals)
+        except Exception:
+            _logger.exception("Onboarding defaults sync failed for offer %s", self.id)
+            try:
+                self.message_post(body=_(
+                    "Onboarding defaults sync failed. Please review the candidate's "
+                    "onboarding fields manually."
+                ))
+            except Exception:
+                _logger.exception("Failed to post sync-failure chatter for offer %s", self.id)
+
+    def _create_sign_request_silently(self, silent_fail=True):
+        """审批通过时静默创建 sign_request：用 no_sign_mail 抑制官方 sign 邀请邮件。
+        失败仅 chatter 留言 + activity 提醒，不阻塞审批（silent_fail=True）。
+        创建后流程：HR 在 offer form 上点 Company Sign 完成公司签 →
+        点 Send Sign Link to Employee 邀请候选人。
+        """
+        self.ensure_one()
+        # 已有活跃 sign_request 则跳过（幂等）
+        if self.has_sign_request:
+            return True
+        try:
+            self.with_context(no_sign_mail=True)._get_or_create_offer_sign_request()
+        except UserError as e:
+            self.message_post(body=_(
+                "Failed to create sign request automatically: %s. "
+                "Please fix the missing data and click [Recreate Sign Request] to retry.",
+                e,
+            ))
+            try:
+                responsible = (
+                    (self.applicant_id and self.applicant_id.assigned_hr_id)
+                    or self.create_uid
+                    or self.env.user
+                )
+                self.activity_schedule(
+                    "mail.mail_activity_data_todo",
+                    user_id=responsible.id,
+                    summary=_("Sign request creation failed — please fix and recreate"),
+                    note=str(e),
+                )
+            except Exception:
+                _logger.exception("Failed to schedule activity for sign request creation failure (offer %s)", self.id)
+            if not silent_fail:
+                raise
+            return False
+        return True
 
     # ── Tier Validation 字段白名单 ───────────────────────────────────────
     # OCA 的 view 改写用 _get_all_validation_exceptions（→ _get_validation_exceptions），
@@ -406,12 +627,23 @@ class HrContractSalaryOffer(models.Model):
     # 所以只需 override 公共入口一次即可同时解除"只读"和"写入拦截"。
     _TIER_VALIDATION_EXTRA_FIELDS = [
         "email_template_id",
+        "company_signer_id",
         "offer_email_state",
         "offer_email_sent_date",
-        # 原生字段：审批中/审批后仍允许变化（如拒绝、状态推进）
+        # Sign 流程相关字段（审批通过后才能创建 sign / 发邀请，必须可写）
+        "sign_request_ids",
+        "sign_invite_sent_to_employee",
+        "has_sign_request",
+        "is_company_signed",
+        "is_employee_signed",
+        "sign_type",
+        "offline_sign_note",
+        # 原生字段：审批中/审批后仍允许变化（如拒绝、状态推进、create_employee 关联、跨公司迁移）
         "state",
         "refusal_reason",
         "refusal_date",
+        "employee_id",
+        "company_id",
     ]
 
     @api.model
@@ -439,7 +671,7 @@ class HrContractSalaryOffer(models.Model):
             missing.append(_("Job Title"))
         if not self.department_id:
             missing.append(_("Department"))
-        if not self.work_location:
+        if not self.work_location_id:
             missing.append(_("Work Location"))
         if not self.working_time_text:
             missing.append(_("Working Time"))
@@ -447,8 +679,8 @@ class HrContractSalaryOffer(models.Model):
             missing.append(_("Reporting To"))
         if not self.contract_start_date:
             missing.append(_("Joining Date"))
-        if not (self.contract_template_id and self.contract_template_id.hr_responsible_id):
-            missing.append(_("HR Responsible (signer)"))
+        if not self.company_signer_id:
+            missing.append(_("Company Signer"))
         return missing
 
     def _handle_offer_email_failure(self, reason, silent_fail):
@@ -514,6 +746,105 @@ class HrContractSalaryOffer(models.Model):
             self.applicant_id.email_from,
         ))
         return True
+
+    # ── Sign 流程相关 actions ────────────────────────────────────────────
+    def action_send_sign_link_to_employee(self):
+        """给候选人发送 sign 邀请邮件（candidate 那条 request_item 的链接）。
+        使用 sign 模块原生 send_signature_accesses，记录发送时间到
+        sign_invite_sent_to_employee 字段。HR 可重复点击重发。
+        """
+        if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
+            raise UserError(_("You are not allowed to send sign invitations."))
+        for offer in self:
+            offer.ensure_one()
+            if not offer.has_sign_request:
+                raise UserError(_("No active sign request. Please create one first."))
+            if not offer.is_company_signed:
+                raise UserError(_("The company has not signed yet. Please complete the company side first."))
+
+            active = offer.sign_request_ids.filtered(
+                lambda r: r.state not in ("canceled", "refused")
+            )[:1]
+            employee_items = active.request_item_ids.filtered(
+                lambda i: (i.role_id.name or "").strip().upper() != "COMPANY"
+            )
+            if not employee_items:
+                raise UserError(_("No candidate signer found in the sign request."))
+            employee_items.send_signature_accesses()
+            offer.sign_invite_sent_to_employee = fields.Datetime.now()
+            offer.message_post(body=_(
+                "Sign invitation sent to candidate(s): %s",
+                ", ".join(employee_items.mapped("partner_id.name")),
+            ))
+        return {"type": "ir.actions.client", "tag": "soft_reload"}
+
+    def action_mark_employee_signed_offline(self):
+        """打开 wizard 让 HR 上传线下签好的纸质合同扫描件，标记员工已线下签。"""
+        self.ensure_one()
+        if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
+            raise UserError(_("You are not allowed to mark offer as signed offline."))
+        return {
+            "name": _("Mark Employee Signed Offline"),
+            "type": "ir.actions.act_window",
+            "res_model": "hr.offer.mark.signed.offline.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_offer_id": self.id},
+        }
+
+    def action_recreate_sign_request(self):
+        """取消所有现有 sign_request 后重建。用于审批通过时静默创建失败的补救场景。
+        旧 sign_request 不删除，cancel 后保留作为历史记录。
+        """
+        if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
+            raise UserError(_("You are not allowed to recreate sign requests."))
+        for offer in self:
+            offer.ensure_one()
+            # cancel 所有未结束的旧 sign_request（保留记录，不 unlink）
+            active = offer.sign_request_ids.filtered(
+                lambda r: r.state not in ("canceled", "refused", "signed")
+            )
+            for old in active:
+                try:
+                    old.cancel()
+                except Exception:
+                    _logger.exception("Failed to cancel old sign request %s for offer %s", old.id, offer.id)
+            # 强制重新创建（不抑制邮件 —— 手动重建场景下用户预期看到行为）
+            offer.with_context(no_sign_mail=True)._create_offer_sign_request()
+            offer.message_post(body=_("Sign request recreated."))
+        return {"type": "ir.actions.client", "tag": "soft_reload"}
+
+    # ── Stage 推进 hook ──────────────────────────────────────────────────
+    def write(self, vals):
+        # 监听 offer.state 从其他变 'full_signed'：推进 applicant 和 requisition stage。
+        # offer.state 由 hr_contract_salary 官方 controller 在候选人完成签署时写入。
+        trigger_offers = self.env["hr.contract.salary.offer"]
+        if vals.get("state") == "full_signed":
+            trigger_offers = self.filtered(lambda o: o.state != "full_signed")
+        res = super().write(vals)
+        for offer in trigger_offers:
+            offer._on_offer_fully_signed()
+        return res
+
+    def _on_offer_fully_signed(self):
+        """全部签署完成时推进相关 stage。"""
+        self.ensure_one()
+        contract_signed_stage = self.env.ref("hr_recruitment.stage_job5", raise_if_not_found=False)
+        hired_stage = self.env.ref("tg_hr.requisition_stage_hired", raise_if_not_found=False)
+
+        applicant = self.applicant_id
+        if applicant and contract_signed_stage:
+            applicant.sudo().stage_id = contract_signed_stage
+
+        requisition = applicant and getattr(applicant, "requisition_id", False)
+        if requisition and hired_stage:
+            requisition.sudo().stage_id = hired_stage
+
+        # sign_type 兜底：wizard 已经设过则不动；否则视为电子签自动完成
+        if not self.sign_type:
+            self.sudo().sign_type = "online"
+
+        self.message_post(body=_("Offer fully signed — applicant and requisition stages advanced."))
 
     def action_send_offer_email(self):
         """手动发送/重发 offer 邮件按钮。失败抛 UserError 触发前端 notification。

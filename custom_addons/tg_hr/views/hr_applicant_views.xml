@@ -203,33 +203,69 @@
                     groups="tg_hr.group_hr_offer_email_sender,base.group_system"
                     invisible="approval_state != 'approved'"
                 />
+                <!-- [DEPRECATED] 自动签按钮永久 invisible，代码保留备复活；详见模型 docstring -->
                 <button
                     name="action_auto_sign_as_company"
                     type="object"
                     string="Sign (Company)"
                     class="btn btn-primary"
-                    invisible="not id or state in ['refused', 'expired', 'cancelled'] or not sign_template_id"
+                    invisible="1"
                 />
-                <button
-                    name="action_open_sign_document"
-                    type="object"
-                    string="Candidate Sign Link"
-                    class="btn btn-secondary"
-                    invisible="not id or state in ['refused', 'expired', 'cancelled'] or not sign_template_id"
-                />
+                <!-- Stage A: 公司签 -->
                 <button
                     name="action_open_company_sign_document"
                     type="object"
-                    string="Company Sign Link"
+                    string="Company Sign"
+                    class="btn btn-primary"
+                    groups="tg_hr.group_hr_offer_email_sender,base.group_system"
+                    invisible="approval_state != 'approved' or not has_sign_request or is_company_signed"
+                />
+                <!-- Stage B: 公司签完，员工签 / 发链接 -->
+                <!-- Employee Sign 仅"对应候选人"本人登录时可见（按钮上没有 groups 限制，
+                     依赖 is_offer_for_current_user 字段判断；无关联 user 的 applicant 永远不显示） -->
+                <button
+                    name="action_open_sign_document"
+                    type="object"
+                    string="Employee Sign"
                     class="btn btn-secondary"
-                    invisible="not id or state in ['refused', 'expired', 'cancelled'] or not sign_template_id"
+                    invisible="not is_company_signed or is_employee_signed or not is_offer_for_current_user"
+                />
+                <button
+                    name="action_send_sign_link_to_employee"
+                    type="object"
+                    string="Send Sign Link to Employee"
+                    class="btn btn-secondary"
+                    groups="tg_hr.group_hr_offer_email_sender,base.group_system"
+                    invisible="not is_company_signed or is_employee_signed"
+                />
+                <button
+                    name="action_mark_employee_signed_offline"
+                    type="object"
+                    string="Mark Signed Offline"
+                    class="btn btn-secondary"
+                    groups="tg_hr.group_hr_offer_email_sender,base.group_system"
+                    invisible="not is_company_signed or is_employee_signed"
+                />
+                <!-- Recreate: 仅当审批通过但 sign_request 未创建（如静默创建失败）时显示 -->
+                <button
+                    name="action_recreate_sign_request"
+                    type="object"
+                    string="Recreate Sign Request"
+                    class="btn btn-warning"
+                    groups="tg_hr.group_hr_offer_email_sender,base.group_system"
+                    invisible="approval_state != 'approved' or has_sign_request"
                 />
             </xpath>
             <xpath expr="//form/sheet/group/group[@name='group_offer']" position="after">
                 <group string="Offer Information">
+                    <div class="alert alert-warning" role="alert" colspan="2" invisible="wage">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        Wage is 0. Please fill in a valid wage before sending the offer email — otherwise the recipient will see 0.
+                    </div>
                     <field name="reporting_to_id" options="{'no_quick_create': True}"/>
-                    <field name="work_location"/>
+                    <field name="work_location_id" options="{'no_quick_create': True}"/>
                     <field name="working_time_text"/>
+                    <field name="company_signer_id" options="{'no_quick_create': True}"/>
                     <field name="structure_type_id" readonly="1"/>
                     <field name="wage"/>
                     <field name="basic_salary" readonly="1"/>
@@ -244,6 +280,15 @@
                     <field name="offer_email_recipient"/>
                     <field name="offer_email_state"/>
                     <field name="offer_email_sent_date"/>
+                </group>
+                <group string="Sign Status">
+                    <field name="sign_type"/>
+                    <field name="has_sign_request"/>
+                    <field name="is_company_signed"/>
+                    <field name="is_employee_signed"/>
+                    <field name="sign_invite_sent_to_employee"/>
+                    <field name="offline_sign_note" invisible="sign_type != 'offline'"/>
+                    <field name="is_offer_for_current_user" invisible="1"/>
                 </group>
             </xpath>
             <!-- 隐藏原生 state statusbar -->
@@ -270,12 +315,18 @@
                 <field name="onboarding_complete" invisible="1"/>
                 <field name="show_onboarding_page" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
-                <button name="action_sync_onboarding_defaults"
-                        type="object"
-                        string="Sync Defaults"
-                        class="btn-secondary"
-                        invisible="not show_onboarding_page"
-                        groups="base.group_system"/>
+            </xpath>
+
+            <!-- Offered / Contract Signed 阶段隐藏原生 Refuse 按钮（archive_applicant） -->
+            <xpath expr="//form//header//button[@name='archive_applicant']" position="attributes">
+                <attribute name="invisible">not active or is_pool_applicant or is_in_offered_stage or is_contract_signed_stage</attribute>
+            </xpath>
+
+            <!-- 显示 applicant.partner_id（原生默认 invisible），放在基本信息 group 里 employee 关联上方 -->
+            <xpath expr="//field[@name='partner_id'][@invisible='1']" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="options">{'no_quick_create': True, 'no_create_edit': True}</attribute>
             </xpath>
 
             <!-- 原生 Create Employee 按钮永远隐藏，由 wizard 按钮替代 -->
@@ -317,9 +368,8 @@
                     <group string="Personal Information">
                         <group>
                             <field name="partner_name" string="Name (English)" placeholder="Full name in English"/>
-                            <field name="ob_local_name"
-                                   placeholder="Local official name (Chinese / Bengali / ...) — optional"
-                                   help="Optional. The employee's official name in their local language or script (e.g. Chinese characters, Bengali script). Leave blank if not applicable."/>
+                            <field name="local_name"
+                                   placeholder="Local official name (Chinese / Bengali / ...) — optional"/>
                             <field name="ob_sex"/>
                             <field name="ob_birthday"/>
                             <field name="ob_nationality_id" options="{'no_quick_create': True}"/>

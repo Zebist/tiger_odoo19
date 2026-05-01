@@ -45,7 +45,7 @@ _COND_CHK = {
 
 
 class HrApplicant(models.Model):
-    _inherit = "hr.applicant"
+    _inherit = ["hr.applicant", "form.readonly.mixin"]
 
     _STAGE_SEQUENCE = [
         "hr_recruitment.stage_job0",
@@ -69,6 +69,12 @@ class HrApplicant(models.Model):
     }
 
     stage_id = fields.Many2one(default=lambda r: r.env.ref('hr_recruitment.stage_job0', raise_if_not_found=False))
+    is_contract_signed_stage = fields.Boolean(
+        string="Is Contract Signed",
+        compute="_compute_is_contract_signed_stage",
+        store=True,
+        help="True when applicant.stage_id is the Contract Signed stage (hr_recruitment.stage_job5).",
+    )
     show_review_button = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
         compute_sudo=True,
@@ -198,10 +204,17 @@ class HrApplicant(models.Model):
     )
 
     # ── Onboarding: 个人基本信息 ──────────────────────────────────────────
-    ob_local_name = fields.Char(
+    local_name = fields.Char(
         string='Local Name',
         tracking=True,
-        help="Optional. The employee's official name in their local language or script (e.g. Chinese, Bengali). Leave blank if not applicable.",
+        help="Optional. The applicant's legal/official name in their local language or script "
+             "(e.g. Chinese, Bengali). Synced to employee.legal_name on hire.",
+    )
+    work_location_id = fields.Many2one(
+        'hr.work.location',
+        string='Work Location',
+        tracking=True,
+        domain="[('company_id', 'in', [False, company_id])]",
     )
     ob_sex = fields.Selection(
         [('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
@@ -321,6 +334,10 @@ class HrApplicant(models.Model):
             "tg_hr.hr_recruitment_stage_tg_offered", raise_if_not_found=False
         )
         offered_stage_id = offered_stage if offered_stage else False
+        contract_signed_stage = self.env.ref(
+            "hr_recruitment.stage_job5", raise_if_not_found=False
+        )
+        contract_signed_stage_id = contract_signed_stage if contract_signed_stage else False
         for applicant in self:
             stage_id = applicant.stage_id
             applicant.show_review_button = bool(
@@ -335,15 +352,59 @@ class HrApplicant(models.Model):
             applicant.show_pass_interview_button = bool(stage_id == interview_stage_id and not applicant.interview_passed)
             # 有阶段且不是 New 阶段时显示 Interview Process 页
             applicant.show_interview_process_page = bool(stage_id and stage_id != new_stage_id)
-            # 仅 Offered 阶段且最新 offer 已审批通过（未拒绝）时显示 Onboarding Preparation 页
+            # Offered 或 Contract Signed 阶段且最新 offer 已审批通过（未拒绝）时显示 Onboarding Preparation 页
             latest_offer = applicant.salary_offer_ids.sorted('id', reverse=True)[:1]
             offer_approved = bool(
                 latest_offer
                 and latest_offer.approval_state == 'approved'
                 and latest_offer.state != 'refused'
             )
-            applicant.show_onboarding_page = bool(stage_id == offered_stage_id and offer_approved)
+            applicant.show_onboarding_page = bool(
+                stage_id in (offered_stage_id, contract_signed_stage_id) and offer_approved
+            )
             applicant.has_active_offer = any(o.state != 'refused' for o in applicant.salary_offer_ids)
+
+    @api.depends("stage_id")
+    def _compute_is_contract_signed_stage(self):
+        target = self.env.ref("hr_recruitment.stage_job5", raise_if_not_found=False)
+        for applicant in self:
+            applicant.is_contract_signed_stage = bool(target) and applicant.stage_id == target
+
+    def write(self, vals):
+        # 锁定 Contract Signed stage：进入此阶段后不允许再改 stage_id（kanban 拖拽 / form 切换都拦截）。
+        # base.group_system 可绕过（紧急情况由 admin 强制）。
+        if "stage_id" in vals and not self.env.user.has_group("base.group_system"):
+            target = self.env.ref("hr_recruitment.stage_job5", raise_if_not_found=False)
+            if target and vals["stage_id"] != target.id:
+                locked = self.filtered(lambda r: r.stage_id == target)
+                if locked:
+                    raise UserError(_(
+                        "Applicant(s) %s are in 'Contract Signed' stage and cannot be moved to another stage. "
+                        "Contact a system administrator if you really need to revert.",
+                        ", ".join(locked.mapped("partner_name")),
+                    ))
+        return super().write(vals)
+
+    # ── form.readonly.mixin 接入：Contract Signed stage 整体只读，
+    #    仅 onboarding page (name="tg_hr_onboarding") 内字段保持可编辑 ──
+    def _get_view_readonly_expr(self):
+        return "is_contract_signed_stage"
+
+    def _get_view_readonly_depends(self):
+        return ("is_contract_signed_stage",)
+
+    def _get_view_readonly_skip_containers(self):
+        return ("tg_hr_onboarding",)
+
+    def action_show_offers(self):
+        """Override：仅给 base.group_system 提权。普通用户保持原 record rule 限制
+        避免点 stat button 跳到一个新建 offer 编辑页。
+        """
+        if (self.env.user.has_group("base.group_system")):
+            self = self.sudo()
+
+        action = super(HrApplicant, self).action_show_offers()
+        return action
 
     def action_open_review_wizard(self):
         self.ensure_one()
@@ -661,15 +722,11 @@ class HrApplicant(models.Model):
             },
         }
 
-    def action_sync_onboarding_defaults(self):
-        self.ensure_one()
-        vals = {}
-        if not self.ob_employee_type:
-            vals['ob_employee_type'] = 'employee'
+    @api.onchange("department_id")
+    def _onchange_department_id_set_ob_manager(self):
+        # form 上选/改部门时，若 ob_manager_id 为空则自动填部门 manager
         if not self.ob_manager_id and self.department_id and self.department_id.manager_id:
-            vals['ob_manager_id'] = self.department_id.manager_id.id
-        if vals:
-            self.write(vals)
+            self.ob_manager_id = self.department_id.manager_id
 
     def create_employee_from_applicant(self):
         self.ensure_one()
@@ -744,10 +801,15 @@ class HrApplicant(models.Model):
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
+        # 试用期起点优先取 wizard 传入的 join_date（context），fallback 到 today
+        join_date = self.env.context.get("tg_hr_create_employee_join_date") or fields.Date.context_today(self)
         trial_end = False
         if self.ob_trial_period_months:
-            trial_end = fields.Date.context_today(self) + relativedelta(months=self.ob_trial_period_months)
+            trial_end = join_date + relativedelta(months=self.ob_trial_period_months)
         vals.update({
+            'legal_name': self.local_name or vals.get('legal_name') or self.partner_name or False,
+            'private_email': self.email_from or False,
+            'private_phone': self.partner_phone or False,
             'identification_id': self.ob_identification_id or False,
             'passport_id': self.ob_passport_id or False,
             'passport_expiration_date': self.ob_passport_expiration_date or False,
@@ -763,6 +825,7 @@ class HrApplicant(models.Model):
             'permit_no': self.ob_visa_no or False,
             'visa_expire': self.ob_visa_expire or False,
             'work_permit_expiration_date': self.ob_work_permit_expiration_date or False,
+            'join_date': join_date,
         })
         return vals
 
