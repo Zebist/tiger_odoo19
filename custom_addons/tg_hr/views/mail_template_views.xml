@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 在 mail.template form 上展示 company_ids（适用公司） -->
+    <record id="email_template_form_inherit_tg_hr" model="ir.ui.view">
+        <field name="name">email.template.form.inherit.tg.hr</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <field name="subject" position="after">
+                <field name="company_ids"
+                       widget="many2many_tags"
+                       options="{'no_quick_create': True}"
+                       placeholder="Leave empty to apply to all companies"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

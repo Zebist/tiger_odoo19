@@ -15,10 +15,10 @@ class HrContractSalaryOffer(models.Model):
 
     _tier_validation_manual_config = False
 
-    reporting_to_id = fields.Many2one("hr.employee", string="Reporting To", required=True)
-    work_location = fields.Char(string="Location", required=True)
+    reporting_to_id = fields.Many2one("hr.employee", string="Reporting To", required=True, tracking=True)
+    work_location = fields.Char(string="Location", required=True, tracking=True)
 
-    wage = fields.Monetary(string="Wage", required=True, default=0.0, currency_field="currency_id")
+    wage = fields.Monetary(string="Wage", required=True, default=0.0, currency_field="currency_id", tracking=True)
     structure_type_id = fields.Many2one(
         'hr.payroll.structure.type',
         string="Salary Structure Type",
