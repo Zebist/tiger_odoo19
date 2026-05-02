@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- 仅具备 Applicant Pipeline 组、无标准 Recruitment User/Interviewer 时也能看到 Recruitment 应用 -->
+    <record id="hr_recruitment.menu_hr_recruitment_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_actions'))]"/>
+    </record>
+
     <menuitem
         id="menu_tg_hr_requisition"
         name="Requisitions"
         parent="hr_recruitment.menu_hr_recruitment_root"
         action="action_tg_hr_requisition"
         sequence="15"
-        groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_interviewer"/>
+        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,hr_recruitment.group_hr_recruitment_interviewer"/>
 
     <menuitem
         id="menu_tg_hr_requisition_stage"

@@ -86,17 +86,13 @@ class TestUserRole(TransactionCase):
     def test_role_1(self):
         self.user_id.write({"role_line_ids": [(0, 0, {"role_id": self.role1_id.id})]})
         user_group_ids = sorted({group.id for group in self.user_id.group_ids})
-        role_group_ids = self.role1_id.trans_implied_ids.ids
-        role_group_ids.append(self.role1_id.group_id.id)
-        role_group_ids = sorted(set(role_group_ids))
+        role_group_ids = sorted(set(self.role1_id.group_id.all_implied_ids.ids))
         self.assertEqual(user_group_ids, role_group_ids)
 
     def test_role_2(self):
         self.user_id.write({"role_line_ids": [(0, 0, {"role_id": self.role2_id.id})]})
         user_group_ids = sorted({group.id for group in self.user_id.group_ids})
-        role_group_ids = self.role2_id.trans_implied_ids.ids
-        role_group_ids.append(self.role2_id.group_id.id)
-        role_group_ids = sorted(set(role_group_ids))
+        role_group_ids = sorted(set(self.role2_id.group_id.all_implied_ids.ids))
         self.assertEqual(user_group_ids, role_group_ids)
 
     def test_role_1_2(self):
@@ -109,10 +105,8 @@ class TestUserRole(TransactionCase):
             }
         )
         user_group_ids = sorted({group.id for group in self.user_id.group_ids})
-        role1_group_ids = self.role1_id.trans_implied_ids.ids
-        role1_group_ids.append(self.role1_id.group_id.id)
-        role2_group_ids = self.role2_id.trans_implied_ids.ids
-        role2_group_ids.append(self.role2_id.group_id.id)
+        role1_group_ids = self.role1_id.group_id.all_implied_ids.ids
+        role2_group_ids = self.role2_id.group_id.all_implied_ids.ids
         role_group_ids = sorted(set(role1_group_ids + role2_group_ids))
         self.assertEqual(user_group_ids, role_group_ids)
 
@@ -132,15 +126,13 @@ class TestUserRole(TransactionCase):
             }
         )
         user_group_ids = sorted({group.id for group in self.user_id.group_ids})
-        role1_group_ids = self.role1_id.trans_implied_ids.ids
-        role1_group_ids.append(self.role1_id.group_id.id)
-        role_group_ids = sorted(set(role1_group_ids))
+        role_group_ids = sorted(set(self.role1_id.group_id.all_implied_ids.ids))
         self.assertEqual(user_group_ids, role_group_ids)
 
     def test_role_unlink(self):
         # Get role1 and role2 groups
-        role1_groups = self.role1_id.trans_implied_ids | self.role1_id.group_id
-        role2_groups = self.role2_id.trans_implied_ids | self.role2_id.group_id
+        role1_groups = self.role1_id.group_id.all_implied_ids
+        role2_groups = self.role2_id.group_id.all_implied_ids
 
         # Configure the user with role1 and role2
         self.user_id.write(
@@ -167,8 +159,8 @@ class TestUserRole(TransactionCase):
 
     def test_role_line_unlink(self):
         # Get role1 and role2 groups
-        role1_groups = self.role1_id.trans_implied_ids | self.role1_id.group_id
-        role2_groups = self.role2_id.trans_implied_ids | self.role2_id.group_id
+        role1_groups = self.role1_id.group_id.all_implied_ids
+        role2_groups = self.role2_id.group_id.all_implied_ids
 
         # Configure the user with role1 and role2
         self.user_id.write(
@@ -261,7 +253,7 @@ class TestUserRole(TransactionCase):
         role_id = result["res_id"]
         role = self.role_model.browse([role_id])
         user_group_ids = sorted(set(self.user_id.group_ids.ids))
-        role_group_ids = sorted(set(role.trans_implied_ids.ids))
+        role_group_ids = sorted(set(role.group_id.all_implied_ids.ids))
         self.assertEqual(user_group_ids, role_group_ids)
 
     def test_show_alert_computation(self):

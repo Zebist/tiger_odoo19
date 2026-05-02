@@ -4,7 +4,7 @@ import re
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -48,23 +48,28 @@ class HrApplicant(models.Model):
     _inherit = ["hr.applicant", "form.readonly.mixin"]
 
     _STAGE_SEQUENCE = [
-        "hr_recruitment.stage_job0",
-        "tg_hr.hr_recruitment_stage_tg_initital",
-        "tg_hr.hr_recruitment_stage_tg_contacted",
-        "tg_hr.hr_recruitment_stage_tg_interview",
-        "tg_hr.hr_recruitment_stage_tg_offered",
+        "hr_recruitment.stage_job0",  # new
+        "tg_hr.hr_recruitment_stage_tg_initital",  # init
+        "tg_hr.hr_recruitment_stage_tg_contacted",  # contacted
+        "tg_hr.hr_recruitment_stage_tg_interview",  # interview
+        "tg_hr.hr_recruitment_stage_tg_offered",  # offered
+        "hr_recruitment.stage_job5",  # contract signed (hr_recruitment.stage_job5)
     ]
 
     # 进入该阶段前必须满足的字段条件，后续阶段会累积检查前面所有阶段的条件
     _STAGE_ENTRY_REQUIREMENTS = {
         "tg_hr.hr_recruitment_stage_tg_contacted": [
             ("resume_reviewed", "Resume Review"),
+            ("first_contact_made", "First Contact"),
         ],
         "tg_hr.hr_recruitment_stage_tg_interview": [
-            ("first_contact_made", "First Contact"),
+            ("interview_type", "Set Interview"),
         ],
         "tg_hr.hr_recruitment_stage_tg_offered": [
             ("interview_passed", "Interview Passed"),
+        ],
+        "hr_recruitment.stage_job5": [
+            ("latest_approved_offer_fully_signed", "Offer Fully Signed"),
         ],
     }
 
@@ -74,6 +79,12 @@ class HrApplicant(models.Model):
         compute="_compute_is_contract_signed_stage",
         store=True,
         help="True when applicant.stage_id is the Contract Signed stage (hr_recruitment.stage_job5).",
+    )
+    # New → Initial Screening 一键推进（仅 New 阶段展示，人才库候选人除外）
+    show_move_to_initial_screening_button = fields.Boolean(
+        compute="_compute_tg_hr_stage_flags",
+        compute_sudo=True,
+        store=False,
     )
     show_review_button = fields.Boolean(
         compute="_compute_tg_hr_stage_flags",
@@ -158,6 +169,14 @@ class HrApplicant(models.Model):
         string="Interview Passed",
         default=False,
         tracking=True,
+    )
+    # 与 _get_latest_approved_offer 一致：按 id 最新一条且已审批、未拒绝时，是否已 full_signed
+    latest_approved_offer_fully_signed = fields.Boolean(
+        string="Latest Approved Offer Fully Signed",
+        compute="_compute_latest_approved_offer_fully_signed",
+        compute_sudo=True,
+        store=True,
+        help="True when the newest salary offer (by id) is approved, not refused, and fully signed.",
     )
 
     interview_score = fields.Selection(
@@ -309,9 +328,39 @@ class HrApplicant(models.Model):
             return True
         return self.assigned_hr_id.id == self.env.uid
 
-    @api.depends("stage_id", "resume_reviewed", "first_contact_made", "interview_passed",
-                 "assigned_hr_id",
-                 "salary_offer_ids.approval_state", "salary_offer_ids.state")
+    def _get_latest_approved_offer(self):
+        """按 id 降序取最新一条 salary offer；仅当该条已审批通过且未拒绝时返回，否则返回空记录集。"""
+        self.ensure_one()
+        latest = self.salary_offer_ids.sorted("id", reverse=True)[:1]
+        if (
+            latest
+            and latest.approval_state == "approved"
+            and latest.state != "refused"
+        ):
+            return latest
+        return self.env["hr.contract.salary.offer"]
+
+    @api.depends(
+        "salary_offer_ids",
+        "salary_offer_ids.approval_state",
+        "salary_offer_ids.state",
+    )
+    def _compute_latest_approved_offer_fully_signed(self):
+        for rec in self:
+            offer = rec._get_latest_approved_offer()
+            rec.latest_approved_offer_fully_signed = bool(offer) and offer.state == "full_signed"
+
+    @api.depends(
+        "stage_id",
+        "resume_reviewed",
+        "first_contact_made",
+        "interview_passed",
+        "assigned_hr_id",
+        "salary_offer_ids.approval_state",
+        "salary_offer_ids.state",
+        "is_pool_applicant",
+        "talent_pool_ids",
+    )
     def _compute_tg_hr_stage_flags(self):
         init_stage = self.env.ref(
             "tg_hr.hr_recruitment_stage_tg_initital", raise_if_not_found=False
@@ -340,6 +389,11 @@ class HrApplicant(models.Model):
         contract_signed_stage_id = contract_signed_stage if contract_signed_stage else False
         for applicant in self:
             stage_id = applicant.stage_id
+            applicant.show_move_to_initial_screening_button = bool(
+                new_stage_id
+                and stage_id == new_stage_id
+                and not applicant.is_pool_applicant
+            )
             applicant.show_review_button = bool(
                 stage_id == init_stage_id
                 and not applicant.resume_reviewed
@@ -352,13 +406,8 @@ class HrApplicant(models.Model):
             applicant.show_pass_interview_button = bool(stage_id == interview_stage_id and not applicant.interview_passed)
             # 有阶段且不是 New 阶段时显示 Interview Process 页
             applicant.show_interview_process_page = bool(stage_id and stage_id != new_stage_id)
-            # Offered 或 Contract Signed 阶段且最新 offer 已审批通过（未拒绝）时显示 Onboarding Preparation 页
-            latest_offer = applicant.salary_offer_ids.sorted('id', reverse=True)[:1]
-            offer_approved = bool(
-                latest_offer
-                and latest_offer.approval_state == 'approved'
-                and latest_offer.state != 'refused'
-            )
+            # Offered 或 Contract Signed 阶段且「按 id 最新且已审批未拒绝」的 offer 存在时显示 Onboarding Preparation 页
+            offer_approved = bool(applicant._get_latest_approved_offer())
             applicant.show_onboarding_page = bool(
                 stage_id in (offered_stage_id, contract_signed_stage_id) and offer_approved
             )
@@ -372,15 +421,16 @@ class HrApplicant(models.Model):
 
     def write(self, vals):
         # 锁定 Contract Signed stage：进入此阶段后不允许再改 stage_id（kanban 拖拽 / form 切换都拦截）。
-        # base.group_system 可绕过（紧急情况由 admin 强制）。
-        if "stage_id" in vals and not self.env.user.has_group("base.group_system"):
+        # 拥有「Applicant Contract Signed Stage Override」组的用户可绕过（由 HR 管理员按需分配）。
+        if "stage_id" in vals and not self.env.user.has_group(
+            "tg_hr.group_hr_applicant_contract_signed_stage_override"
+        ):
             target = self.env.ref("hr_recruitment.stage_job5", raise_if_not_found=False)
             if target and vals["stage_id"] != target.id:
                 locked = self.filtered(lambda r: r.stage_id == target)
                 if locked:
                     raise UserError(_(
                         "Applicant(s) %s are in 'Contract Signed' stage and cannot be moved to another stage. "
-                        "Contact a system administrator if you really need to revert.",
                         ", ".join(locked.mapped("partner_name")),
                     ))
         return super().write(vals)
@@ -405,6 +455,23 @@ class HrApplicant(models.Model):
 
         action = super(HrApplicant, self).action_show_offers()
         return action
+
+    def action_move_to_initial_screening(self):
+        """从 New 阶段进入 Initial Screening（与 statusbar 下一阶段一致）。"""
+        new_stage = self.env.ref("hr_recruitment.stage_job0", raise_if_not_found=False)
+        init_stage = self.env.ref("tg_hr.hr_recruitment_stage_tg_initital", raise_if_not_found=False)
+        if not init_stage:
+            raise UserError(_("Initial screening stage is not configured (missing xml id tg_hr.hr_recruitment_stage_tg_initital)."))
+        if not new_stage:
+            raise UserError(_("New stage is not configured (missing xml id hr_recruitment.stage_job0)."))
+        invalid = self.filtered(lambda a: a.stage_id != new_stage or a.is_pool_applicant)
+        if invalid:
+            raise UserError(
+                _("This action only applies to job applicants in the New stage (not talent pool). Records: %s")
+                % ", ".join(invalid.mapped("display_name"))
+            )
+        self.write({"stage_id": init_stage.id})
+        return True
 
     def action_open_review_wizard(self):
         self.ensure_one()
@@ -704,11 +771,32 @@ class HrApplicant(models.Model):
             rec.onboarding_complete = (done == total) if total else True
 
     # ─────────────────────────────────────────────────────────────────────
+    # Talent pool（标准 hr_recruitment）：多条人才主档命中时取最早一条
+    # ─────────────────────────────────────────────────────────────────────
+
+    def link_applicant_to_talent(self):
+        # @Override
+        # 标准实现 search 无 order/limit，同联系方式多条「人才」时会得到多记录集，写入
+        # pool_applicant_id 可能异常；这里按最早创建的人才主档（稳定 canonical），且只取一条。
+        talent = self.env["hr.applicant"].search(
+            domain=self._get_similar_applicants_domain(only_talent=True),
+            order="create_date asc, id asc",
+            limit=1,
+        )
+        self.pool_applicant_id = talent
+
+    # ─────────────────────────────────────────────────────────────────────
     # Onboarding Actions
     # ─────────────────────────────────────────────────────────────────────
 
     def action_open_create_employee_wizard(self):
         self.ensure_one()
+        if not self.env.user.has_groups(
+            "tg_hr.group_tg_hr_onboarding_create_employee,base.group_system"
+        ):
+            raise AccessError(
+                _("You do not have permission to create an employee from this applicant.")
+            )
         return {
             'name': self.env._('Create Employee'),
             'type': 'ir.actions.act_window',
@@ -747,9 +835,7 @@ class HrApplicant(models.Model):
         return action
 
     def _load_contract_template_from_offer(self, employee):
-        offer = self.salary_offer_ids.filtered(
-            lambda o: o.approval_state == 'approved' and o.state != 'refused'
-        ).sorted('id', reverse=True)[:1]
+        offer = self._get_latest_approved_offer()
         if not offer:
             _logger.warning('tg_hr: no approved offer found for applicant %s (id=%s)', self.partner_name, self.id)
             return
@@ -757,12 +843,15 @@ class HrApplicant(models.Model):
         if not template:
             _logger.warning('tg_hr: offer %s has no contract_template_id or employee_version_id', offer.id)
             return
-        vals = self.env['hr.version'].get_values_from_contract_template(template)
+        # 入职档案组对 hr.version 仅只读：模板取值与回写 version 走 sudo，避免依赖 hr.group_hr_user 写版本
+        vals = self.env['hr.version'].sudo().get_values_from_contract_template(template)
         if not vals:
             _logger.warning('tg_hr: get_values_from_contract_template returned empty for template %s', template.id)
             return
         employee.write(vals)
-        employee.version_id.contract_template_id = template
+        vers = employee.sudo().version_id
+        if vers:
+            vers.sudo().write({'contract_template_id': template.id})
 
     def _create_employee_bank_account(self, employee):
         if not self.ob_bank_account_number:

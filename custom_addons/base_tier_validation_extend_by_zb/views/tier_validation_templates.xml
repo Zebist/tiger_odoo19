@@ -11,21 +11,22 @@
                     type="object"
                     string="Submit"
                     class="btn-primary"
-                    invisible="approval_state != 'draft' or requester_id != uid"
+                    invisible="approval_state != 'draft' or (requester_id != uid and not tier_zb_workflow_act_all_records)"
             />
             <button
                     name="action_ack"
                     type="object"
                     string="Acknowledge &amp; Edit"
-                    invisible="approval_state != 'rejected' or requester_id != uid"
+                    invisible="approval_state != 'rejected' or (requester_id != uid and not tier_zb_workflow_act_all_records)"
             />
             <button
                     name="action_draft"
                     type="object"
                     string="Withdraw to Draft"
-                    invisible="approval_state != 'approving' or requester_id != uid"
+                    invisible="approval_state != 'approving' or (requester_id != uid and not tier_zb_workflow_act_all_records)"
             />
 
+            <field name="tier_zb_workflow_act_all_records" invisible="1" />
             <field name="validation_status" invisible="1" />
             <button
                 name="request_validation"

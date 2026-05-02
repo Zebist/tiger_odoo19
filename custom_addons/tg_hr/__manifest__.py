@@ -7,6 +7,7 @@
     'author': 'Tiger-Zebin',
     'depends': [
         'base_by_zb',
+        'base_user_role',
         'hr',
         'hr_payroll',
         'tg_payroll',
@@ -14,6 +15,7 @@
         'hr_contract_salary',
         'documents',
         'mail',
+        'sign',
         'base_tier_validation',
         'base_tier_validation_server_action',
         'base_tier_validation_extend_by_zb'
@@ -37,6 +39,7 @@
         'wizards/hr_offer_mark_signed_offline_wizard_views.xml',
         'wizards/hr_employee_confirm_contract_wizard_views.xml',
         'views/hr_applicant_views.xml',
+        'views/hr_applicant_generate_offer_tg.xml',
         'views/hr_employee_views.xml',
         # Tier Validation 配置数据（审批流/动作）
         'data/tier_validation_data.xml',
@@ -44,6 +47,7 @@
         'views/mail_template_views.xml',
         'views/menuitems.xml',
         'report/tg_hr_applicant_report_views.xml',
+        'data/tg_hr_user_roles.xml',
     ],
     'assets': {
         'web.assets_backend': [

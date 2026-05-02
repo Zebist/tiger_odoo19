@@ -5,8 +5,15 @@
         <field name="sequence">32</field>
     </record>
 
+    <!-- 预置 res.users.role 的「壳」组挂在 User roles 分类下，便于权限页归类 -->
+    <record id="res_groups_privilege_tg_hr_role" model="res.groups.privilege">
+        <field name="name">Tiger HR Roles</field>
+        <field name="sequence">90</field>
+        <field name="category_id" ref="base_user_role.ir_module_category_role"/>
+    </record>
+
     <record id="res_groups_privilege_tg_hr_requisition" model="res.groups.privilege">
-        <field name="name">Requisition</field>
+        <field name="name">Tiger Requisition</field>
         <field name="sequence">10</field>
         <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
     </record>
@@ -14,57 +21,88 @@
     <record id="group_tg_hr_requisition_terminate" model="res.groups">
         <field name="name">Terminate Recruitment</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
-    <!-- Onboarding 权限 -->
+    <!-- 仅授予 tg.hr.requisition 的创建权限（与 Officer ACL 合并后才具备完整增删改查） -->
+    <record id="group_tg_hr_requisition_creator" model="res.groups">
+        <field name="name">Requisition Creator</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <!-- 候选人表单 / Kanban 流水线操作按钮（与 Officer 分离，便于角色组合） -->
+    <record id="group_tg_hr_recruitment_applicant_actions" model="res.groups">
+        <field name="name">Recruitment Applicant Pipeline Actions</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <!-- Onboarding + Employee Contract Confirm 共用同一 privilege（原 Employee Onboarding 已合并） -->
     <record id="res_groups_privilege_tg_hr_onboarding" model="res.groups.privilege">
-        <field name="name">Onboarding</field>
+        <field name="name">Tiger Onboarding</field>
         <field name="sequence">20</field>
         <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
     </record>
 
-    <!-- 部门经理：可查看本部门员工信息 -->
     <record id="group_tg_hr_onboarding_dept_manager" model="res.groups">
         <field name="name">Onboarding Department Manager</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
-    <!-- Onboarding 管理员：完整权限（包含部门经理权限）-->
     <record id="group_tg_hr_onboarding_admin" model="res.groups">
         <field name="name">Onboarding Administrator</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
-        <field name="implied_ids" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_dept_manager'))]"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
-    <!-- Offer Email 权限 -->
+    <!-- Create Employee 向导与表单按钮（入职档案） -->
+    <record id="group_tg_hr_onboarding_create_employee" model="res.groups">
+        <field name="name">Onboarding Create Employee</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+    </record>
+
+    <!-- 入职档案：不挂 hr.group_hr_user，避免获得标准 hr.version 写权限；见 ACL + employee 记录规则 -->
+    <record id="group_tg_hr_onboarding_records_core" model="res.groups">
+        <field name="name">Onboarding Records Core</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+    </record>
+
+    <!-- 合同/薪酬侧：显式 hr.version 全权限（可与 hr.group_hr_user 叠加） -->
+    <record id="group_hr_version_contract_admin" model="res.groups">
+        <field name="name">HR Version Contract Administrator</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+    </record>
+
+    <record id="res_groups_privilege_tg_hr_applicant_stage" model="res.groups.privilege">
+        <field name="name">Tiger Applicant Stage</field>
+        <field name="sequence">25</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <record id="group_hr_applicant_contract_signed_stage_override" model="res.groups">
+        <field name="name">Applicant Contract Signed Stage Override</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_applicant_stage"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
     <record id="res_groups_privilege_tg_hr_offer_email" model="res.groups.privilege">
-        <field name="name">Offer Email</field>
+        <field name="name">Tiger Offer Email</field>
         <field name="sequence">30</field>
         <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
     </record>
 
-    <!-- 允许手动发送/重发 Offer 邮件、操作 sign 流程（Company Sign / Send Sign Link / Recreate Sign Request 等） -->
     <record id="group_hr_offer_email_sender" model="res.groups">
         <field name="name">Offer Email Sender</field>
+        <field name="comment">仅用于界面按钮与后端 RPC 的 has_group 门禁；不在此组挂 ir.model.access / ir.rule。</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_offer_email"/>
-        <field name="implied_ids" eval="[
-            (4, ref('sign.group_sign_user')),
-        ]"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
-    <!-- Employee Onboarding 权限（Confirm Contract 等） -->
-    <record id="res_groups_privilege_tg_hr_employee_onboard" model="res.groups.privilege">
-        <field name="name">Employee Onboarding</field>
-        <field name="sequence">40</field>
-        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
-    </record>
-
-    <!-- 允许 confirm employee 合同（首次入职走 wizard 填写日期 + onboarding checklist） -->
     <record id="group_hr_employee_contract_confirm" model="res.groups">
         <field name="name">Employee Contract Confirm</field>
-        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_employee_onboard"/>
-        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 </odoo>

@@ -20,4 +20,10 @@
         <field name="name">Approval Configuration User (Read)</field>
         <field name="privilege_id" ref="base_tier_validation_extend_by_zb.res_groups_privilege_tier_validation_extend" />
     </record>
+
+    <!-- 流程发起人按钮的“代操作”权限：不校验 requester_id，仍由模型方法校验 approval_state -->
+    <record id="group_tier_workflow_actions_all_records" model="res.groups">
+        <field name="name">Workflow Actions on All Records</field>
+        <field name="privilege_id" ref="base_tier_validation_extend_by_zb.res_groups_privilege_tier_validation_extend" />
+    </record>
 </odoo>

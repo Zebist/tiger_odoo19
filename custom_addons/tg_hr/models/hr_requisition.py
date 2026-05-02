@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
 from odoo.exceptions import ValidationError
 
 
@@ -29,7 +28,13 @@ class TgHrRequisition(models.Model):
     )
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     job_id = fields.Many2one('hr.job', string='Job Position', required=True)
-    reporting_to_id = fields.Many2one('res.users', string='Reporting To', required=True)
+    # 与 hr.department.manager_id、薪资 Offer 的 reporting_to_id 一致，存 hr.employee
+    reporting_to_id = fields.Many2one(
+        'hr.employee',
+        string='Reporting To',
+        required=True,
+        tracking=True,
+    )
     hiring_manager_id = fields.Many2one('res.users', string='Hiring Manager', copy=False)
     hiring_type = fields.Selection(
         selection=[
@@ -118,6 +123,10 @@ class TgHrRequisition(models.Model):
     def _onchange_hiring_type(self):
         if self.hiring_type != 'replacement':
             self.replacement_partner_id = False
+
+    @api.onchange('department_id')
+    def _onchange_department_id(self):
+        self.reporting_to_id = self.department_id.manager_id
 
     def write(self, vals):
         if vals.get('hiring_type') and vals['hiring_type'] != 'replacement':

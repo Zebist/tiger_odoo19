@@ -58,12 +58,13 @@ class HrEmployee(models.Model):
 
     # ── Onboarding 自动检测 helpers（供 confirm wizard 调用）──────────────
     def _onboarding_auto_check_contract_signed(self):
-        """合同签署：基于 applicant 的 offer 是否完整签署。"""
+        """合同签署：与 applicant 上「按 id 最新且已审批未拒绝」的 offer 是否 full_signed 一致。"""
         self.ensure_one()
         applicant = self._get_recruitment_applicant()
         if not applicant:
             return False
-        return any(o.state == "full_signed" for o in applicant.salary_offer_ids)
+        offer = applicant._get_latest_approved_offer()
+        return bool(offer) and offer.state == "full_signed"
 
     def _onboarding_auto_check_odoo_account(self):
         """Odoo 账号：employee 是否已关联 user。"""
@@ -115,11 +116,12 @@ class HrEmployee(models.Model):
             _logger.info("push_signed_files: no applicant found for employee %s", self.id)
             return
         try:
-            offer = applicant.salary_offer_ids.filtered(
-                lambda o: o.state == "full_signed"
-            ).sorted("id", reverse=True)[:1]
-            if not offer:
-                _logger.info("push_signed_files: no fully-signed offer for applicant %s", applicant.id)
+            offer = applicant._get_latest_approved_offer()
+            if not offer or offer.state != "full_signed":
+                _logger.info(
+                    "push_signed_files: no latest approved fully-signed offer for applicant %s",
+                    applicant.id,
+                )
                 return
             sign_request = offer.sign_request_ids.filtered(
                 lambda r: r.state == "signed"

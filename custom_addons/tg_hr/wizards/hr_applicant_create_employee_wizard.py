@@ -40,9 +40,7 @@ class HrApplicantCreateEmployeeWizard(models.TransientModel):
         applicant_id = self.env.context.get('default_applicant_id') or self.env.context.get('active_id')
         if applicant_id:
             applicant = self.env['hr.applicant'].browse(applicant_id)
-            offer = applicant.salary_offer_ids.filtered(
-                lambda o: o.approval_state == 'approved' and o.state != 'refused'
-            ).sorted('id', reverse=True)[:1]
+            offer = applicant._get_latest_approved_offer()
             if offer and offer.contract_start_date:
                 return offer.contract_start_date
         return fields.Date.context_today(self)
@@ -85,12 +83,11 @@ class HrApplicantCreateEmployeeWizard(models.TransientModel):
                 # 时一并填齐两个日期。这里只暂存 trial_date_end，作为 Confirm Contract wizard 的默认值。
             }
             # 从 offer 同步 wage（applicant -> offer.wage 已经在审批前算好）
-            offer = applicant.salary_offer_ids.filtered(
-                lambda o: o.approval_state == 'approved' and o.state != 'refused'
-            ).sorted('id', reverse=True)[:1]
+            offer = applicant._get_latest_approved_offer()
             if offer and offer.wage:
                 version_vals['wage'] = offer.wage
-            version.write(version_vals)
+            # 入职档案角色对 hr.version 可能仅只读，统一 sudo 写入向导落库字段
+            version.sudo().write(version_vals)
             # Push 签好的合同 PDF + Certificate of Completion 到 employee
             employee.push_signed_files_from_offer()
         return action

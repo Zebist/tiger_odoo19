@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form//header" position="inside">
+                <field name="show_move_to_initial_screening_button" invisible="1"/>
                 <field name="show_review_button" invisible="1"/>
                 <field name="show_first_contact_button" invisible="1"/>
                 <field name="show_interview_button" invisible="1"/>
@@ -13,30 +14,36 @@
                 <field name="is_in_interview_stage" invisible="1"/>
                 <field name="interview_passed" invisible="1"/>
                 <field name="show_interview_process_page" widget="interview_process_page_focus" />
+                <button name="action_move_to_initial_screening"
+                        type="object"
+                        string="Start Initial Screening"
+                        class="btn-secondary"
+                        invisible="not show_move_to_initial_screening_button"
+                        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_open_review_wizard"
                         type="object"
                         string="Review"
                         class="btn-primary"
                         invisible="not show_review_button"
-                        groups="base.group_user"/>
+                        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_open_first_contact_wizard"
                         type="object"
                         string="Set First Contact"
                         class="btn-primary"
                         invisible="not show_first_contact_button"
-                        groups="base.group_user"/>
+                        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_open_interview_wizard"
                         type="object"
                         string="Set Interview"
                         class="btn-primary"
                         invisible="not show_interview_button"
-                        groups="base.group_user"/>
+                        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_pass_interview"
                         type="object"
                         string="Pass Interview"
                         class="btn-primary"
                         invisible="not show_pass_interview_button"
-                        groups="base.group_user"/>
+                        groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
             </xpath>
 
             <xpath expr="//group/group/field[@name='priority']" position="attributes">
@@ -81,12 +88,6 @@
                             <field name="meeting_url" widget="url"/>
                             <field name="interview_notes" placeholder="Notes..."/>
                         </group>
-                        <group>
-                            <button name="action_open_interview_wizard" type="object" string="Set Interview Details"
-                                    class="btn-secondary"
-                                    invisible="1"
-                                    groups="hr_recruitment.group_hr_recruitment_user,base.group_system"/>
-                        </group>
                     </group>
                 </page>
             </xpath>
@@ -98,7 +99,15 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
         <field name="arch" type="xml">
+            <!-- Kanban 跨列拖拽会先 web_save(stage_id) 再 web_resequence(sequence)。
+                 form.readonly.mixin 会给顶层 stage_id 注入 readonly，客户端 _getChanges 默认会丢弃只读字段，
+                 导致 web_save 不带 stage_id、你只在 write 里看到多次 {sequence: ...}。
+                 force_save 保证分组字段仍随拖拽提交，服务端 write 才能校验 Contract Signed 锁定。 -->
+            <xpath expr="//kanban/field[@name='stage_id']" position="attributes">
+                <attribute name="force_save">1</attribute>
+            </xpath>
             <xpath expr="//kanban" position="inside">
+                <field name="show_move_to_initial_screening_button" invisible="1"/>
                 <field name="show_review_button" invisible="1"/>
                 <field name="show_first_contact_button" invisible="1"/>
                 <field name="show_interview_button" invisible="1"/>
@@ -115,6 +124,12 @@
 
             <xpath expr="//templates/t[@t-name='card']/field[@name='job_id']" position="before">
                 <div class="d-flex flex-wrap gap-1 mb-2">
+                    <a t-if="record.show_move_to_initial_screening_button.raw_value"
+                       name="action_move_to_initial_screening"
+                       type="object"
+                       class="btn btn-sm btn-secondary">
+                        Start Initial Screening
+                    </a>
                     <a t-if="record.show_review_button.raw_value"
                        name="action_open_review_wizard"
                        type="object"
@@ -250,10 +265,10 @@
                 <button
                     name="action_recreate_sign_request"
                     type="object"
-                    string="Recreate Sign Request"
+                    string="Create Sign Request"
                     class="btn btn-warning"
                     groups="tg_hr.group_hr_offer_email_sender,base.group_system"
-                    invisible="approval_state != 'approved' or has_sign_request"
+                    invisible="approval_state != 'approved' or has_sign_request or not employee_id"
                 />
             </xpath>
             <xpath expr="//form/sheet/group/group[@name='group_offer']" position="after">
@@ -265,7 +280,6 @@
                     <field name="reporting_to_id" options="{'no_quick_create': True}"/>
                     <field name="work_location_id" options="{'no_quick_create': True}"/>
                     <field name="working_time_text"/>
-                    <field name="company_signer_id" options="{'no_quick_create': True}"/>
                     <field name="structure_type_id" readonly="1"/>
                     <field name="wage"/>
                     <field name="basic_salary" readonly="1"/>
@@ -277,11 +291,13 @@
                 </group>
                 <group string="Offer Email">
                     <field name="email_template_id" options="{'no_quick_create': True}"/>
+                    <field name="offer_sender_id" options="{'no_quick_create': True}"/>
                     <field name="offer_email_recipient"/>
                     <field name="offer_email_state"/>
                     <field name="offer_email_sent_date"/>
                 </group>
                 <group string="Sign Status">
+                    <field name="company_signer_id" options="{'no_quick_create': True}"/>
                     <field name="sign_type"/>
                     <field name="has_sign_request"/>
                     <field name="is_company_signed"/>
@@ -339,7 +355,7 @@
                         string="Create Employee"
                         class="btn-primary"
                         invisible="not onboarding_complete or employee_id or not show_onboarding_page"
-                        groups="hr_recruitment.group_hr_recruitment_user"/>
+                        groups="tg_hr.group_tg_hr_onboarding_create_employee,base.group_system"/>
             </xpath>
 
             <xpath expr="//notebook/page[1]" position="before">

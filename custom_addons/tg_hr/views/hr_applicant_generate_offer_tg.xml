@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 与 Offer Email Sender 对齐；去掉原 recruitment officer 的 groups -->
+    <record id="hr_applicant_view_form_generate_offer_tg_hr" model="ir.ui.view">
+        <field name="name">hr.applicant.form.generate.offer.tg.hr</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_generate_offer']" position="attributes">
+                <attribute name="groups">tg_hr.group_hr_offer_email_sender,base.group_system</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

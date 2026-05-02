@@ -80,13 +80,8 @@ class ResUsers(models.Model):
         # We obtain all the groups associated to each role first, so that
         # it is faster to compare later with each user's groups.
         for role in self.mapped("role_line_ids.role_id"):
-            role_groups[role] = list(
-                set(
-                    role.group_id.ids
-                    + role.implied_ids.ids
-                    + role.trans_implied_ids.ids
-                )
-            )
+            # Odoo 19：res.groups 上 trans_implied_ids 更名为 all_implied_ids（含本组及传递 implied）
+            role_groups[role] = list(set(role.group_id.all_implied_ids.ids))
         self_writable_group_ids = self._get_self_writable_groups().ids
         for user in self:
             if not user.role_line_ids and not force:

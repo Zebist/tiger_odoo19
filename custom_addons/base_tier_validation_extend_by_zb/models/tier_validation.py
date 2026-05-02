@@ -1,7 +1,7 @@
 import logging
 from lxml import etree
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -34,6 +34,21 @@ class TierValidation(models.AbstractModel):
         tracking=True,
         readonly=True
     )
+    # 当前用户是否可走「任意单据」流程按钮（与 group_tier_workflow_actions_all_records 一致，含系统管理员）
+    tier_zb_workflow_act_all_records = fields.Boolean(
+        string="Workflow Actions on Any Record (Current User)",
+        compute="_compute_tier_zb_workflow_act_all_records",
+        help="Technical field for form modifiers: privileged users skip the requester check on workflow buttons.",
+    )
+
+    @api.depends_context("uid")
+    def _compute_tier_zb_workflow_act_all_records(self):
+        user = self.env.user
+        privileged = user.has_group(
+            "base_tier_validation_extend_by_zb.group_tier_workflow_actions_all_records"
+        )
+        for rec in self:
+            rec.tier_zb_workflow_act_all_records = privileged
 
     def _add_tier_validation_buttons(self, node, params):
         """不通过 inherit 修改 OCA 的 ir.ui.view"""

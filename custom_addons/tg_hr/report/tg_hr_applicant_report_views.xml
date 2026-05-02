@@ -86,6 +86,6 @@
         parent="hr_recruitment.report_hr_recruitment"
         action="action_tg_hr_applicant_report"
         sequence="20"
-        groups="hr_recruitment.group_hr_recruitment_user"/>
+        groups="tg_hr.group_tg_hr_recruitment_applicant_actions"/>
 
 </odoo>

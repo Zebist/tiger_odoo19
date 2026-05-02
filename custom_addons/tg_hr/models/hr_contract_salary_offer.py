@@ -93,6 +93,15 @@ class HrContractSalaryOffer(models.Model):
         tracking=True,
         help="Working hours text shown in the offer email, e.g. '9:30 to 18:30'.",
     )
+    offer_sender_id = fields.Many2one(
+        "res.users",
+        string="Offer Sender",
+        compute="_compute_offer_sender_id",
+        store=True,
+        readonly=False,
+        tracking=True,
+        help="Shown as the sender (From) of the offer email when set. Defaults to the applicant's Assigned HR.",
+    )
     offer_email_recipient = fields.Char(
         string="Recipient Email",
         related="applicant_id.email_from",
@@ -213,6 +222,13 @@ class HrContractSalaryOffer(models.Model):
         for offer in self:
             offer.basic_salary_upper_zh = amount_to_chinese_upper(offer.basic_salary or 0.0)
 
+    @api.depends("applicant_id", "applicant_id.assigned_hr_id")
+    def _compute_offer_sender_id(self):
+        # 与 work_location 类似：仅在为空时回填，避免覆盖 HR 手改；新建时默认 Assigned HR。
+        for offer in self:
+            if not offer.offer_sender_id and offer.applicant_id.assigned_hr_id:
+                offer.offer_sender_id = offer.applicant_id.assigned_hr_id
+
     @api.depends("company_id")
     def _compute_email_template_id(self):
         # 根据公司挑选默认 offer 邮件模板：模板 company_ids 包含当前公司即匹配。
@@ -324,6 +340,21 @@ class HrContractSalaryOffer(models.Model):
             h += 1
             m = 0
         return "%d:%02d" % (h, m)
+
+    def action_open_refuse_wizard(self):
+        """全部为 full_signed 时不打开 Refuse 向导；混合选中时仍可打开，仅非 full_signed 会被写入 refused。"""
+        if self and not self.filtered(lambda o: o.state != "full_signed"):
+            raise UserError(_("Fully signed offers cannot be refused."))
+        return super().action_open_refuse_wizard()
+
+    def action_refuse_offer(self, message=None, refusal_reason=None):
+        """拒绝时跳过 full_signed（如候选人归档时顺带 refuse，不应把已签完 offer 标成 refused）。"""
+        to_refuse = self.filtered(lambda o: o.state != "full_signed")
+        if not to_refuse:
+            return
+        return super(HrContractSalaryOffer, to_refuse).action_refuse_offer(
+            message=message, refusal_reason=refusal_reason
+        )
 
     def action_open_sign_document(self):
         """打开候选人签署页面（手动流程）。"""
@@ -472,7 +503,7 @@ class HrContractSalaryOffer(models.Model):
         if not candidate_partner.email:
             raise UserError(_("The applicant must have a valid email address to sign the document."))
 
-        company_partner = (self.company_signer_id.partner_id or self.env.user.partner_id)
+        company_partner = self.company_signer_id.partner_id
         if not company_partner.email:
             raise UserError(_("The company signer must have a valid email address to sign the document."))
 
@@ -546,7 +577,7 @@ class HrContractSalaryOffer(models.Model):
             if offered_stage:
                 applicant.stage_id = offered_stage
             offer._send_offer_email(silent_fail=True)
-            offer._create_sign_request_silently(silent_fail=True)
+            # offer._create_sign_request_silently(silent_fail=True)
             offer._sync_applicant_onboarding_defaults()
 
     def _sync_applicant_onboarding_defaults(self):
@@ -627,6 +658,7 @@ class HrContractSalaryOffer(models.Model):
     # 所以只需 override 公共入口一次即可同时解除"只读"和"写入拦截"。
     _TIER_VALIDATION_EXTRA_FIELDS = [
         "email_template_id",
+        "offer_sender_id",
         "company_signer_id",
         "offer_email_state",
         "offer_email_sent_date",
@@ -681,6 +713,10 @@ class HrContractSalaryOffer(models.Model):
             missing.append(_("Joining Date"))
         if not self.company_signer_id:
             missing.append(_("Company Signer"))
+        if not self.offer_sender_id:
+            missing.append(_("Offer Sender"))
+        elif not self.offer_sender_id.work_email:
+            missing.append(_("Offer Sender Work Email"))
         return missing
 
     def _handle_offer_email_failure(self, reason, silent_fail):
@@ -793,7 +829,7 @@ class HrContractSalaryOffer(models.Model):
         }
 
     def action_recreate_sign_request(self):
-        """取消所有现有 sign_request 后重建。用于审批通过时静默创建失败的补救场景。
+        """取消所有现有 sign_request 后重建
         旧 sign_request 不删除，cancel 后保留作为历史记录。
         """
         if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
