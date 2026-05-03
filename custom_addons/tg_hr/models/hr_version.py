@@ -7,6 +7,9 @@ PAYROLL_GROUP = "hr_payroll.group_hr_payroll_user"
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
+    # ---- 调整权限 ---------------------------------------------------------
+    date_version = fields.Date(groups="hr.group_hr_user,tg_hr.group_tg_hr_version_readonly")
+
     # ---- 标准津贴字段（规则中按字段名稳定引用） ---------------------------
     kpi_base = fields.Monetary(
         string="KPI Base",

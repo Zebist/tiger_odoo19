@@ -188,6 +188,13 @@
         <field name="model">hr.contract.salary.offer</field>
         <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
         <field name="arch" type="xml">
+            <!-- Token 仍挂在原生 Technical Features 分组内；access_token 仅系统管理员可见 -->
+            <xpath expr="//field[@name='access_token']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']//button[@name='action_view_signature_request']" position="attributes">
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_user,sign.group_sign_user,base.group_system</attribute>
+            </xpath>
             <xpath expr="//form/header/button[@name='action_send_by_email']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -360,6 +367,7 @@
 
             <xpath expr="//notebook/page[1]" position="before">
                 <page string="Onboarding Preparation" name="tg_hr_onboarding"
+                      groups="tg_hr.group_tg_hr_applicant_records_admin,base.group_system"
                       invisible="not show_onboarding_page">
 
                     <!-- 进度横幅 -->

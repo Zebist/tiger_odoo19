@@ -9,8 +9,8 @@
         'base_by_zb',
         'base_user_role',
         'hr',
+        'hr_skills',
         'hr_payroll',
-        'tg_payroll',
         'hr_recruitment',
         'hr_contract_salary',
         'documents',
@@ -23,9 +23,10 @@
     'data': [
         'security/tg_hr_groups.xml',
         'security/ir.model.access.csv',
-        'security/tg_hr_record_rules.xml',
         'data/hr_requisition_stage_data.xml',
         'data/hr_applicant_stage_data.xml',
+        # ir.rule 中 ref 本模块 Offered 阶段，须在 hr_applicant_stage_data 之后加载
+        'security/tg_hr_record_rules.xml',
         'data/cron_offer_t3_warning.xml',
         'data/resource_calendar_bd_data.xml',
         'data/mail_template_offer_data.xml',
@@ -40,7 +41,11 @@
         'wizards/hr_employee_confirm_contract_wizard_views.xml',
         'views/hr_applicant_views.xml',
         'views/hr_applicant_generate_offer_tg.xml',
+        'views/hr_version_search_views.xml',
         'views/hr_employee_views.xml',
+        'views/hr_employee_public_views.xml',
+        'views/hr_version_views.xml',
+        'views/hr_payroll_structure_type_views.xml',
         # Tier Validation 配置数据（审批流/动作）
         'data/tier_validation_data.xml',
         'views/res_users_views.xml',

@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="hr_payroll_structure_type_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.payroll.structure.type.form.inherit.tg_payroll</field>
+        <field name="name">hr.payroll.structure.type.form.inherit.tg_hr</field>
         <field name="model">hr.payroll.structure.type</field>
         <field name="inherit_id" ref="hr_payroll.hr_payroll_structure_type_view_form"/>
         <field name="arch" type="xml">

@@ -447,14 +447,15 @@ class HrApplicant(models.Model):
         return ("tg_hr_onboarding",)
 
     def action_show_offers(self):
-        """Override：仅给 base.group_system 提权。普通用户保持原 record rule 限制
-        避免点 stat button 跳到一个新建 offer 编辑页。
-        """
-        if (self.env.user.has_group("base.group_system")):
+        """与表单 stat 按钮 groups 一致；系统用户 sudo，其余走 ACL + record rule。"""
+        if not self.env.user.has_groups(
+            "hr_recruitment.group_hr_recruitment_user,"
+            "tg_hr.group_hr_offer_email_sender,base.group_system"
+        ):
+            raise AccessError(_("You are not allowed to open salary offers for applicants."))
+        if self.env.user.has_group("base.group_system"):
             self = self.sudo()
-
-        action = super(HrApplicant, self).action_show_offers()
-        return action
+        return super(HrApplicant, self).action_show_offers()
 
     def action_move_to_initial_screening(self):
         """从 New 阶段进入 Initial Screening（与 statusbar 下一阶段一致）。"""
@@ -937,3 +938,13 @@ class HrApplicant(models.Model):
             newest = work_permit_atts.sorted('id', reverse=True)[0]
             employee.sudo().has_work_permit = newest.file
 
+    def action_generate_offer(self):
+        if self.env.user.has_group('tg_hr.group_hr_offer_email_sender'):  # 有权限的时候做 sudo 提权
+            return super(HrApplicant, self.sudo()).action_generate_offer()
+    
+        return super().action_generate_offer()
+
+    def _check_interviewer_access(self):
+        # @OVERRIDE 支持入职管理员操作
+        if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user') and not self.env.user.has_group('tg_hr.group_tg_hr_applicant_records_admin'):
+            raise UserError(_('You are not allowed to perform this action.'))

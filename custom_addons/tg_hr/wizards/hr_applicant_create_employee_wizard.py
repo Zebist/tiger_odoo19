@@ -74,6 +74,9 @@ class HrApplicantCreateEmployeeWizard(models.TransientModel):
                 wiz.trial_date_end = False
 
     def action_create_employee(self):
+        if self.env.user.has_group('tg_hr.group_tg_hr_onboarding_create_employee'):
+            self = self.sudo()  # 有创建权限时提权
+
         self.ensure_one()
         applicant = self.applicant_id
         applicant.write({

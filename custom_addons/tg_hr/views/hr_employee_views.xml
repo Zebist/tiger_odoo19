@@ -8,15 +8,14 @@
 
             <!-- 顶部横幅：当前 version 的合同开始日期为空 → 提示 HR 走 Confirm Contract -->
             <xpath expr="//sheet" position="before">
+                <field name="version_contract_date_start" invisible="1"/>
                 <div class="alert alert-warning" role="alert"
                      invisible="version_contract_date_start">
                     <i class="fa fa-exclamation-triangle me-2"/>
                     Please review and confirm the contract dates at the bottom of the
                     <strong>Payroll</strong> tab via <strong>Confirm Contract</strong>.
                 </div>
-                <field name="version_contract_date_start" invisible="1"/>
             </xpath>
-
             <!-- Work Information page 末尾加 Onboarding 区（含 Join Date） -->
             <xpath expr="//page[@name='work_information']//div[@id='o_work_information']" position="inside">
                 <group string="Onboarding">

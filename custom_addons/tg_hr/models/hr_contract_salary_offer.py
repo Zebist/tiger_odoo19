@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models, Command
 from odoo.addons.base_by_zb.tools.amount import amount_to_chinese_upper
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -15,6 +15,10 @@ class HrContractSalaryOffer(models.Model):
     _inherit = ["hr.contract.salary.offer", "tier.validation.zb"]
 
     _tier_validation_manual_config = False
+
+    job_title = fields.Char(required=True)
+    employee_job_id = fields.Many2one(required=True)
+    department_id = fields.Many2one(required=True)
 
     reporting_to_id = fields.Many2one("hr.employee", string="Reporting To", required=True, tracking=True)
     work_location_id = fields.Many2one(
@@ -55,25 +59,6 @@ class HrContractSalaryOffer(models.Model):
         related="contract_template_id.structure_type_id",
         store=True,
         readonly=True,
-    )
-
-    basic_salary = fields.Monetary(string="Basic Salary", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
-    house_rent_allowance = fields.Monetary(string="House Rent Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
-    medical_allowance = fields.Monetary(string="Medical Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
-    conveyance_allowance = fields.Monetary(string="Conveyance Allowance", compute="_compute_salary_breakdown", store=True, currency_field="currency_id")
-
-    offer_total_amount = fields.Monetary(
-        string="Total",
-        compute="_compute_offer_total_amount",
-        store=True,
-        currency_field="currency_id",
-    )
-
-    basic_salary_upper_zh = fields.Char(
-        string="Basic Salary (Upper)",
-        compute="_compute_basic_salary_upper_zh",
-        store=True,
-        readonly=False
     )
 
     # ── Offer Email ──────────────────────────────────────────────────────
@@ -120,16 +105,19 @@ class HrContractSalaryOffer(models.Model):
     has_sign_request = fields.Boolean(
         string="Has Active Sign Request",
         compute="_compute_sign_request_state",
+        compute_sudo=True,
         store=True,
     )
     is_company_signed = fields.Boolean(
         string="Company Signed",
         compute="_compute_sign_request_state",
+        compute_sudo=True,
         store=True,
     )
     is_employee_signed = fields.Boolean(
         string="Employee Signed",
         compute="_compute_sign_request_state",
+        compute_sudo=True,
         store=True,
     )
     sign_invite_sent_to_employee = fields.Datetime(
@@ -157,6 +145,63 @@ class HrContractSalaryOffer(models.Model):
         copy=False,
         help="Optional note recorded by HR when marking offline signed.",
     )
+
+    basic_salary = fields.Monetary(string="Basic Salary", compute="_compute_salary_breakdown", store=True,
+                                   currency_field="currency_id")
+    house_rent_allowance = fields.Monetary(string="House Rent Allowance", compute="_compute_salary_breakdown",
+                                           store=True, currency_field="currency_id")
+    medical_allowance = fields.Monetary(string="Medical Allowance", compute="_compute_salary_breakdown", store=True,
+                                        currency_field="currency_id")
+    conveyance_allowance = fields.Monetary(string="Conveyance Allowance", compute="_compute_salary_breakdown",
+                                           store=True, currency_field="currency_id")
+
+    offer_total_amount = fields.Monetary(
+        string="Total",
+        compute="_compute_offer_total_amount",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    basic_salary_upper_zh = fields.Char(
+        string="Basic Salary (Upper)",
+        compute="_compute_basic_salary_upper_zh",
+        store=True,
+        readonly=False
+    )
+
+    @api.depends("basic_salary", "currency_id")
+    def _compute_basic_salary_upper_zh(self):
+        for offer in self:
+            offer.basic_salary_upper_zh = amount_to_chinese_upper(offer.basic_salary or 0.0)
+
+    @api.depends("basic_salary", "house_rent_allowance", "medical_allowance", "conveyance_allowance")
+    def _compute_offer_total_amount(self):
+        for offer in self:
+            offer.offer_total_amount = (
+                    (offer.basic_salary or 0.0)
+                    + (offer.house_rent_allowance or 0.0)
+                    + (offer.medical_allowance or 0.0)
+                    + (offer.conveyance_allowance or 0.0)
+            )
+
+    @api.depends(
+        "wage",
+        "structure_type_id",
+        "structure_type_id.hra_pct",
+        "structure_type_id.medical_pct",
+        "structure_type_id.conveyance_pct",
+    )
+    def _compute_salary_breakdown(self):
+        # 复用 hr.version 上的同款拆分算法，确保 offer 与合同一致
+        Version = self.env['hr.version']
+        for offer in self:
+            basic, hra, med, conv = Version._split_wage(
+                offer.wage, offer.structure_type_id, offer.currency_id
+            )
+            offer.basic_salary = basic
+            offer.house_rent_allowance = hra
+            offer.medical_allowance = med
+            offer.conveyance_allowance = conv
 
     SIGN_PREFILL_MAPPING = {
         "EMPLOYEE NAME": lambda o: o.applicant_id.partner_name or "",
@@ -188,39 +233,6 @@ class HrContractSalaryOffer(models.Model):
             if not offer.reporting_to_id and offer.department_id.manager_id:
                 offer.reporting_to_id = offer.department_id.manager_id
 
-    @api.depends(
-        "wage",
-        "structure_type_id",
-        "structure_type_id.hra_pct",
-        "structure_type_id.medical_pct",
-        "structure_type_id.conveyance_pct",
-    )
-    def _compute_salary_breakdown(self):
-        # 复用 hr.version 上的同款拆分算法，确保 offer 与合同一致
-        Version = self.env['hr.version']
-        for offer in self:
-            basic, hra, med, conv = Version._split_wage(
-                offer.wage, offer.structure_type_id, offer.currency_id
-            )
-            offer.basic_salary = basic
-            offer.house_rent_allowance = hra
-            offer.medical_allowance = med
-            offer.conveyance_allowance = conv
-
-    @api.depends("basic_salary", "house_rent_allowance", "medical_allowance", "conveyance_allowance")
-    def _compute_offer_total_amount(self):
-        for offer in self:
-            offer.offer_total_amount = (
-                (offer.basic_salary or 0.0)
-                + (offer.house_rent_allowance or 0.0)
-                + (offer.medical_allowance or 0.0)
-                + (offer.conveyance_allowance or 0.0)
-            )
-
-    @api.depends("basic_salary", "currency_id")
-    def _compute_basic_salary_upper_zh(self):
-        for offer in self:
-            offer.basic_salary_upper_zh = amount_to_chinese_upper(offer.basic_salary or 0.0)
 
     @api.depends("applicant_id", "applicant_id.assigned_hr_id")
     def _compute_offer_sender_id(self):
@@ -312,7 +324,7 @@ class HrContractSalaryOffer(models.Model):
                 offer.is_company_signed = True
                 offer.is_employee_signed = True
                 continue
-            active = offer.sign_request_ids.filtered(
+            active = offer.sudo().sign_request_ids.filtered(
                 lambda r: r.state not in ("canceled", "refused")
             )[:1]
             offer.has_sign_request = bool(active)

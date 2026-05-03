@@ -38,6 +38,33 @@
         <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
+    <!-- hr.recruitment.degree 只读 ACL 专用组（与流水线动作组分离） -->
+    <record id="group_tg_hr_recruitment_degree_readonly" model="res.groups">
+        <field name="name">Recruitment Degree Readonly</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <!-- hr.applicant 普用户全量 CRUD + 见 ir.rule（自建 / Assigned HR=自己 / Assigned HR 为空） -->
+    <record id="group_tg_hr_recruitment_applicant_normal_edit" model="res.groups">
+        <field name="name">Recruitment Applicant Normal User (Edit — Own, Assigned HR, or Unassigned)</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_requisition"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <!-- 入职档案 privilege：档案管理员组；仅 hr.applicant ACL + ir.rule；Onboarding 页仅该组可见 -->
+    <record id="res_groups_privilege_tg_hr_applicant_records" model="res.groups.privilege">
+        <field name="name">Onboarding Records</field>
+        <field name="sequence">12</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <record id="group_tg_hr_applicant_records_admin" model="res.groups">
+        <field name="name">Applicant Records Administrator</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_applicant_records"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
     <!-- Onboarding + Employee Contract Confirm 共用同一 privilege（原 Employee Onboarding 已合并） -->
     <record id="res_groups_privilege_tg_hr_onboarding" model="res.groups.privilege">
         <field name="name">Tiger Onboarding</field>
@@ -48,13 +75,6 @@
     <record id="group_tg_hr_onboarding_dept_manager" model="res.groups">
         <field name="name">Onboarding Department Manager</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
-        <field name="implied_ids" eval="[(6, 0, [])]"/>
-    </record>
-
-    <record id="group_tg_hr_onboarding_admin" model="res.groups">
-        <field name="name">Onboarding Administrator</field>
-        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
-        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
     <!-- Create Employee 向导与表单按钮（入职档案） -->
@@ -73,6 +93,13 @@
     <record id="group_hr_version_contract_admin" model="res.groups">
         <field name="name">HR Version Contract Administrator</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+    </record>
+
+    <!-- hr.version 仅读 ACL 专用组（无记录规则） -->
+    <record id="group_tg_hr_version_readonly" model="res.groups">
+        <field name="name">HR Version Readonly</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
 
     <record id="res_groups_privilege_tg_hr_applicant_stage" model="res.groups.privilege">
@@ -95,7 +122,7 @@
 
     <record id="group_hr_offer_email_sender" model="res.groups">
         <field name="name">Offer Email Sender</field>
-        <field name="comment">仅用于界面按钮与后端 RPC 的 has_group 门禁；不在此组挂 ir.model.access / ir.rule。</field>
+        <field name="comment">Offer 相关按钮/RPC；候选人侧 hr.contract.salary.offer 见 tg_hr ACL 与「applicant pipeline」同名 record rule。</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_offer_email"/>
         <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>
@@ -104,5 +131,17 @@
         <field name="name">Employee Contract Confirm</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
         <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <!-- 员工主数据只读：hr.employee ACL 1,0,0,0 -->
+    <record id="res_groups_privilege_tg_hr_employee_info" model="res.groups.privilege">
+        <field name="name">Tiger Employee Information</field>
+        <field name="sequence">15</field>
+        <field name="category_id" ref="tg_hr.module_category_tg_hr"/>
+    </record>
+
+    <record id="group_tg_hr_employee_info_readonly" model="res.groups">
+        <field name="name">Employee Information Readonly</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_employee_info"/>
     </record>
 </odoo>

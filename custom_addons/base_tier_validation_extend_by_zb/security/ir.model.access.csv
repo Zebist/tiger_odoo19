@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_base_approval_flow_zb_manager,base.approval.flow.zb.manager,model_base_approval_flow_zb,base_tier_validation_extend_by_zb.group_tier_validation_extend_manager,1,1,1,1
 access_base_approval_flow_zb_user_read,base.approval.flow.zb.user.read,model_base_approval_flow_zb,base_tier_validation_extend_by_zb.group_tier_validation_extend_user,1,0,0,0
+access_base_approval_flow_zb_base_user_read,base.approval.flow.zb.base.user.read,model_base_approval_flow_zb,base.group_user,1,0,0,0
 access_base_approval_flow_zb_system,base.approval.flow.zb.system,model_base_approval_flow_zb,base.group_system,1,1,1,1

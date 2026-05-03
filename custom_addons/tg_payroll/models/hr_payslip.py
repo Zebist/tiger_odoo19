@@ -47,7 +47,7 @@ class HrPayslip(models.Model):
 
     def compute_sheet(self):
         self._tg_assert_pay_run_allows_sheet_compute()
-        return super().compute_sheet()
+        return super(HrPayslip, self.sudo()).compute_sheet()
 
     def action_refresh_from_work_entries(self):
         # 与 compute 同规则；先校验再动数据，避免 RPC 在非 draft run 上执行一半失败

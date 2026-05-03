@@ -41,19 +41,45 @@
         <field name="name">Employee: onboarding admin full access</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_onboarding_admin'))]"/>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_applicant_records_admin'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
 
-    <!-- 流水线数据组：候选人侧 Offer 域（与标准 Officer 规则一致；非按钮组） -->
+    <!-- 普用户编辑组：仅本人创建的、或 Assigned HR 为本人、或 Assigned HR 为空的候选人 -->
+    <record id="rule_hr_applicant_tg_normal_edit_own_assigned_or_unassigned" model="ir.rule">
+        <field name="name">Applicant: normal edit (own create, assigned HR self, or unassigned HR)</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="domain_force">['|', '|', ('create_uid', '=', user.id), ('assigned_hr_id', '=', user.id), ('assigned_hr_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_normal_edit'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- 档案管理员：Offered / Contract Signed 全量可见；其余阶段仅自建 / Assigned HR=本人 / 未分配 HR -->
+    <!-- 与 hr_recruitment_security.xml 一致：domain 存为文本，运行期 safe_eval 才有 user； -->
+    <!-- Odoo 19 Domain 前缀式：n 个条件需 n-1 个「|」且全部并列，见 odoo/orm/domains.py 反转栈解析 -->
+    <record id="rule_hr_applicant_tg_records_admin" model="ir.rule">
+        <field name="name">Applicant: records admin (offered or contract signed or own/assigned/unassigned)</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="domain_force" eval="'[\'|\', \'|\', \'|\', \'|\', (\'stage_id\', \'=\', ' + str(ref('tg_hr.hr_recruitment_stage_tg_offered')) + '), (\'stage_id\', \'=\', ' + str(ref('hr_recruitment.stage_job5')) + '), (\'create_uid\', \'=\', ' + 'user' + '.id), (\'assigned_hr_id\', \'=\', ' + 'user' + '.id), (\'assigned_hr_id\', \'=\', False)]'"/>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_applicant_records_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 流水线 / Offer Email Sender：候选人侧 Offer 域（与标准 Officer 域一致） -->
     <record id="rule_hr_contract_salary_offer_applicant_pipeline_applicant" model="ir.rule">
         <field name="name">Salary Package Offer: applicant pipeline sees applicant offers</field>
         <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
         <field name="domain_force">[('employee_version_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_actions'))]"/>
+        <field name="groups" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_actions')), (4, ref('tg_hr.group_hr_offer_email_sender'))]"/>
     </record>
 
     <!-- 系统管理员：可查看所有 Salary Package Offer（避免标准模块 record rule 误伤） -->

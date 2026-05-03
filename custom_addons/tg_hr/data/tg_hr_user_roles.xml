@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
-    <!-- OCA base_user_role：预置角色（仅 implied 业务组；用户仍需勾选「内部用户」或由管理员分配） -->
-    <!-- 招聘专员：仅流水线 + Offer 相关自建组；不挂原生 Officer / Sign / Requisition Creator（其余权限后续按需补 ACL）。 -->
+<odoo>
+    <!-- OCA base_user_role：TG HR 预置角色（noupdate=0 便于升级同步名称与 implied 组） -->
 
-    <record id="role_tg_hr_recruitment_specialist" model="res.users.role">
-        <field name="name">Recruitment Specialist </field>
-        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
-        <field name="implied_ids" eval="[(6, 0, [
+    <data noupdate="0">
+        <!-- 已废弃角色：从库中删除（若曾安装过旧数据） -->
+        <delete model="res.users.role" id="role_tg_hr_onboarding_contract_admin"/>
+
+        <record id="role_tg_hr_recruitment_specialist" model="res.users.role">
+            <field name="name">Recruitment Specialist</field>
+            <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
+            <field name="implied_ids" eval="[(6, 0, [
             ref('base.group_user'),
+            ref('tg_hr.group_tg_hr_recruitment_applicant_normal_edit'),
             ref('tg_hr.group_tg_hr_recruitment_applicant_actions'),
+            ref('tg_hr.group_tg_hr_recruitment_degree_readonly'),
+            ref('tg_hr.group_tg_hr_requisition_terminate'),
+            ref('hr_recruitment.group_hr_recruitment_interviewer'),
+            ref('tg_hr.group_tg_hr_employee_info_readonly'),
+            ref('tg_hr.group_tg_hr_version_readonly'),
             ref('tg_hr.group_hr_offer_email_sender'),
         ])]"/>
-    </record>
+        </record>
 
-    <record id="role_tg_hr_onboarding_contract_admin" model="res.users.role">
-        <field name="name">Onboarding Contract Administrator</field>
-        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
-        <field name="implied_ids" eval="[(6, 0, [
+        <!-- 原 Onboarding Records Administrator：改名强调档案维护；不再隐含招聘 Officer -->
+        <record id="role_tg_hr_onboarding_records_admin" model="res.users.role">
+            <field name="name">Onboarding Records Maintainer</field>
+            <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
+            <field name="implied_ids" eval="[(6, 0, [
             ref('base.group_user'),
             ref('hr.group_hr_user'),
-            ref('sign.group_sign_user'),
-            ref('tg_hr.group_hr_offer_email_sender'),
+            ref('tg_hr.group_tg_hr_recruitment_applicant_actions'),
+            ref('tg_hr.group_tg_hr_recruitment_degree_readonly'),
+            ref('hr_recruitment.group_hr_recruitment_interviewer'),
+            ref('tg_hr.group_tg_hr_applicant_records_admin'),
             ref('tg_hr.group_hr_employee_contract_confirm'),
-            ref('tg_hr.group_hr_version_contract_admin'),
-        ])]"/>
-    </record>
-
-    <record id="role_tg_hr_onboarding_records_admin" model="res.users.role">
-        <field name="name">Onboarding Records Administrator</field>
-        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
-        <field name="implied_ids" eval="[(6, 0, [
-            ref('base.group_user'),
-            ref('hr_recruitment.group_hr_recruitment_user'),
-            ref('tg_hr.group_tg_hr_onboarding_records_core'),
             ref('tg_hr.group_tg_hr_onboarding_create_employee'),
-            ref('tg_hr.group_hr_employee_contract_confirm'),
+            ref('tg_hr.group_tg_hr_onboarding_records_core'),
+            ref('sign.group_sign_user'),
         ])]"/>
-    </record>
+        </record>
+
+        <!-- 发薪：工资 Officer（已隐含 HR Officer）+ 导出 -->
+        <record id="role_tg_hr_payroll_specialist" model="res.users.role">
+            <field name="name">Payroll Specialist</field>
+            <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
+            <field name="implied_ids" eval="[(6, 0, [
+            ref('base.group_user'),
+            ref('hr_payroll.group_hr_payroll_user'),
+            ref('base.group_allow_export'),
+        ])]"/>
+        </record>
+    </data>
 </odoo>

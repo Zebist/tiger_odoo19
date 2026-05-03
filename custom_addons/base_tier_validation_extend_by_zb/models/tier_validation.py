@@ -90,7 +90,7 @@ class TierValidation(models.AbstractModel):
                     order="sequence asc",
                 )
                 # 写入 flow_id 方便后续获取
-                rec.sudo().flow_id = tier_definitions.flow_id if tier_definitions else None
+                rec.sudo().flow_id = tier_definitions.sudo().flow_id if tier_definitions else None
 
                 for td in tier_definitions:
                     if rec.evaluate_tier(td):
@@ -138,9 +138,9 @@ class TierValidation(models.AbstractModel):
         for review in reviews:
             definition = review.definition_id
             stage = (
-                definition.stage_id or review.definition_id.flow_id.approve_stage_id
+                definition.stage_id or review.definition_id.sudo().flow_id.approve_stage_id
                 if status == "approved"
-                else definition.rejected_stage_id or review.definition_id.flow_id.reject_stage_id
+                else definition.rejected_stage_id or review.definition_id.sudo().flow_id.reject_stage_id
                 if status == "rejected"
                 else False
             )
@@ -207,7 +207,7 @@ class TierValidation(models.AbstractModel):
                 # tier_stage_write=True,
                 skip_tier_state_check=True,
                 skip_validation_check=True,
-            ).write({"stage_id": rec.flow_id.draft_stage_id})
+            ).write({"stage_id": rec.sudo().flow_id.draft_stage_id})
 
         if not dont_update_state:
             self.sudo().with_context(
@@ -228,7 +228,7 @@ class TierValidation(models.AbstractModel):
             reviews = rec.request_validation()  # 自动请求validation  # todo 做成可配置
             if not reviews:
                 continue
-            submit_stage_id = rec.flow_id.submit_stage_id
+            submit_stage_id = rec.sudo().flow_id.submit_stage_id
             if not dont_update_state and 'stage_id' in rec._fields:
                 rec.sudo().with_context(
                     skip_tier_state_check=True,
@@ -250,6 +250,6 @@ class TierValidation(models.AbstractModel):
 
     def unlink(self):
         for rec in self:
-            if not rec.flow_id.allow_delete and rec.approval_state != 'draft':
+            if not rec.sudo().flow_id.allow_delete and rec.sudo().approval_state != 'draft':
                 raise ValidationError(_('This record cannot be deleted. Please archive it instead, or delete it while in draft state.'))
         return super().unlink()

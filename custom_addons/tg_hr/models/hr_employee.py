@@ -10,6 +10,9 @@ _logger = logging.getLogger(__name__)
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
+    # ---- 补充权限
+    has_work_entries = fields.Boolean(groups="base.group_system,hr.group_hr_user,tg_hr.group_tg_hr_applicant_records_admin")
+
     grade = fields.Selection(
         [
             ("G0", "G0"),
@@ -38,10 +41,15 @@ class HrEmployee(models.Model):
     # ── 暴露 version_id.contract_date_start 给视图层 invisible 表达式使用 ─
     # 用 related store=False，纯展示用，避免在 hr.version 上加重逻辑
     version_contract_date_start = fields.Date(
-        related="version_id.contract_date_start",
+        compute="_compute_version_contract_date_start",
         string="Current Contract Start",
+        compute_sudo=True,
         readonly=True,
     )
+
+    def _compute_version_contract_date_start(self):
+        for rec in self:
+            rec.version_contract_date_start = rec.version_id.contract_date_start
 
     # ── Onboarding Checklist（首次合同 confirm 时填）──────────────────────
     onb_chk_contract_signed = fields.Boolean(string="合同签署", copy=False, tracking=True)

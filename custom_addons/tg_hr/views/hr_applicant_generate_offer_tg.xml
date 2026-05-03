@@ -9,6 +9,9 @@
             <xpath expr="//button[@name='action_generate_offer']" position="attributes">
                 <attribute name="groups">tg_hr.group_hr_offer_email_sender,base.group_system</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_show_offers']" position="attributes">
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_user,tg_hr.group_hr_offer_email_sender,base.group_system</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

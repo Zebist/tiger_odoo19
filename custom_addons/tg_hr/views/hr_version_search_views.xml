@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        hr.version 上 contract_date_start/end 仅 hr.group_hr_manager 可见，
+        但标准搜索视图仍带 date= 筛选器；非经理用户打开 many2one Search more 时
+        前端 SearchArchParser 会访问缺失字段的 .type 导致 Owl 报错。
+        与字段权限对齐：仅经理可见这两个按合同日期的快捷筛选。
+    -->
+    <record id="hr_version_search_view_inherit_tg_hr" model="ir.ui.view">
+        <field name="name">hr.version.search.inherit.tg_hr</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='contract_date_start']" position="attributes">
+                <attribute name="groups">hr.group_hr_manager</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='contract_date_end']" position="attributes">
+                <attribute name="groups">hr.group_hr_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

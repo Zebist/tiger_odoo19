@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="hr_contract_template_form_view_inherit" model="ir.ui.view">
-        <field name="name">hr.contract.template.form.inherit.tg_payroll</field>
+        <field name="name">hr.contract.template.form.inherit.tg_hr</field>
         <field name="model">hr.version</field>
         <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
         <field name="arch" type="xml">
@@ -32,8 +32,8 @@
         </field>
     </record>
 
-    <record id="hr_employee_form_view_inherit_tg_payroll" model="ir.ui.view">
-        <field name="name">hr.employee.form.inherit.tg_payroll</field>
+    <record id="hr_employee_form_view_inherit_tg_hr" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.tg_hr</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">

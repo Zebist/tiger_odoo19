@@ -3407,15 +3407,18 @@ class BaseModel(metaclass=MetaModel):
         )
 
         if self.env.user._has_group('base.group_no_one'):
+            # @CODE_REFACTOR: 在 py 中配置的特殊权限，fields.groups 可能是空白，导致这里split报错，我们多加个elif判断和 else 分支来处理
             if field.groups == NO_ACCESS:
                 allowed_groups_msg = _("always forbidden")
-            else:
+            elif field.groups:
                 groups_list = [self.env.ref(g) for g in field.groups.split(',')]
                 groups = self.env['res.groups'].union(*groups_list).sorted('id')
                 allowed_groups_msg = _(
                     "allowed for groups %s",
                     ', '.join(repr(g.display_name) for g in groups),
                 )
+            else:
+                allowed_groups_msg = _("forbidden by module configuration in python code")
             error_msg += _(
                 "\nUser: %(user)s"
                 "\nGroups: %(allowed_groups_msg)s",

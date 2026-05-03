@@ -13,6 +13,7 @@ access_tg_hr_applicant_review_wizard_user,tg.hr.applicant.review.wizard user,mod
 access_tg_hr_applicant_first_contact_wizard_user,tg.hr.applicant.first.contact.wizard user,model_tg_hr_applicant_first_contact_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_interview_wizard_user,tg.hr.applicant.interview.wizard user,model_tg_hr_applicant_interview_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_attachment_user,tg.hr.applicant.attachment applicant pipeline,model_tg_hr_applicant_attachment,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,1
+access_tg_hr_applicant_attachment_recuritment_user,tg.hr.applicant.attachment applicant pipeline,model_tg_hr_applicant_attachment,hr_recruitment.group_hr_recruitment_user,1,1,1,1
 access_tg_hr_applicant_attachment_system,tg.hr.applicant.attachment system,model_tg_hr_applicant_attachment,base.group_system,1,1,1,1
 access_tg_hr_applicant_create_employee_wizard_user,tg.hr.applicant.create.employee.wizard user,model_tg_hr_applicant_create_employee_wizard,base.group_user,1,1,1,1
 access_hr_offer_mark_signed_offline_wizard_user,hr.offer.mark.signed.offline.wizard user,model_hr_offer_mark_signed_offline_wizard,base.group_user,1,1,1,1
@@ -20,8 +21,17 @@ access_hr_employee_confirm_contract_wizard_user,hr.employee.confirm.contract.wiz
 access_tg_hr_applicant_report_user,tg.hr.applicant.report applicant pipeline,model_tg_hr_applicant_report,tg_hr.group_tg_hr_recruitment_applicant_actions,1,0,0,0
 access_tg_hr_applicant_report_manager,tg.hr.applicant.report manager,model_tg_hr_applicant_report,hr_recruitment.group_hr_recruitment_manager,1,0,0,0
 access_hr_employee_onboarding_records_core,tg.hr onboarding records employee,hr.model_hr_employee,tg_hr.group_tg_hr_onboarding_records_core,1,1,1,1
+access_hr_employee_info_readonly,tg.hr employee information readonly,hr.model_hr_employee,tg_hr.group_tg_hr_employee_info_readonly,1,0,0,0
 access_hr_version_onboarding_records_ro,tg.hr onboarding records hr.version ro,hr.model_hr_version,tg_hr.group_tg_hr_onboarding_records_core,1,0,0,0
 access_hr_version_contract_admin_rwcd,tg.hr hr.version contract admin,hr.model_hr_version,tg_hr.group_hr_version_contract_admin,1,1,1,1
+access_tg_hr_version_readonly_hr_version,tg.hr hr.version readonly,hr.model_hr_version,tg_hr.group_tg_hr_version_readonly,1,0,0,0
+access_tg_hr_hr_version_system,tg.hr hr.version system,hr.model_hr_version,base.group_system,1,1,1,1
 access_tg_hr_applicant_actions_hr_applicant_rw,tg.hr pipeline hr.applicant rw no create,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,0,0
+access_tg_hr_recruitment_applicant_normal_edit_hr_applicant,tg.hr recruitment applicant normal user edit hr.applicant,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_recruitment_applicant_normal_edit,1,1,1,0
+access_tg_hr_hr_applicant_system,tg.hr hr.applicant system,hr_recruitment.model_hr_applicant,base.group_system,1,1,1,1
+access_tg_hr_applicant_records_admin_hr_applicant,tg.hr applicant records admin hr.applicant only,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_applicant_records_admin,1,1,0,0
 access_tg_hr_applicant_actions_hr_contract_salary_offer,tg.hr pipeline hr.contract.salary.offer,hr_contract_salary.model_hr_contract_salary_offer,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,1
+access_tg_hr_offer_email_sender_hr_contract_salary_offer,tg.hr offer email sender hr.contract.salary.offer,hr_contract_salary.model_hr_contract_salary_offer,tg_hr.group_hr_offer_email_sender,1,1,1,1
 access_tg_hr_version_contract_admin_hr_contract_salary_offer,tg.hr version contract admin hr.contract.salary.offer,hr_contract_salary.model_hr_contract_salary_offer,tg_hr.group_hr_version_contract_admin,1,1,1,1
+access_hr_recruitment_degree_user_readonly,hr.recruitment.degree user readonly,hr_recruitment.model_hr_recruitment_degree,tg_hr.group_tg_hr_recruitment_degree_readonly,1,0,0,0
+access_refuse_offer_wizard_send_offer,access.refuse_offer_wizard_send_offer,hr_contract_salary.model_refuse_offer_wizard,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,0
