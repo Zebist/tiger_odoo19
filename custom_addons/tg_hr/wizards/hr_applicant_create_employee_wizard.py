@@ -12,8 +12,13 @@ class HrApplicantCreateEmployeeWizard(models.TransientModel):
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     manager_id = fields.Many2one('hr.employee', string='Reporting Manager', required=True,
                                  options="{'no_quick_create': True}")
-    work_location_id = fields.Many2one('hr.work.location', string='Work Location', required=True,
-                                       domain="[('company_id', 'in', [False, applicant_company_id])]")
+    work_location_id = fields.Many2one(
+        'hr.work.location',
+        string='Work Location',
+        required=True,
+        default=lambda self: self._default_work_location_id(),
+        domain="[('company_id', 'in', [False, applicant_company_id])]",
+    )
     applicant_company_id = fields.Many2one(related='applicant_id.company_id')
     resource_calendar_id = fields.Many2one('resource.calendar', string='Working Schedule',
                                            required=True, check_company=True)
@@ -44,6 +49,17 @@ class HrApplicantCreateEmployeeWizard(models.TransientModel):
             if offer and offer.contract_start_date:
                 return offer.contract_start_date
         return fields.Date.context_today(self)
+
+    @api.model
+    def _default_work_location_id(self):
+        # 与 join_date 一致：取「按 id 最新、已审批、未拒绝」的 offer 上的 Location
+        applicant_id = self.env.context.get('default_applicant_id') or self.env.context.get('active_id')
+        if applicant_id:
+            applicant = self.env['hr.applicant'].browse(applicant_id)
+            offer = applicant._get_latest_approved_offer()
+            if offer and offer.work_location_id:
+                return offer.work_location_id.id
+        return False
 
     @api.depends('join_date', 'applicant_id.ob_trial_period_months')
     def _compute_trial_date_end(self):

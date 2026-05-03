@@ -48,7 +48,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
-            <!-- Compute Sheet 两个按钮（初始计算 / 重算）：仅 run draft 时露出 -->
+            <!-- Compute Sheet（初始 / 重算）：与原生条件一致，并叠一层 run 审批 draft（后端 compute_sheet 同步校验） -->
             <xpath expr="//button[@name='compute_sheet'][hasclass('oe_highlight')]" position="attributes">
                 <attribute name="invisible">state != 'draft' or line_ids or credit_note or run_approval_state != 'draft'</attribute>
             </xpath>
@@ -96,7 +96,11 @@
         </field>
     </record>
 
-    <!-- payslip 列表 header：隐藏原生 mass action（run 操作改在 PayRunCard 上做） -->
+    <!--
+    payslip 列表 header：勿对 compute_sheet 写依赖 run_approval_state 的 invisible。
+    PayRun kanban 嵌入的 PayslipListController 里 ControlPanel 修饰符求值上下文不含该名，会 OwlError。
+    run draft 守门仅走后端 compute_sheet。
+    -->
     <record id="view_hr_payslip_tree_inherit_tg_payroll" model="ir.ui.view">
         <field name="name">hr.payslip.list.inherit.tg_payroll</field>
         <field name="model">hr.payslip</field>
@@ -127,8 +131,10 @@
     <record id="hr_payroll.action_edit_payslip_lines" model="ir.actions.server">
         <field name="binding_model_id" eval="False"/>
     </record>
+    <!-- 恢复列表 Action「Compute Sheet」；后端 compute_sheet 校验 pay run draft -->
     <record id="hr_payroll.action_hr_payroll_compute_payroll" model="ir.actions.server">
-        <field name="binding_model_id" eval="False"/>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_view_types">list</field>
     </record>
     <record id="hr_payroll.action_hr_payroll_recompute_whole_sheet" model="ir.actions.server">
         <field name="binding_model_id" eval="False"/>

@@ -7,6 +7,8 @@ KPI_GRADE_RATES = {'A': 1.0, 'B': 0.5, 'C': 0.0}
 _KPI_SYNC_CTX = 'tg_payroll_kpi_sync'
 # tier server action 触发的 auto-confirm 通过此 context flag 绕过 run_approval_state 守门
 _AUTO_CONFIRM_CTX = 'tg_payroll_auto_confirm'
+# 批量导入 / load() 时跳过「按结构预置 Salary Input 零行」
+_SKIP_DEFAULT_INPUT_LINES_CTX = 'tg_payroll_skip_default_input_lines'
 
 
 class HrPayslip(models.Model):
@@ -26,6 +28,31 @@ class HrPayslip(models.Model):
 
     def _get_view_readonly_depends(self):
         return ('run_approval_state',)
+
+    def _tg_assert_pay_run_allows_sheet_compute(self):
+        """compute_sheet：仅当所属 pay run 审批态为 draft 时允许（与表单按钮守门一致）。"""
+        for slip in self:
+            run = slip.payslip_run_id
+            if not run:
+                continue
+            if run.approval_state != 'draft':
+                raise UserError(_(
+                    "Cannot compute payslip '%(slip)s' while pay run '%(run)s' is not in draft "
+                    "approval state (current: %(state)s).\n"
+                    "Withdraw the pay run to draft if you need to change calculations.",
+                    slip=slip.display_name,
+                    run=run.display_name,
+                    state=run.approval_state or 'n/a',
+                ))
+
+    def compute_sheet(self):
+        self._tg_assert_pay_run_allows_sheet_compute()
+        return super().compute_sheet()
+
+    def action_refresh_from_work_entries(self):
+        # 与 compute 同规则；先校验再动数据，避免 RPC 在非 draft run 上执行一半失败
+        self._tg_assert_pay_run_allows_sheet_compute()
+        return super().action_refresh_from_work_entries()
 
     kpi_grade = fields.Selection(
         [('A', 'A (100%)'), ('B', 'B (50%)'), ('C', 'C (0%)')],
@@ -156,7 +183,10 @@ class HrPayslip(models.Model):
 
     @api.model
     def load(self, fields, data):
-        res = super().load(fields, data)
+        res = super(
+            HrPayslip,
+            self.with_context(**{_SKIP_DEFAULT_INPUT_LINES_CTX: True}),
+        ).load(fields, data)
         if self.env.context.get('tg_payroll_allow_import'):
             return res
         ids = res.get('ids') or []
@@ -356,8 +386,79 @@ class HrPayslip(models.Model):
             monthly_tax = monthly_tax / total_days * active_days
         return -monthly_tax
 
+    def _tg_apply_default_structure_input_lines(self):
+        """新建 / Generate payslip 后：为结构上已配置且 Availability in Structure 非空的 input type 预置 amount=0 行。
+        struct_ids 为空的类型表示全局可用，留给用户按需添加，不在此自动插入。"""
+        if self.env.context.get(_SKIP_DEFAULT_INPUT_LINES_CTX):
+            return
+        Input = self.env['hr.payslip.input']
+        vals_list = []
+        for slip in self:
+            if slip.state != 'draft':
+                continue
+            struct = slip.struct_id
+            if not struct:
+                continue
+            allowed_types = struct.input_line_type_ids.filtered(
+                lambda t: t.struct_ids and struct in t.struct_ids
+            )
+            existing_type_ids = set(slip.input_line_ids.mapped('input_type_id').ids)
+            for itype in allowed_types:
+                if itype.id in existing_type_ids:
+                    continue
+                vals_list.append({
+                    'payslip_id': slip.id,
+                    'input_type_id': itype.id,
+                    'amount': 0.0,
+                    'name': itype.name,
+                })
+        if vals_list:
+            Input.create(vals_list)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._tg_apply_default_structure_input_lines()
+        return records
+
+
 class HrPayslipInput(models.Model):
     _inherit = 'hr.payslip.input'
+
+    def _check_input_type_allowed_for_payslip_structure(self):
+        """input type 上 struct_ids（Availability in Structure）非空时，仅允许当前 payslip.struct_id 命中其一；
+        struct_ids 为空表示不限制 structure。非法 input 名称 + payslip 当前 structure 名一条提示。"""
+        illegal_names = []
+        illegal_slips = self.env['hr.payslip']
+        for line in self:
+            itype = line.input_type_id
+            slip = line.payslip_id
+            if not itype or not slip:
+                continue
+            allowed_structs = itype.struct_ids
+            if not allowed_structs:
+                continue
+            struct = slip.struct_id
+            if not struct or struct not in allowed_structs:
+                illegal_names.append(itype.display_name)
+                illegal_slips |= slip
+
+        if not illegal_names:
+            return
+
+        unique_names = ', '.join(dict.fromkeys(illegal_names))
+        struct_records = illegal_slips.mapped('struct_id').filtered(lambda s: s)
+        if struct_records:
+            struct_label = ', '.join(dict.fromkeys(struct_records.mapped('display_name')))
+            raise UserError(_(
+                'The following salary inputs are not allowed on structure "%(struct)s": %(names)s.',
+                struct=struct_label,
+                names=unique_names,
+            ))
+        raise UserError(_(
+            'The following salary inputs are not allowed (no salary structure on the payslip): %(names)s.',
+            names=unique_names,
+        ))
 
     def _check_kpi_input_conflict(self):
         """KPIBONUS 唯一性守门：同一 payslip 上 KPIBONUS 行唯一，
@@ -383,11 +484,14 @@ class HrPayslipInput(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
+        records._check_input_type_allowed_for_payslip_structure()
         records._check_kpi_input_conflict()
         return records
 
     def write(self, vals):
         res = super().write(vals)
+        if {'input_type_id', 'payslip_id'} & set(vals):
+            self._check_input_type_allowed_for_payslip_structure()
         if {'amount', 'input_type_id', 'payslip_id'} & set(vals):
             self._check_kpi_input_conflict()
         return res

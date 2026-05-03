@@ -14,7 +14,7 @@ access_tg_hr_applicant_first_contact_wizard_user,tg.hr.applicant.first.contact.w
 access_tg_hr_applicant_interview_wizard_user,tg.hr.applicant.interview.wizard user,model_tg_hr_applicant_interview_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_attachment_user,tg.hr.applicant.attachment applicant pipeline,model_tg_hr_applicant_attachment,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,1
 access_tg_hr_applicant_attachment_system,tg.hr.applicant.attachment system,model_tg_hr_applicant_attachment,base.group_system,1,1,1,1
-access_tg_hr_applicant_create_employee_wizard_onboarding,tg.hr.applicant.create.employee.wizard onboarding,model_tg_hr_applicant_create_employee_wizard,tg_hr.group_tg_hr_onboarding_create_employee,1,1,1,1
+access_tg_hr_applicant_create_employee_wizard_user,tg.hr.applicant.create.employee.wizard user,model_tg_hr_applicant_create_employee_wizard,base.group_user,1,1,1,1
 access_hr_offer_mark_signed_offline_wizard_user,hr.offer.mark.signed.offline.wizard user,model_hr_offer_mark_signed_offline_wizard,base.group_user,1,1,1,1
 access_hr_employee_confirm_contract_wizard_user,hr.employee.confirm.contract.wizard user,model_hr_employee_confirm_contract_wizard,base.group_user,1,1,1,1
 access_tg_hr_applicant_report_user,tg.hr.applicant.report applicant pipeline,model_tg_hr_applicant_report,tg_hr.group_tg_hr_recruitment_applicant_actions,1,0,0,0

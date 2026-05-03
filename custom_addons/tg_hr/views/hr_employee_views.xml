@@ -24,6 +24,14 @@
                 </group>
             </xpath>
 
+            <!-- 无 version 合同开始日时隐藏原生 Contract 起止行（走 Confirm Contract 写入 version） -->
+            <xpath expr="//label[@for='contract_date_start']" position="attributes">
+                <attribute name="invisible">not version_contract_date_start</attribute>
+            </xpath>
+            <xpath expr="//div[@name='contract_dates']" position="attributes">
+                <attribute name="invisible">not version_contract_date_start</attribute>
+            </xpath>
+
             <!-- Payroll tab 既有字段：保留 trial_date_end / grade -->
             <field name="wage_type" position="before">
                 <field name="trial_date_end"/>

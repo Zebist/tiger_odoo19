@@ -33,6 +33,7 @@ class HrEmployee(models.Model):
         tracking=True,
         help="HR onboarding date. Distinct from contract start date.",
     )
+    trial_date_end = fields.Date(tracking=True)
 
     # ── 暴露 version_id.contract_date_start 给视图层 invisible 表达式使用 ─
     # 用 related store=False，纯展示用，避免在 hr.version 上加重逻辑

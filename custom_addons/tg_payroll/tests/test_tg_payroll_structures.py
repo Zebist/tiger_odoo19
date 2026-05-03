@@ -3,6 +3,7 @@
 from datetime import date
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -62,11 +63,18 @@ class TestTGPayrollStructures(TransactionCase):
                 'name': it.name,
             }))
 
+        run = self.env['hr.payslip.run'].create({
+            'name': 'TG Structure Test %s' % employee.name,
+            'date_start': date_from,
+            'date_end': date_to,
+            'structure_id': struct.id,
+        })
         slip = self.env['hr.payslip'].create({
             'name': '%s %s' % (employee.name, struct.name),
             'employee_id': employee.id,
             'version_id': version.id,
             'struct_id': struct.id,
+            'payslip_run_id': run.id,
             'date_from': date_from,
             'date_to': date_to,
             'input_line_ids': input_cmds,
@@ -223,4 +231,131 @@ class TestTGPayrollStructures(TransactionCase):
             version_vals={'date_start': date(2026, 4, 1), 'date_end': date(2026, 4, 15)},
         )
         self.assertAlmostEqual(self._line_total(slip, 'BASIC'), 30000.0 * (15.0 / 30.0), places=2)
+
+    def test_payslip_input_rejected_when_not_in_input_type_struct_ids(self):
+        """input type 的 struct_ids 非空时，仅允许对应 structure 上的 payslip input。"""
+        struct_cn_ft = self.structs['CN_FT']
+        struct_cn_ct = self.structs['CN_CT']
+        itype = self.env['hr.payslip.input.type'].create({
+            'name': 'TG Structure Availability Test',
+            'code': 'TGTEST_STRUCT_AVAIL',
+            'struct_ids': [Command.set([struct_cn_ct.id])],
+        })
+        # 故意挂到 CN_FT 的 structure 上，绕开 UI domain，验证后端守门
+        struct_cn_ft.write({'input_line_type_ids': [Command.link(itype.id)]})
+
+        emp = self._create_employee('Struct Avail Test', struct_cn_ft.type_id, 10000.0)
+        run = self.env['hr.payslip.run'].create({
+            'name': 'TG Struct Avail Run',
+            'date_start': date(2026, 4, 1),
+            'date_end': date(2026, 4, 30),
+            'structure_id': struct_cn_ft.id,
+        })
+        slip = self.env['hr.payslip'].create({
+            'name': 'Struct Avail Slip',
+            'employee_id': emp.id,
+            'version_id': emp.version_id.id,
+            'struct_id': struct_cn_ft.id,
+            'payslip_run_id': run.id,
+            'date_from': date(2026, 4, 1),
+            'date_to': date(2026, 4, 30),
+        })
+        with self.assertRaises(UserError):
+            self.env['hr.payslip.input'].create({
+                'payslip_id': slip.id,
+                'input_type_id': itype.id,
+                'amount': 1.0,
+                'name': itype.name,
+            })
+
+    def test_payslip_input_allowed_when_input_type_struct_ids_empty(self):
+        """struct_ids 为空表示全 structure 可用。"""
+        struct_cn_ft = self.structs['CN_FT']
+        itype = self.env['hr.payslip.input.type'].create({
+            'name': 'TG Structure Availability All',
+            'code': 'TGTEST_STRUCT_ALL',
+        })
+        self.assertFalse(itype.struct_ids)
+        struct_cn_ft.write({'input_line_type_ids': [Command.link(itype.id)]})
+
+        emp = self._create_employee('Struct All Test', struct_cn_ft.type_id, 10000.0)
+        run = self.env['hr.payslip.run'].create({
+            'name': 'TG Struct All Run',
+            'date_start': date(2026, 4, 1),
+            'date_end': date(2026, 4, 30),
+            'structure_id': struct_cn_ft.id,
+        })
+        slip = self.env['hr.payslip'].create({
+            'name': 'Struct All Slip',
+            'employee_id': emp.id,
+            'version_id': emp.version_id.id,
+            'struct_id': struct_cn_ft.id,
+            'payslip_run_id': run.id,
+            'date_from': date(2026, 4, 1),
+            'date_to': date(2026, 4, 30),
+        })
+        line = self.env['hr.payslip.input'].create({
+            'payslip_id': slip.id,
+            'input_type_id': itype.id,
+            'amount': 2.0,
+            'name': itype.name,
+        })
+        self.assertTrue(line.exists())
+
+    def test_payslip_write_struct_change_validates_existing_inputs(self):
+        struct_cn_ft = self.structs['CN_FT']
+        struct_cn_ct = self.structs['CN_CT']
+        itype = self.env['hr.payslip.input.type'].create({
+            'name': 'TG Structure Switch Test',
+            'code': 'TGTEST_STRUCT_SWITCH',
+            'struct_ids': [Command.set([struct_cn_ct.id])],
+        })
+        struct_cn_ct.write({'input_line_type_ids': [Command.link(itype.id)]})
+
+        emp = self._create_employee('Struct Switch Emp', struct_cn_ct.type_id, 8000.0)
+        run = self.env['hr.payslip.run'].create({
+            'name': 'TG Struct Switch Run',
+            'date_start': date(2026, 4, 1),
+            'date_end': date(2026, 4, 30),
+            'structure_id': struct_cn_ct.id,
+        })
+        slip = self.env['hr.payslip'].create({
+            'name': 'Struct Switch Slip',
+            'employee_id': emp.id,
+            'version_id': emp.version_id.id,
+            'struct_id': struct_cn_ct.id,
+            'payslip_run_id': run.id,
+            'date_from': date(2026, 4, 1),
+            'date_to': date(2026, 4, 30),
+            'input_line_ids': [Command.create({
+                'input_type_id': itype.id,
+                'amount': 1.0,
+                'name': itype.name,
+            })],
+        })
+        with self.assertRaises(UserError):
+            slip.write({'struct_id': struct_cn_ft.id})
+
+    def test_compute_sheet_blocked_when_pay_run_not_draft(self):
+        """pay run 非 draft 审批态时禁止 compute_sheet（防绕过 UI）。"""
+        struct = self.structs['BD_WORKER']
+        emp = self._create_employee('Compute Guard Emp', struct.type_id, 10000.0)
+        run = self.env['hr.payslip.run'].create({
+            'name': 'TG Compute Guard Run',
+            'date_start': date(2026, 4, 1),
+            'date_end': date(2026, 4, 30),
+            'structure_id': struct.id,
+        })
+        slip = self.env['hr.payslip'].create({
+            'name': 'Compute Guard Slip',
+            'employee_id': emp.id,
+            'version_id': emp.version_id.id,
+            'struct_id': struct.id,
+            'payslip_run_id': run.id,
+            'date_from': date(2026, 4, 1),
+            'date_to': date(2026, 4, 30),
+        })
+        run.write({'approval_state': 'approving'})
+        with self.assertRaises(UserError):
+            slip.compute_sheet()
 

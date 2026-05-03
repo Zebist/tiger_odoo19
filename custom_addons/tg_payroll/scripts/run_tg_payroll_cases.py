@@ -54,11 +54,18 @@ def _create_slip(env, struct_xmlid, emp_name, wage, date_from, date_to, *, input
             'name': it.name,
         }))
 
+    run = env['hr.payslip.run'].create({
+        'name': 'TG Cases %s' % emp.name,
+        'date_start': date_from,
+        'date_end': date_to,
+        'structure_id': struct.id,
+    })
     slip = env['hr.payslip'].create({
         'name': '%s %s' % (emp.name, struct.name),
         'employee_id': emp.id,
         'version_id': version.id,
         'struct_id': struct.id,
+        'payslip_run_id': run.id,
         'date_from': date_from,
         'date_to': date_to,
         'input_line_ids': input_cmds,
