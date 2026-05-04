@@ -4,7 +4,7 @@
     'version': '19.0.1.0.0',
     'category': 'Technical',
     'summary': 'Base configurations and utilities',
-    'author': 'Tiger-Zebin',
+    'author': 'Zebin',
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',

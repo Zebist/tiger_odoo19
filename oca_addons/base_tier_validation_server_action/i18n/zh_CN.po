@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_tier_validation_server_action
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Zebin\n"
+"Language-Team: Chinese (Simplified) <>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__auto_validate
+msgid "Auto Validate"
+msgstr "自动审批通过"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__auto_validate_domain
+msgid "Auto Validate Domain"
+msgstr "自动通过条件域"
+
+#. module: base_tier_validation_server_action
+#: model:ir.actions.server,name:base_tier_validation_server_action.ir_cron_auto_tier_validation_ir_actions_server
+msgid "Automatic Tier Validation"
+msgstr "自动层级审批"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__server_action_id
+msgid "Post Approve Action"
+msgstr "通过后执行的服务器动作"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__rejected_server_action_id
+msgid "Post Reject Action"
+msgstr "拒绝后执行的服务器动作"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__server_action_id
+msgid "Server action triggered as soon as this step is approved"
+msgstr "该步骤一旦通过即触发的服务器动作"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__rejected_server_action_id
+msgid "Server action triggered as soon as this step is rejected"
+msgstr "该步骤一旦被拒绝即触发的服务器动作"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model,name:base_tier_validation_server_action.model_tier_definition
+msgid "Tier Definition"
+msgstr "层级定义"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model,name:base_tier_validation_server_action.model_tier_validation
+msgid "Tier Validation (abstract)"
+msgstr "层级审批（抽象）"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__auto_validate
+msgid ""
+"Use schedule job to auto validate if condition is met.\n"
+"- If no user specified, use job's system user to validate\n"
+"- If 1 user matched as reviewer, use the user to validate\n"
+"- If > 1 user matched as reviewer, do not auto validate"
+msgstr ""
+"使用计划任务在条件满足时自动通过审批。\n"
+"- 未指定用户时，使用计划任务的系统用户执行通过\n"
+"- 若仅匹配到 1 名审批人，则由该用户执行通过\n"
+"- 若匹配到多名审批人，则不自动通过"
+
+#. module: base_tier_validation_server_action
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_server_action.tier_definition_view_form
+msgid "if pass condition"
+msgstr "若满足条件"

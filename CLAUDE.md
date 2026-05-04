@@ -1,7 +1,8 @@
 # Tiger-Zebin Odoo 19 Project Rules
 
 ## 作者标识
-- `__manifest__.py` 的 `author` 字段统一为 `'Tiger-Zebin'`（连字符，无空格）
+- **`custom_addons/tg_*`（Tiger 业务模块）**：`__manifest__.py` 的 `'author'` 使用 **`'Tiger-Zebin'`**（连字符，无空格）；翻译头等署名如需体现 Tiger 同上。
+- **`custom_addons/base_*`（基础模块，可迁移复用）**：**不出现 Tiger**；`'author'` 使用 **`'Zebin'`**。详见 `.cursor/rules/author-tiger-zebin.mdc`（适用于 manifest、`.po` 头、源码 `@author`、README 等所有署名类元数据）。
 
 ## 版本号
 - `version` 必须以 `19.0.` 开头，例如 `19.0.1.0.0`

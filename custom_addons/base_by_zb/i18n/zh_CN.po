@@ -1,0 +1,61 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_by_zb
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20250917\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-04 03:51+0000\n"
+"PO-Revision-Date: 2026-05-04 12:00+0000\n"
+"Last-Translator: Zebin\n"
+"Language-Team: Chinese (Simplified) / zh_CN\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_by_zb
+#: model:ir.model,name:base_by_zb.model_res_country
+msgid "Country"
+msgstr "国家/地区"
+
+#. module: base_by_zb
+#: model:ir.model.fields,field_description:base_by_zb.field_res_country__dial_code
+msgid "Dial Code"
+msgstr "国际拨号码"
+
+#. module: base_by_zb
+#: model:ir.model.fields,field_description:base_by_zb.field_form_readonly_mixin__display_name
+#: model:ir.model.fields,field_description:base_by_zb.field_res_country__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: base_by_zb
+#: model:ir.model,name:base_by_zb.model_form_readonly_mixin
+msgid "Form Readonly Mixin"
+msgstr "表单只读混入"
+
+#. module: base_by_zb
+#: model:ir.model.fields,field_description:base_by_zb.field_form_readonly_mixin__id
+#: model:ir.model.fields,field_description:base_by_zb.field_res_country__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_by_zb
+#: model:ir.model.fields,help:base_by_zb.field_res_country__dial_code
+msgid "International dialing prefix derived from phone_code, e.g. +880"
+msgstr "由 phone_code 推导的国际拨号前缀，例如 +880"
+
+#. module: base_by_zb
+#. odoo-javascript
+#: code:addons/base_by_zb/static/src/js/required_fields_notification.js:0
+msgid "Missing required fields"
+msgstr "缺少必填字段"
+
+#. module: base_by_zb
+#. odoo-javascript
+#: code:addons/base_by_zb/static/src/js/required_fields_notification.js:0
+msgid "Missing required fields: %s"
+msgstr "缺少必填字段：%s"

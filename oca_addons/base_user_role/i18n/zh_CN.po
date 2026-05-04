@@ -24,133 +24,133 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_user_role.field_res_groups__role_count
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__role_count
 msgid "# User Roles"
-msgstr ""
+msgstr "角色数量"
 
 #. module: base_user_role
 #. odoo-python
 #: code:addons/base_user_role/models/role.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（副本）"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_form_inherit
 msgid "<em>Any configuration changes made here will not be persistent.</em>"
-msgstr ""
+msgstr "<em>在此处的配置修改不会保存。</em>"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_form_inherit
 msgid "<strong>The access rights of this user are managed by roles.</strong>"
-msgstr ""
+msgstr "<strong>该用户的访问权限由角色统一管理。</strong>"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__api_key_duration
 msgid "API Keys maximum duration days"
-msgstr ""
+msgstr "API 密钥最长有效天数"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__model_access
 msgid "Access Controls"
-msgstr ""
+msgstr "访问控制"
 
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "访问组"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__menu_access
 msgid "Access Menu"
-msgstr ""
+msgstr "菜单访问"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__model_access_ids
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_form
 msgid "Access Rights"
-msgstr ""
+msgstr "访问权限"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role_line__active
 msgid "Active"
-msgstr ""
+msgstr "有效"
 
 #. module: base_user_role
 #: model:ir.actions.act_window,name:base_user_role.action_add_multiple_users_wizard
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_form
 msgid "Add Multiple Users"
-msgstr ""
+msgstr "批量添加用户"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_add_users_wizard
 msgid "Add Users"
-msgstr ""
+msgstr "添加用户"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__category_id
 msgid "Application"
-msgstr ""
+msgstr "应用程序"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_wizard_create_role_from_user__assign_to_user
 msgid "Assign to user"
-msgstr ""
+msgstr "分配给用户"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__group_category_id
 msgid "Associated category"
-msgstr ""
+msgstr "关联分类"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__group_id
 msgid "Associated group"
-msgstr ""
+msgstr "关联组"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_users_role__group_category_id
 msgid "Associated group's category"
-msgstr ""
+msgstr "关联组所属分类"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.group_groups_into_role_wiz_view
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_add_users_wizard
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.create_from_user_wizard_view
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__color
 msgid "Color Index"
-msgstr ""
+msgstr "颜色"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__comment
 msgid "Comment"
-msgstr ""
+msgstr "说明"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.create_from_user_wizard_view
 #: model_terms:ir.ui.view,arch_db:base_user_role.group_groups_into_role_wiz_view
 msgid "Create"
-msgstr ""
+msgstr "创建"
 
 #. module: base_user_role
 #: model:ir.actions.act_window,name:base_user_role.action_wizard_groups_into_role
 msgid "Create Role"
-msgstr ""
+msgstr "创建角色"
 
 #. module: base_user_role
 #: model:ir.actions.act_window,name:base_user_role.create_from_user_wizard_action
 #: model_terms:ir.ui.view,arch_db:base_user_role.create_from_user_wizard_view
 msgid "Create role from user"
-msgstr ""
+msgstr "从用户创建角色"
 
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_wizard_create_role_from_user
 msgid "Create role from user wizard"
-msgstr ""
+msgstr "从用户创建角色（向导）"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__create_uid
@@ -175,7 +175,7 @@ msgstr "创建时间"
 msgid ""
 "Determines the maximum duration of an api key created by a user belonging to "
 "this group."
-msgstr ""
+msgstr "属于该组的用户所创建 API 密钥的最长有效期限。"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__display_name
@@ -184,43 +184,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_user_role.field_wizard_create_role_from_user__display_name
 #: model:ir.model.fields,field_description:base_user_role.field_wizard_groups_into_role__display_name
 msgid "Display Name"
-msgstr "Display Name"
+msgstr "显示名称"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role_line__is_enabled
 msgid "Enabled"
-msgstr ""
+msgstr "已启用"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role_line__date_from
 #: model:ir.model.fields,field_description:base_user_role.field_role_add_users_wizard__date_from
 msgid "From"
-msgstr ""
+msgstr "开始"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__full_name
 msgid "Group Name"
-msgstr ""
+msgstr "组名称"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_users_role__share
 msgid "Group created to set access rights for sharing data with some users."
-msgstr ""
+msgstr "用于与部分用户共享数据时设置访问权的组。"
 
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_wizard_groups_into_role
 msgid "Group groups into a role"
-msgstr ""
+msgstr "将多个组合并为角色"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_wizard_groups_into_role__name
 msgid "Group groups into a role and specify a name for this role"
-msgstr ""
+msgstr "将多个组合并为一个角色并指定名称"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_form
 msgid "Groups"
-msgstr ""
+msgstr "组"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__id
@@ -234,12 +234,12 @@ msgstr "ID"
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__implied_ids
 msgid "Inherits"
-msgstr ""
+msgstr "继承"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "内部备注"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_groups__parent_ids
@@ -270,7 +270,7 @@ msgstr "上次更新日期"
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__model_access_count
 msgid "Model Access Count"
-msgstr ""
+msgstr "模型访问数"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__name
@@ -283,25 +283,25 @@ msgstr "名称"
 #: model:ir.model.fields,field_description:base_user_role.field_res_groups__trans_parent_ids
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__trans_parent_ids
 msgid "Parent Groups"
-msgstr ""
+msgstr "父级组"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_groups__parent_ids
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__parent_ids
 msgid "Parents"
-msgstr ""
+msgstr "父级"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__rule_ids
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_role_form
 msgid "Record Rules"
-msgstr ""
+msgstr "记录规则"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_groups__role_id
 #: model:ir.model.fields,help:base_user_role.field_res_users_role__role_id
 msgid "Relation for the groups that represents a role"
-msgstr ""
+msgstr "表示该角色的权限组关联"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_groups__role_id
@@ -309,55 +309,55 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role_line__role_id
 #: model:ir.model.fields,field_description:base_user_role.field_role_add_users_wizard__role_id
 msgid "Role"
-msgstr ""
+msgstr "角色"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users__role_line_ids
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__line_ids
 msgid "Role lines"
-msgstr ""
+msgstr "角色行"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_groups__role_ids
 #: model:ir.model.fields,help:base_user_role.field_res_users_role__role_ids
 msgid "Roles in which the group is involved"
-msgstr ""
+msgstr "该组参与的角色"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__rule_groups
 msgid "Rules"
-msgstr ""
+msgstr "规则"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__rules_count
 msgid "Rules Count"
-msgstr ""
+msgstr "规则数量"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__share
 msgid "Share Group"
-msgstr ""
+msgstr "共享组"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users__show_alert
 msgid "Show Alert"
-msgstr ""
+msgstr "显示提示"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role_line__date_to
 #: model:ir.model.fields,field_description:base_user_role.field_role_add_users_wizard__date_to
 msgid "To"
-msgstr ""
+msgstr "结束"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__trans_implied_ids
 msgid "Transitively inherits"
-msgstr ""
+msgstr "传递继承"
 
 #. module: base_user_role
 #: model:ir.actions.server,name:base_user_role.cron_update_users_ir_actions_server
 msgid "Update user roles"
-msgstr ""
+msgstr "更新用户角色"
 
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_res_users
@@ -368,7 +368,7 @@ msgstr "用户"
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_res_users_role
 msgid "User Role"
-msgstr ""
+msgstr "用户角色"
 
 #. module: base_user_role
 #: model:ir.actions.act_window,name:base_user_role.action_res_users_role_tree
@@ -379,17 +379,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_user_role.res_groups_view_form
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_form_inherit
 msgid "User Roles"
-msgstr ""
+msgstr "用户角色"
 
 #. module: base_user_role
 #: model:ir.module.category,name:base_user_role.ir_module_category_role
 msgid "User roles"
-msgstr ""
+msgstr "用户角色"
 
 #. module: base_user_role
 #: model:ir.model.constraint,message:base_user_role.constraint_res_users_role_line_user_role_uniq
 msgid "User roles can be assigned to a user only once at a time"
-msgstr ""
+msgstr "同一用户在同一角色下仅能有一条有效分配"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__users
@@ -401,18 +401,17 @@ msgstr "用户"
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_res_users_role_line
 msgid "Users associated to a role"
-msgstr ""
+msgstr "角色关联的用户"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_users_role__user_ids
-#, fuzzy
 msgid "Users list"
-msgstr "用户"
+msgstr "用户列表"
 
 #. module: base_user_role
 #: model:ir.model.fields,help:base_user_role.field_res_users_role__implied_ids
 msgid "Users of this group automatically inherit those groups"
-msgstr ""
+msgstr "属于本组的用户将自动继承所列组权限"
 
 #. module: base_user_role
 #: model:ir.model.fields,field_description:base_user_role.field_res_groups__view_access
@@ -423,12 +422,12 @@ msgstr "视图"
 #. module: base_user_role
 #: model:ir.model,name:base_user_role.model_role_add_users_wizard
 msgid "Wizard to add multiple users to a role"
-msgstr ""
+msgstr "批量将用户加入角色"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.create_from_user_wizard_view
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: base_user_role
 #: model_terms:ir.ui.view,arch_db:base_user_role.view_res_users_form_inherit

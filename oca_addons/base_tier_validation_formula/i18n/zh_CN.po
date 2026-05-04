@@ -35,7 +35,7 @@ msgid ""
 "Error evaluating tier validation conditions.\n"
 " %s"
 msgstr ""
-"错误的层级审批条件。\n"
+"评估层级审批条件时出错。\n"
 " %s"
 
 #. module: base_tier_validation_formula

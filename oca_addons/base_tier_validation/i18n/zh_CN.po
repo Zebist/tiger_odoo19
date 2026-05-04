@@ -23,6 +23,9 @@ msgid ""
 "                This Record needs to be\n"
 "                validated."
 msgstr ""
+"<i class=\"fa fa-lg fa-info-circle\"/>\n"
+"                本记录需要\n"
+"                审批通过。"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -32,6 +35,10 @@ msgid ""
 "                <b>rejected</b>\n"
 "                ."
 msgstr ""
+"<i class=\"fa fa-lg fa-thumbs-down\"/>\n"
+"                操作已被\n"
+"                <b>拒绝</b>\n"
+"                。"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -41,6 +48,10 @@ msgid ""
 "                <b>validated</b>\n"
 "                !"
 msgstr ""
+"<i class=\"fa fa-lg fa-thumbs-up\"/>\n"
+"                操作已\n"
+"                <b>通过审批</b>\n"
+"                ！"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
@@ -50,19 +61,19 @@ msgstr "<span class=\"oe_edit_only\">名称</span>"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "<span>Bypass, if previous tier was validated by same reviewer</span>"
-msgstr ""
+msgstr "<span>若上一层由同一审批人通过，则跳过本层</span>"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 msgid "A record to be reviewed has been created by %s."
-msgstr ""
+msgstr "待审批记录由 %s 创建。"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_review.py:0
 msgid "A review has been requested %s days ago."
-msgstr ""
+msgstr "审批请求已发出 %s 天。"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -86,7 +97,7 @@ msgstr "审批已通过。 ( %s )"
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 msgid "A review was rejected by %(user)s. (%(comment)s)"
-msgstr ""
+msgstr "%(user)s 驳回了审批。（%(comment)s）"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -113,22 +124,22 @@ msgstr "所有"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__allow_write_for_reviewer
 msgid "Allow Write For Reviewers"
-msgstr ""
+msgstr "允许审批人编辑"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_validation_exception__group_ids
 msgid "Allowed groups to use this Tier Validation Exception"
-msgstr ""
+msgstr "允许使用本审批例外的用户组"
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_definition__review_type__group
 msgid "Any user in a specific group"
-msgstr ""
+msgstr "指定组内的任一用户"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "Apply On"
-msgstr ""
+msgstr "应用于"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__approve_sequence
@@ -140,7 +151,7 @@ msgstr "审批按指定序号排序"
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__approve_sequence_bypass
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__approve_sequence_bypass
 msgid "Approve Sequence Bypass"
-msgstr ""
+msgstr "顺序审批跳过"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__approve_sequence
@@ -156,7 +167,7 @@ msgstr "已批准"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "Archived"
-msgstr ""
+msgstr "已归档"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -164,14 +175,14 @@ msgstr ""
 msgid ""
 "At least one of these fields must be checked! Write under Validation, Write "
 "after Validation"
-msgstr ""
+msgstr "请至少勾选一项：审批中可写字段、审批通过后可写字段"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__approve_sequence_bypass
 #: model:ir.model.fields,help:base_tier_validation.field_tier_review__approve_sequence_bypass
 msgid ""
 "Bypassed (auto validated), if previous tier was validated by same reviewer"
-msgstr ""
+msgstr "若上一层由同一审批人通过，则本层自动通过"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__can_review
@@ -184,7 +195,7 @@ msgstr "可审批"
 msgid ""
 "Can review will be marked if the review is pending and the\n"
 "        approve sequence has been achieved"
-msgstr ""
+msgstr "当前层待审批且已轮到本层顺序时为真"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.view_comment_wizard
@@ -224,12 +235,12 @@ msgstr "公司"
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "系统设置"
 
 #. module: base_tier_validation
 #: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
 msgid "Create a new Validation Exception!"
-msgstr ""
+msgstr "创建新的审批例外规则！"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__create_uid
@@ -276,7 +287,7 @@ msgstr "显示名称"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__display_status
 msgid "Display Status"
-msgstr ""
+msgstr "显示状态"
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_definition__definition_type__domain
@@ -297,18 +308,18 @@ msgstr "审批人"
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_definition__review_type__field
 msgid "Field in related record"
-msgstr ""
+msgstr "关联记录上的字段"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__field_ids
 msgid "Fields"
-msgstr ""
+msgstr "字段"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_review.py:0
 msgid "Group %s"
-msgstr ""
+msgstr "组 %s"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_search
@@ -318,7 +329,7 @@ msgstr "分组"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__group_ids
 msgid "Groups"
-msgstr ""
+msgstr "用户组"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__has_comment
@@ -328,7 +339,7 @@ msgstr "含审批意见"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__hide_reviews
 msgid "Hide Reviews"
-msgstr ""
+msgstr "隐藏审批明细"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__id
@@ -341,7 +352,7 @@ msgstr "ID"
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_validation__has_comment
 msgid "If set, Allow the reviewer to leave a comment on the review."
-msgstr ""
+msgstr "勾选后，审批时需填写备注。"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_create
@@ -357,42 +368,43 @@ msgid ""
 "reached.Usefull in an Approve by sequence scenario. An notification request "
 "to review is sent out when it's their turn to review."
 msgstr ""
+"进入该状态时，以邮件通知所有可能的审批人。适用于按顺序审批：轮到某审批人时发送通知。"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_accepted
 msgid ""
 "If set, reviewers will be notified by email when a review related to this "
 "definition is accepted."
-msgstr ""
+msgstr "勾选后，该层通过时以邮件通知相关审批人。"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_rejected
 msgid ""
 "If set, reviewers will be notified by email when a review related to this "
 "definition is rejected."
-msgstr ""
+msgstr "勾选后，该层被拒绝时以邮件通知相关审批人。"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_restarted
 msgid ""
 "If set, reviewers will be notified by email when a reviews related to this "
 "definition are restarted."
-msgstr ""
+msgstr "勾选后，该层审批被重置时以邮件通知相关审批人。"
 
 #. module: base_tier_validation
 #: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
 msgid "It's fully validated"
-msgstr ""
+msgstr "审批已全部通过"
 
 #. module: base_tier_validation
 #: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
 msgid "It's in the validation process"
-msgstr ""
+msgstr "正在审批中"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__last_reminder_date
 msgid "Last Reminder Date"
-msgstr ""
+msgstr "上次催办时间"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__write_uid
@@ -421,18 +433,18 @@ msgstr "模型"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__model_name
 msgid "Model Name"
-msgstr ""
+msgstr "模型名称"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "More Options"
-msgstr ""
+msgstr "更多选项"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__name
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__name
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__need_validation
@@ -448,13 +460,13 @@ msgstr "新建多层级审批"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__next_review
 msgid "Next Review"
-msgstr ""
+msgstr "下一审批"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 msgid "Next: %s"
-msgstr ""
+msgstr "下一环节：%s"
 
 #. module: base_tier_validation
 #. odoo-javascript
@@ -465,7 +477,7 @@ msgstr "没有待审批的项目。"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_accepted
 msgid "Notify Reviewers on Accepted"
-msgstr ""
+msgstr "通过时通知审批人"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_create
@@ -475,36 +487,36 @@ msgstr "创建时通知审批人"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_rejected
 msgid "Notify Reviewers on Rejected"
-msgstr ""
+msgstr "拒绝时通知审批人"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_restarted
 msgid "Notify Reviewers on Restarted"
-msgstr ""
+msgstr "重置时通知审批人"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_pending
 msgid "Notify Reviewers on reaching Pending"
-msgstr ""
+msgstr "进入待审批时通知"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_reminder_delay
 msgid ""
 "Number of days after which a message must be posted to remind about pending "
 "validation  (0 = no reminder)"
-msgstr ""
+msgstr "待审批超过该天数后发送催办（0 表示不催办）"
 
 #. module: base_tier_validation
 #: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
 msgid ""
 "Once created, you can decide which fields you want to be editable when the "
 "record:"
-msgstr ""
+msgstr "创建后，可设置记录在不同审批阶段下允许编辑的字段："
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.res_config_settings_view_form_budget
 msgid "Option to use python formula to get reviewers and find documents"
-msgstr ""
+msgstr "可用 Python 公式确定审批人及匹配单据（需安装公式扩展）"
 
 #. module: base_tier_validation
 #. odoo-javascript
@@ -522,7 +534,7 @@ msgstr "引用模型"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
 msgid "Reject"
-msgstr ""
+msgstr "拒绝"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__rejected
@@ -534,7 +546,7 @@ msgstr "已驳回"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__rejected_message
 msgid "Rejected Message"
-msgstr ""
+msgstr "已拒绝提示"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__res_id
@@ -549,7 +561,7 @@ msgstr "关联文档模型"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_buttons
 msgid "Request Validation"
-msgstr ""
+msgstr "请求审批"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__requested_by
@@ -575,7 +587,7 @@ msgstr "资源模型"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_buttons
 msgid "Restart Validation"
-msgstr ""
+msgstr "重置审批"
 
 #. module: base_tier_validation
 #. odoo-javascript
@@ -594,7 +606,7 @@ msgstr "审批人"
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__reviewer_field_id
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__reviewer_field_id
 msgid "Reviewer field"
-msgstr ""
+msgstr "审批人字段"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__reviewer_group_id
@@ -619,12 +631,12 @@ msgstr "审批"
 #. module: base_tier_validation
 #: model:ir.actions.server,name:base_tier_validation.ir_cron_auto_tier_validation_ir_actions_server
 msgid "Send Tier Review Reminder"
-msgstr ""
+msgstr "发送审批催办"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_reminder_delay
 msgid "Send reminder message on pending reviews"
-msgstr ""
+msgstr "对长期待审批记录催办"
 
 #. module: base_tier_validation
 #. odoo-javascript
@@ -649,7 +661,8 @@ msgstr "状态"
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 msgid "The review has been reset by %s."
-msgstr ""
+msgstr "审批已由 %s 重置。"
+
 
 #. module: base_tier_validation
 #. odoo-python
@@ -659,6 +672,9 @@ msgid ""
 " - %s \n"
 "Please request a validation."
 msgstr ""
+"至少有一条记录需先完成审批。待处理审批：\n"
+" - %s \n"
+"请先请求审批。"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__sequence
@@ -676,7 +692,7 @@ msgstr "层级定义"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_res_config_settings__module_base_tier_validation_formula
 msgid "Tier Formula"
-msgstr ""
+msgstr "审批公式"
 
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_tier_review
@@ -686,7 +702,7 @@ msgstr "多层级审批"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.res_config_settings_view_form_budget
 msgid "Tier Validation"
-msgstr ""
+msgstr "层级审批"
 
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_tier_validation
@@ -695,43 +711,41 @@ msgstr "多层级审批（抽象）"
 
 #. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_accepted
-#, fuzzy
 msgid "Tier Validation Accepted Notification"
-msgstr "多层级审批（抽象）"
+msgstr "层级审批：已通过"
 
 #. module: base_tier_validation
 #: model:ir.actions.act_window,name:base_tier_validation.tier_validation_exception_action
 #: model:ir.ui.menu,name:base_tier_validation.menu_tier_validation_exception
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_form
 msgid "Tier Validation Exception"
-msgstr ""
+msgstr "审批例外"
 
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_tier_validation_exception
 msgid "Tier Validation Exceptions"
-msgstr ""
+msgstr "审批例外"
 
 #. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_rejected
-#, fuzzy
 msgid "Tier Validation Rejected Notification"
-msgstr "多层级审批（抽象）"
+msgstr "层级审批：已拒绝"
 
 #. module: base_tier_validation
 #: model:mail.activity.type,name:base_tier_validation.mail_act_tier_validation_reminder
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_reminder
 msgid "Tier Validation Reminder"
-msgstr ""
+msgstr "审批催办"
 
 #. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_requested
 msgid "Tier Validation Requested"
-msgstr ""
+msgstr "审批已请求"
 
 #. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_restarted
 msgid "Tier Validation Restarted"
-msgstr ""
+msgstr "审批已重置"
 
 #. module: base_tier_validation
 #: model:ir.ui.menu,name:base_tier_validation.menu_tier_confirmation
@@ -741,38 +755,38 @@ msgstr "多层级审批"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__to_validate_message
 msgid "To Validate Message"
-msgstr ""
+msgstr "待审批提示"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__todo_by
 msgid "Todo By"
-msgstr ""
+msgstr "待办人"
 
 #. module: base_tier_validation
 #. odoo-javascript
 #: code:addons/base_tier_validation/static/src/components/tier_review_widget/tier_review_widget.xml:0
 msgid "Todo by"
-msgstr ""
+msgstr "待办人"
 
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_res_users
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__valid_model_field_ids
 msgid "Valid Model Field"
-msgstr ""
+msgstr "可用模型字段"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__valid_reviewer_field_ids
 msgid "Valid Reviewer Field"
-msgstr ""
+msgstr "可用审批人字段"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
 msgid "Validate"
-msgstr ""
+msgstr "通过"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__validate_reject
@@ -788,7 +802,7 @@ msgstr "已批准"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__validated_message
 msgid "Validated Message"
-msgstr ""
+msgstr "已通过提示"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__review_type
@@ -806,18 +820,18 @@ msgstr "审批日期"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__reviewed_formated_date
 msgid "Validation Formated Date"
-msgstr ""
+msgstr "审批时间（显示）"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__validation_status
 msgid "Validation Status"
-msgstr ""
+msgstr "审批状态"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_review.py:0
 msgid "Validation reviewer field should be of the appropriate type"
-msgstr ""
+msgstr "审批人字段类型无效，请使用用户或用户组类型字段"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__review_ids
@@ -828,32 +842,32 @@ msgstr "审批"
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_review__status__waiting
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_validation__validation_status__waiting
 msgid "Waiting"
-msgstr ""
+msgstr "等待中"
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_validation__validation_status__no
 msgid "Without validation"
-msgstr ""
+msgstr "未走审批"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__allowed_to_write_after_validation
 msgid "Write after Validation"
-msgstr ""
+msgstr "审批通过后可编辑"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
 msgid "Write after validation"
-msgstr ""
+msgstr "审批通过后可编辑"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__allowed_to_write_under_validation
 msgid "Write under Validation"
-msgstr ""
+msgstr "审批中可编辑"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
 msgid "Write under validation"
-msgstr ""
+msgstr "审批中可编辑"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -865,6 +879,11 @@ msgid ""
 "Only those fields can be modified:\n"
 "- %(allowed_fields_str)s"
 msgstr ""
+"审批通过后不允许修改以下字段：\n"
+"- %(not_allowed_fields_str)s\n"
+"\n"
+"仅允许修改：\n"
+"- %(allowed_fields_str)s"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -876,6 +895,11 @@ msgid ""
 "Only those fields can be modified:\n"
 "- %(allowed_fields_str)s"
 msgstr ""
+"审批进行中不允许修改以下字段：\n"
+"- %(not_allowed_fields_str)s\n"
+"\n"
+"仅允许修改：\n"
+"- %(allowed_fields_str)s"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form

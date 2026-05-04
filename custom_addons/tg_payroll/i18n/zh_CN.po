@@ -1,0 +1,774 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tg_payroll
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20250917\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-04 03:53+0000\n"
+"PO-Revision-Date: 2026-05-04 12:00+0000\n"
+"Last-Translator: Tiger-Zebin\n"
+"Language-Team: Chinese (Simplified) / zh_CN\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: tg_payroll
+#: model_terms:ir.ui.view,arch_db:tg_payroll.view_hr_payslip_form_inherit
+msgid ""
+"<span class=\"badge text-bg-warning\" invisible=\"run_approval_state != 'approving'\">Approving</span>\n"
+"                    <span class=\"badge text-bg-success\" invisible=\"run_approval_state != 'approved'\">Approved</span>\n"
+"                    <span class=\"badge text-bg-danger\" invisible=\"run_approval_state != 'rejected'\">Rejected</span>"
+msgstr ""
+"<span class=\"badge text-bg-warning\" invisible=\"run_approval_state != 'approving'\">审批中</span>\n"
+"                    <span class=\"badge text-bg-success\" invisible=\"run_approval_state != 'approved'\">已批准</span>\n"
+"                    <span class=\"badge text-bg-danger\" invisible=\"run_approval_state != 'rejected'\">已拒绝</span>"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip__kpi_grade__a
+msgid "A (100%)"
+msgstr "A（100%）"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_ait
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_ait
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_ait
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_ait
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_ait
+msgid "AIT (Income Tax)"
+msgstr "AIT（所得税）"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_abs
+msgid "Absence (Days)"
+msgstr "缺勤（天）"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_abs
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_abs
+msgid "Absence Deduction"
+msgstr "缺勤扣款"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model_terms:ir.ui.view,arch_db:tg_payroll.hr_payslip_run_view_kanban_inherit_tg_payroll
+msgid "Acknowledge & Edit"
+msgstr "确认并编辑"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "Added KPIBONUS input: %(amt)s (Grade %(grade)s × Base %(base)s)"
+msgstr "已新增 KPIBONUS 输入：%(amt)s（等级 %(grade)s × 基数 %(base)s）"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ct_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_adj
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_adj
+msgid "Adjustment"
+msgstr "调整"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip_input_type__unit__amount
+msgid "Amount"
+msgstr "金额"
+
+#. module: tg_payroll
+#: model_terms:ir.ui.view,arch_db:tg_payroll.view_hr_payslip_form_inherit
+msgid "Apply to KPIBONUS"
+msgstr "应用到 KPIBONUS"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__run_approval_state
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__approval_state
+msgid "Approval Status"
+msgstr "审批状态"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+msgid "Approved"
+msgstr "已批准"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+msgid "Approving"
+msgstr "审批中"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ct_basic
+msgid "Attendance Salary"
+msgstr "出勤工资"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip__kpi_grade_amount
+msgid ""
+"Auto-computed KPI bonus based on KPI Grade and the contract's KPI Base."
+msgstr "根据 KPI 等级与合同的 KPI 基数自动计算的 KPI 奖金。"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip__kpi_grade__b
+msgid "B (50%)"
+msgstr "B（50%）"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_fac_mgmt
+msgid "BD_FAC.MGMT"
+msgstr "BD_FAC.MGMT"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_hq
+msgid "BD_HQ"
+msgstr "BD_HQ"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_intern
+msgid "BD_IN"
+msgstr "BD_IN"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_sales_ct
+msgid "BD_SALES_CT"
+msgstr "BD_SALES_CT"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_sales_ft
+msgid "BD_SALES_FT"
+msgstr "BD_SALES_FT"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_bd_worker
+msgid "BD_WORKER"
+msgstr "BD_WORKER"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip__kpi_base
+msgid ""
+"Base amount used to compute the monthly KPI bonus. Grade A pays 100%, B pays"
+" 50%, C pays 0%."
+msgstr "用于计算月度 KPI 奖金的基数。A 档 100%，B 档 50%，C 档 0%。"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_basic
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_basic
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_basic
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_basic
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_basic
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_basic
+msgid "Basic Salary"
+msgstr "基本工资"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_trip
+msgid "Business Trip Allowance"
+msgstr "出差津贴"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_trip
+msgid "Business Trip Days"
+msgstr "出差天数"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip__kpi_grade__c
+msgid "C (0%)"
+msgstr "C（0%）"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_cn_ct
+msgid "CN_CT"
+msgstr "CN_CT"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_cn_ft
+msgid "CN_FT"
+msgstr "CN_FT"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__can_forward
+msgid "Can Forward"
+msgstr "可转交"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__can_review
+msgid "Can Review"
+msgstr "可审批"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"Cannot compute payslip '%(slip)s' while pay run '%(run)s' is not in draft approval state (current: %(state)s).\n"
+"Withdraw the pay run to draft if you need to change calculations."
+msgstr ""
+"工资批次「%(run)s」不在草稿审批状态时无法计算工资单「%(slip)s」（当前：%(state)s）。\n"
+"如需修改计算，请先将工资批次撤回到草稿。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"Cannot import payslips into pay run(s) that are not in draft state: %(runs)s.\n"
+"Imports are only allowed for draft runs. Use the approval flow for changes."
+msgstr ""
+"无法向非草稿状态的工资批次导入工资单：%(runs)s。\n"
+"仅允许导入到草稿批次。其他变更请走审批流程。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "Cannot modify KPIBONUS when the payslip is %s."
+msgstr "工资单处于 %s 时不能修改 KPIBONUS。"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_commission
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_commission
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_commission
+msgid "Commission"
+msgstr "提成"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_conv
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_conv
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_conv
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_conv
+msgid "Conveyance Allowance"
+msgstr "交通补贴"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_basic
+msgid "Daily Wage"
+msgstr "日薪"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip_input_type__unit__day
+msgid "Day"
+msgstr "天"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_input__display_name
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_input_type__display_name
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__display_name
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_salary_rule__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_expat
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_expat
+msgid "Expat Allowance"
+msgstr "外派津贴"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_expat
+msgid "Expat Days"
+msgstr "外派天数"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__flow_id
+msgid "Flow"
+msgstr "流程"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__has_comment
+msgid "Has Comment"
+msgstr "可填写审批意见"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__hide_reviews
+msgid "Hide Reviews"
+msgstr "隐藏审批记录"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip_input_type__unit__hour
+msgid "Hour"
+msgstr "小时"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_hra
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_hra
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_hra
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_hra
+msgid "House Rent Allowance"
+msgstr "住房租金补贴"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_housing
+msgid "Housing Allowance"
+msgstr "住房补贴"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__id
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_input__id
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_input_type__id
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__id
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_salary_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip_run__has_comment
+msgid "If set, Allow the reviewer to leave a comment on the review."
+msgstr "勾选后，审批人可在审批时填写意见。"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip__kpi_grade
+msgid ""
+"If set, the KPIBONUS input is auto-computed from the contract's KPI Base and"
+" this grade. Manual entry or import of KPIBONUS is blocked while a grade is "
+"selected — clear the grade first to allow manual values."
+msgstr ""
+"设置后，KPIBONUS 输入将根据合同的 KPI 基数与本等级自动计算。选择等级期间禁止手工录入或导入 KPIBONUS — "
+"请先清空等级再允许手工值。"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__kpi_base
+msgid "KPI Base"
+msgstr "KPI 基数"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_kpi_bonus
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_kpi
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_kpi
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_kpi
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_kpi
+msgid "KPI Bonus"
+msgstr "KPI 奖金"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__kpi_grade
+msgid "KPI Grade"
+msgstr "KPI 等级"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__kpi_grade_amount
+msgid "KPI Grade Amount"
+msgstr "KPI 等级金额"
+
+#. module: tg_payroll
+#: model_terms:ir.ui.view,arch_db:tg_payroll.view_hr_payslip_form_inherit
+msgid "KPI Preview"
+msgstr "KPI 预览"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "KPIBONUS added"
+msgstr "已添加 KPIBONUS"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "KPIBONUS already equals %(amt)s — nothing to update."
+msgstr "KPIBONUS 已等于 %(amt)s — 无需更新。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"KPIBONUS input is %(actual)s, but KPI Grade %(grade)s expects %(expected)s. "
+"Click Apply to sync, or adjust the input manually."
+msgstr ""
+"KPIBONUS 输入为 %(actual)s，但 KPI 等级 %(grade)s 期望 %(expected)s。点击「应用」同步，或手工调整输入。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"KPIBONUS payslip input type not found. Please ensure the input type with "
+"code '%s' exists."
+msgstr "未找到 KPIBONUS 工资单输入类型。请确认编码为「%s」的输入类型存在。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "KPIBONUS unchanged"
+msgstr "KPIBONUS 未变化"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "KPIBONUS updated"
+msgstr "KPIBONUS 已更新"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_salary_rule__skip_currency_round
+msgid ""
+"Keep the raw float amount returned by this rule, without rounding to\n"
+"the payslip currency precision.\n"
+"\n"
+"Default behaviour (unchecked):\n"
+"  - The 'result' returned by this rule is rounded to currency precision\n"
+"    (e.g. 5966.7499999... → 5966.75), so line.amount in Salary Computation\n"
+"    is a clean cent value.\n"
+"  - When quantity = 1 and rate = 100 (the typical case), line.total equals\n"
+"    line.amount, so it's also clean.\n"
+"\n"
+"What this hook does NOT cover:\n"
+"  - For percentage / non-100% rules where total = amount × qty × rate / 100\n"
+"    (e.g. HRA = 25% of wage), the multiplication can still produce a\n"
+"    non-cent result. Such cases are intentionally left as-is here because\n"
+"    they affect very few use cases in this project; if it matters for your\n"
+"    rule, do the round() inside your Python code.\n"
+"\n"
+"Only enable this checkbox for intermediate rules whose downstream consumers\n"
+"need sub-cent precision (rare in payroll)."
+msgstr ""
+"保留本规则返回的原始浮点金额，不按工资单币种精度四舍五入。\n"
+"\n"
+"默认（未勾选）行为：\n"
+"  - 规则返回的 result 会按币种精度四舍五入\n"
+"   （如 5966.7499999... → 5966.75），因此薪资计算中的 line.amount 为整分。\n"
+"  - 当数量=1 且费率=100（常见情况）时，line.total 等于 line.amount，同样为整分。\n"
+"\n"
+"本开关不覆盖：\n"
+"  - 百分比/非 100% 规则 total = amount × qty × rate / 100\n"
+"    （如 HRA=工资的 25%）仍可能产生非整分结果。本项目此类场景极少，此处有意不处理；若规则需要，请在 Python 代码中自行 round()。\n"
+"\n"
+"仅在下游需要亚分精度的中间规则上勾选（薪资中较少见）。"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__kpi_input_mismatch_message
+msgid "Kpi Input Mismatch Message"
+msgstr "KPI 输入不一致提示"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_late
+msgid "Late (Hours)"
+msgstr "迟到（小时）"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_late
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_late
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_late
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_late
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_late
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_late
+msgid "Late Deduction"
+msgstr "迟到扣款"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_medical
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_medical
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_medical
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_medical
+msgid "Medical Allowance"
+msgstr "医疗补贴"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_stipend
+msgid "Monthly Stipend"
+msgstr "月度津贴"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__need_validation
+msgid "Need Validation"
+msgstr "需要审批"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_intern_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ct_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_cn_ft_net
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_sg_mgmt_net
+msgid "Net Salary"
+msgstr "实发工资"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__next_review
+msgid "Next Review"
+msgstr "下一审批"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_night
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_night
+msgid "Night Shift Allowance"
+msgstr "夜班津贴"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_ot
+msgid "Overtime (Hours)"
+msgstr "加班（小时）"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_ot
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_ot
+msgid "Overtime Pay"
+msgstr "加班费"
+
+#. module: tg_payroll
+#: model:ir.model,name:tg_payroll.model_hr_payslip_run
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip__payslip_run_id
+msgid "Pay Run"
+msgstr "工资批次"
+
+#. module: tg_payroll
+#: model:tier.definition,name:tg_payroll.tier_def_payrun_coo
+msgid "Pay Run - COO"
+msgstr "工资批次 - COO"
+
+#. module: tg_payroll
+#: model:tier.definition,name:tg_payroll.tier_def_payrun_hr
+msgid "Pay Run - HR"
+msgstr "工资批次 - HR"
+
+#. module: tg_payroll
+#: model:base.approval.flow.zb,name:tg_payroll.approval_flow_payrun
+msgid "Pay Run Approval"
+msgstr "工资批次审批"
+
+#. module: tg_payroll
+#: model:ir.actions.server,name:tg_payroll.server_action_payrun_auto_confirm
+msgid "Pay Run: Auto-confirm + send emails after final approval"
+msgstr "工资批次：终审通过后自动确认并发送邮件"
+
+#. module: tg_payroll
+#: model:ir.model,name:tg_payroll.model_hr_payslip
+msgid "Pay Slip"
+msgstr "工资单"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip_run.py:0
+msgid "Pay run '%s' must be approved before generating payment report."
+msgstr "生成付款报表前必须先批准工资批次「%s」。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip_run.py:0
+msgid "Pay run '%s' must be approved before marking as paid."
+msgstr "标记为已付款前必须先批准工资批次「%s」。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "Pay run must be approved before marking payslip as paid."
+msgstr "标记工资单为已付款前必须先批准工资批次。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"Pay run must be fully approved before confirming payslips. Submit the pay "
+"run for approval first."
+msgstr "确认工资单前工资批次必须已完全审批。请先提交工资批次审批。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "Payment report requires pay run approval."
+msgstr "付款报表需要工资批次已审批。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"Payslip '%(slip)s' already has a KPIBONUS input (amount %(amt)s). KPIBONUS "
+"must be unique per payslip — update the existing line instead of adding a "
+"new one."
+msgstr ""
+"工资单「%(slip)s」已存在 KPIBONUS 输入（金额 %(amt)s）。每张工资单只能有一条 KPIBONUS — 请更新现有行而非新增。"
+
+#. module: tg_payroll
+#: model:ir.model,name:tg_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "工资单输入"
+
+#. module: tg_payroll
+#: model:ir.model,name:tg_payroll.model_hr_payslip_input_type
+msgid "Payslip Input Type"
+msgstr "工资单输入类型"
+
+#. module: tg_payroll
+#: model:ir.model.fields.selection,name:tg_payroll.selection__hr_payslip_input_type__unit__percent
+msgid "Percent"
+msgstr "百分比"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_perfect_attend
+msgid "Perfect Attendance Bonus"
+msgstr "全勤奖"
+
+#. module: tg_payroll
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_fac_phone
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_hq_phone
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ct_phone
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_sales_ft_phone
+msgid "Phone Allowance"
+msgstr "话费补贴"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid "Please select a KPI Grade first."
+msgstr "请先选择 KPI 等级。"
+
+#. module: tg_payroll
+#: model:hr.payslip.input.type,name:tg_payroll.input_type_prod
+#: model:hr.salary.rule,name:tg_payroll.tg_rule_bd_worker_prod
+msgid "Production Award"
+msgstr "生产奖"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model_terms:ir.ui.view,arch_db:tg_payroll.hr_payslip_run_view_kanban_inherit_tg_payroll
+msgid "Reject"
+msgstr "拒绝"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__rejected
+msgid "Rejected"
+msgstr "已拒绝"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__rejected_message
+msgid "Rejected Message"
+msgstr "拒绝说明"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__requester_id
+msgid "Requested By"
+msgstr "申请人"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__reviewer_ids
+msgid "Reviewers"
+msgstr "审批人"
+
+#. module: tg_payroll
+#: model:hr.payroll.structure,name:tg_payroll.tg_struct_sg_mgmt
+msgid "SG_MGMT"
+msgstr "SG_MGMT"
+
+#. module: tg_payroll
+#: model:ir.model,name:tg_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "工资规则"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_salary_rule__skip_currency_round
+msgid "Skip Currency Rounding"
+msgstr "跳过币种四舍五入"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model_terms:ir.ui.view,arch_db:tg_payroll.hr_payslip_run_view_kanban_inherit_tg_payroll
+msgid "Submit"
+msgstr "提交"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip_run__tier_zb_workflow_act_all_records
+msgid ""
+"Technical field for form modifiers: privileged users skip the requester "
+"check on workflow buttons."
+msgstr "表单修饰用技术字段：特权用户在工作流按钮上跳过申请人校验。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"The following salary inputs are not allowed (no salary structure on the "
+"payslip): %(names)s."
+msgstr "以下工资输入不允许（工资单无工资结构）：%(names)s。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"The following salary inputs are not allowed on structure \"%(struct)s\": "
+"%(names)s."
+msgstr "工资结构「%(struct)s」不允许以下工资输入：%(names)s。"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__to_validate_message
+msgid "To Validate Message"
+msgstr "待审批提示"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_input_type__unit
+msgid "Unit"
+msgstr "单位"
+
+#. module: tg_payroll
+#: model:ir.model.fields,help:tg_payroll.field_hr_payslip_input_type__unit
+msgid ""
+"Unit of measure for this input. For information / display only; salary rules"
+" read the raw amount value."
+msgstr "该输入的计量单位，仅用于信息展示；工资规则读取原始金额数值。"
+
+#. module: tg_payroll
+#. odoo-python
+#: code:addons/tg_payroll/models/hr_payslip.py:0
+msgid ""
+"Updated KPIBONUS input: %(old)s → %(new)s (Grade %(grade)s × Base %(base)s)"
+msgstr "已更新 KPIBONUS 输入：%(old)s → %(new)s（等级 %(grade)s × 基数 %(base)s）"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model_terms:ir.ui.view,arch_db:tg_payroll.hr_payslip_run_view_kanban_inherit_tg_payroll
+msgid "Validate"
+msgstr "审批"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__validated
+msgid "Validated"
+msgstr "已审批"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__validated_message
+msgid "Validated Message"
+msgstr "审批通过说明"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__validation_status
+msgid "Validation Status"
+msgstr "审批状态"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__review_ids
+msgid "Validations"
+msgstr "审批"
+
+#. module: tg_payroll
+#. odoo-javascript
+#: code:addons/tg_payroll/static/src/views/payrun_card_extend.xml:0
+#: model_terms:ir.ui.view,arch_db:tg_payroll.hr_payslip_run_view_kanban_inherit_tg_payroll
+msgid "Withdraw to Draft"
+msgstr "撤回到草稿"
+
+#. module: tg_payroll
+#: model:ir.model.fields,field_description:tg_payroll.field_hr_payslip_run__tier_zb_workflow_act_all_records
+msgid "Workflow Actions on Any Record (Current User)"
+msgstr "对任意记录执行工作流（当前用户）"

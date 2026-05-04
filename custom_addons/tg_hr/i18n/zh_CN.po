@@ -1,0 +1,3586 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tg_hr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20250917\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-04 03:53+0000\n"
+"PO-Revision-Date: 2026-05-04 03:53+0000\n"
+"Last-Translator: Tiger-Zebin\n"
+"Language-Team: Chinese (Simplified) / zh_CN\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: tg_hr
+#: model:mail.template,body_html:tg_hr.mail_template_offer_en_tiger
+msgid ""
+"<div style=\"margin:0px; padding:0px; font-size:14px; line-height:1.6; color:#333;\">\n"
+"    <p>Dear <t t-out=\"object.applicant_id.partner_name or ''\"/>,</p>\n"
+"    <p>\n"
+"        Greetings from HRD of <t t-out=\"object.company_id.name or ''\"/>, a sister concern of Tiger New Energy Co., Ltd.!\n"
+"    </p>\n"
+"    <p>\n"
+"        Congratulations! You have been selected as a\n"
+"        <strong t-out=\"object.employee_job_id.name or object.job_title or ''\"/>\n"
+"        under the <strong t-out=\"object.department_id.name or ''\"/>\n"
+"        of <strong t-out=\"object.company_id.name or ''\"/>.\n"
+"        Your job location will be <strong t-out=\"(object.work_location_id.name if object.work_location_id else '')\"/>.\n"
+"    </p>\n"
+"    <p>\n"
+"        Your working hour will be <strong t-out=\"object.working_time_text or ''\"/>\n"
+"        from Saturday to Thursday, 6 days in a week.\n"
+"    </p>\n"
+"    <p style=\"margin-bottom:4px;\"><strong>Salary:</strong></p>\n"
+"    <ul style=\"margin-top:0;\">\n"
+"        <li>Wage: <t t-out=\"object.wage or 0\"/> <t t-out=\"object.currency_id.name or ''\"/> / month</li>\n"
+"        <li>TADA: In station: As per company policy</li>\n"
+"        <li>TADA: Out station: At actual cost</li>\n"
+"        <li>Performance Bonus: As per company policy</li>\n"
+"        <li>Festival bonuses: 2 (Per year)</li>\n"
+"        <li>Mobile Allowance: As per company policy</li>\n"
+"        <li>Leave Encashment: As per organizational policy</li>\n"
+"    </ul>\n"
+"    <p>Your Supervisor: <strong t-out=\"object.reporting_to_id.name or ''\"/></p>\n"
+"    <p>\n"
+"        You are requested to submit the required documents as per the list of documents we have provided hereby.\n"
+"        Also, you are requested to join us on\n"
+"        <strong t-out=\"object.contract_start_date or ''\"/>\n"
+"        at 9:30 am at our head office\n"
+"        (20F, Suvastu Muskan Tower, Plot 56, Gulshan Avenue, Gulshan 1, Dhaka-1212.)\n"
+"    </p>\n"
+"    <p>Please fill up the below-mentioned documents and send them back to us through the mail. Give us a reply if you accept the offer.</p>\n"
+"    <br/>\n"
+"    <p style=\"margin-bottom:0;\">\n"
+"        Warm Regards,<br/>\n"
+"        <strong t-out=\"object.offer_sender_id.name or ''\"/><br/>\n"
+"        <t t-out=\"object.offer_sender_id.job_title or ''\"/><br/>\n"
+"        Human Resources Department<br/>\n"
+"        <t t-out=\"object.company_id.name or ''\"/>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: tg_hr
+#: model:mail.template,body_html:tg_hr.mail_template_offer_zh_zuojin
+msgid ""
+"<div style=\"margin:0px; padding:0px; font-size:14px; line-height:1.7; color:#333;\">\n"
+"    <p>\n"
+"        <t t-out=\"object.applicant_id.partner_name or ''\"/>，您好！\n"
+"    </p>\n"
+"    <p>\n"
+"        恭喜你，你已顺利通过<strong t-out=\"object.company_id.name or ''\"/>面试。<br/>\n"
+"        如你确认入职，后续我们将发送正式劳动合同，安排线上 / 线下签约。\n"
+"    </p>\n"
+"    <p>请你提前整理并提供、准备以下入职所需资料及个人信息：</p>\n"
+"    <ol>\n"
+"        <li>本人联系电话、常用邮箱</li>\n"
+"        <li>身份证复印件</li>\n"
+"        <li>学历、学位证书复印件</li>\n"
+"        <li>上家单位离职证明</li>\n"
+"        <li>紧急联系人姓名 + 紧急联系电话</li>\n"
+"        <li>本人名下银行卡信息（卡号 + 完整开户行名称）</li>\n"
+"    </ol>\n"
+"    <p>后续如有任何问题，欢迎随时和我沟通。</p>\n"
+"    <br/>\n"
+"    <p style=\"margin-bottom:0;\">\n"
+"        <strong t-out=\"object.company_id.name or ''\"/><br/>\n"
+"        人力资源部\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-2\"/>\n"
+"                        Wage is 0. Please fill in a valid wage before sending the offer email — otherwise the recipient will see 0."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-2\"/>\n"
+"                        薪资为 0。发送录用邮件前请先填写有效薪资，否则收件人将看到 0。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_form_inherit_tg_hr
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-2\"/>\n"
+"                    Please review and confirm the contract dates at the bottom of the\n"
+"                    <strong>Payroll</strong> tab via <strong>Confirm Contract</strong>."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-2\"/>\n"
+"                    请在员工表单底部 <strong>工资</strong> 页签中，通过 <strong>确认合同</strong> 复核并确认合同日期。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                            Items auto-detected by the system don't need a note. Manually checked items must include a note."
+msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                            系统自动检测项无需备注；人工勾选项必须填写备注。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_create_employee_wizard_form
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                    <strong>Join Date</strong> is the HR onboarding date — not the contract start date.\n"
+"                    Contract dates (start / end / trial) will be reviewed and confirmed on the employee\n"
+"                    form via <strong>Confirm Contract</strong> after the employee is created."
+msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                    <strong>入职日期</strong>为人力资源入职日期，并非合同起始日。\n"
+"                    合同日期（开始 / 结束 / 试用）将在创建员工后，于员工表单通过 <strong>确认合同</strong> 进行复核与确认。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_employee_form_view_inherit_tg_hr
+msgid ""
+"<span class=\"col-12 text-uppercase fw-bolder small\">Salary "
+"Breakdown</span>"
+msgstr "<span class=\"col-12 text-uppercase fw-bolder small\">薪资构成</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+msgid "<span class=\"text-muted small\">Initial Screening</span>"
+msgstr "<span class=\"text-muted small\">初试</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+msgid "<span class=\"text-muted small\">Interview</span>"
+msgstr "<span class=\"text-muted small\">面试</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_buddy_assigned\" class=\"badge text-bg-success"
+" ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_buddy_assigned\" class=\"badge text-bg-success"
+" ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_contract_signed\" class=\"badge text-bg-"
+"success ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_contract_signed\" class=\"badge text-bg-"
+"success ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_equipment_issued\" class=\"badge text-bg-"
+"success ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_equipment_issued\" class=\"badge text-bg-"
+"success ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_lark_account\" class=\"badge text-bg-success "
+"ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_lark_account\" class=\"badge text-bg-success "
+"ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_odoo_account\" class=\"badge text-bg-success "
+"ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_odoo_account\" class=\"badge text-bg-success "
+"ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid ""
+"<span invisible=\"not is_auto_training_completed\" class=\"badge text-bg-"
+"success ms-2\">auto</span>"
+msgstr ""
+"<span invisible=\"not is_auto_training_completed\" class=\"badge text-bg-"
+"success ms-2\">自动</span>"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_kanban
+msgid "<span>Expected joining: </span>"
+msgstr "<span>预计入职：</span>"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__absence_base
+msgid "Absence / Daily Wage Base"
+msgstr "缺勤/每日工资基数"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_bank_account_holder
+msgid "Account Holder"
+msgstr "账户持有者"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_needaction
+msgid "Action Needed"
+msgstr "所需操作"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__active
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__active
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Active"
+msgstr "有效"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活动异常标示"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活动类型图标"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_requisition_stage
+msgid "Add a requisition stage"
+msgstr "添加请购单阶段"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "All checklist items must be checked. Missing: %s"
+msgstr "必须检查所有清单项目。失踪：%s"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "All onboarding items complete. You may now create the employee."
+msgstr "所有入职项目均已完成。您现在可以创建该员工。"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_applicant_report
+msgid "Analyze recruitment by company, hiring manager, or assigned HR."
+msgstr "按公司、招聘经理或指定的人力资源部门分析招聘情况。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_mail_template__company_ids
+msgid "Applicable Companies"
+msgstr "适用公司"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model,name:tg_hr.model_hr_applicant
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__applicant_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__applicant_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__applicant_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__applicant_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__applicant_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__applicant_id
+msgid "Applicant"
+msgstr "申请人"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_hr_applicant_contract_signed_stage_override
+msgid "Applicant Contract Signed Stage Override"
+msgstr "申请人合同签署阶段覆盖"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Applicant Email"
+msgstr "申请人邮箱"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_first_contact_wizard
+msgid "Applicant First Contact Wizard"
+msgstr "申请人首次联系向导"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_interview_wizard
+msgid "Applicant Interview Wizard"
+msgstr "申请人面试向导"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Applicant Name"
+msgstr "申请人姓名"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_applicant_records_admin
+msgid "Applicant Records Administrator"
+msgstr "申请人记录管理员"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_review_wizard
+msgid "Applicant Resume Review Wizard"
+msgstr "申请人简历审核向导"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__approval_state
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__approval_state
+msgid "Approval Status"
+msgstr "审批状态"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__assigned_hr_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__assigned_hr_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Assigned HR"
+msgstr "指定人力资源"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件数量"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_region__tb
+msgid "Bangladesh (TB)"
+msgstr "孟加拉国（TB）"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_region__tl
+msgid "Bangladesh (TL)"
+msgstr "孟加拉国（TL）"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_bank_account_number
+msgid "Bank Account Number"
+msgstr "银行账户号码"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_bank_info
+msgid "Bank Info"
+msgstr "银行信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Bank Information"
+msgstr "银行信息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_bank_name
+msgid "Bank Name"
+msgstr "银行名称"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"Bank account number invalid. Accepted lengths:\n"
+"• 11 digits (DBBL)\n"
+"• 13 digits (BRAC Bank / Dhaka Bank)\n"
+"• 17 digits (IBBL)"
+msgstr ""
+"银行帐号无效。可接受的长度：\n"
+"• 11 位数字 (DBBL)\n"
+"• 13 位数字（BRAC 银行/达卡银行）\n"
+"• 17 位数字 (IBBL)"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__kpi_base
+#: model:ir.model.fields,help:tg_hr.field_hr_version__kpi_base
+msgid ""
+"Base amount used to compute the monthly KPI bonus. Grade A pays 100%, B pays"
+" 50%, C pays 0%."
+msgstr "用于计算每月 KPI 奖金的基本金额。 A级缴费100%，B级缴费50%，C级缴费0%。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__basic_amount
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__basic_amount
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_payroll_structure_type__absence_base__basic
+msgid "Basic"
+msgstr "基础的"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__basic_salary
+msgid "Basic Salary"
+msgstr "基本工资"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__basic_salary_upper_zh
+msgid "Basic Salary (Upper)"
+msgstr "基本工资（上）"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,legend_blocked:tg_hr.hr_recruitment_stage_tg_contacted
+#: model:hr.recruitment.stage,legend_blocked:tg_hr.hr_recruitment_stage_tg_initital
+#: model:hr.recruitment.stage,legend_blocked:tg_hr.hr_recruitment_stage_tg_interview
+#: model:hr.recruitment.stage,legend_blocked:tg_hr.hr_recruitment_stage_tg_offered
+#: model:hr.recruitment.stage,legend_blocked:tg_hr.hr_recruitment_stage_tg_refused
+msgid "Blocked"
+msgstr "受阻"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__perfect_attend_amount
+#: model:ir.model.fields,help:tg_hr.field_hr_version__perfect_attend_amount
+msgid "Bonus paid when there is no absence in the period."
+msgstr "期间无缺勤时支付奖金。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_payroll_structure_type.py:0
+msgid ""
+"Breakdown percentages must be between 0 and 1 (got %(val)s for %(field)s)."
+msgstr "细分百分比必须介于 0 和 1 之间（针对 %(field)s 获取 %(val)s）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_buddy_assigned
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_buddy_assigned
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Buddy 对接"
+msgstr "好友活动"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_buddy_assigned
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_buddy_assigned
+msgid "Buddy 对接 备注"
+msgstr "好友活动备注"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__trip_daily
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__trip_daily
+msgid "Business Trip Allowance / Day"
+msgstr "出差津贴/天"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__can_forward
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__can_forward
+msgid "Can Forward"
+msgstr "可以转发"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__can_review
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__can_review
+msgid "Can Review"
+msgstr "可以评论"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_offer_mark_signed_offline_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_create_employee_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_first_contact_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_interview_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_review_wizard_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"Cannot auto-sign: %s has no digital signature configured. Please go to "
+"Settings → Profile (top-right avatar) and upload a signature image."
+msgstr "无法自动签名：%s 没有配置数字签名。请前往“设置”→“个人资料”（右上角头像）并上传签名图片。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Cannot move to this stage. Please complete: %s"
+msgstr "无法进入这个阶段。请填写：%s"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Cannot sign: the date field '%s' has no value."
+msgstr "无法签名：日期字段“%s”没有值。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_region__cn
+msgid "China (CN)"
+msgstr "中国（中国）"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "China ID must be 18 characters."
+msgstr "中国身份证必须为 18 个字符。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "China bank account (UnionPay) must be 16–19 digits."
+msgstr "中国银行账户（银联）必须为 16-19 位数字。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"China passport format invalid. Must be:\n"
+"• E + 8 digits (e.g. E12345678), or\n"
+"• E + 1 letter (not I/O) + 7 digits (e.g. EA1234567)"
+msgstr ""
+"中国护照格式无效。必须是：\n"
+"• E + 8 位数字（例如 E12345678），或\n"
+"• E + 1 个字母（不是 I/O）+ 7 个数字（例如 EA1234567）"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__applicant_company_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__company_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Company"
+msgstr "公司"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Company Name"
+msgstr "公司名称"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Company Sign"
+msgstr "公司标志"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__is_company_signed
+msgid "Company Signed"
+msgstr "公司签署"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__company_signer_id
+msgid "Company Signer"
+msgstr "公司签字人"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_offer_mark_signed_offline_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_first_contact_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_interview_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_review_wizard_form
+msgid "Confirm"
+msgstr "确认"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_employee.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_form_inherit_tg_hr
+msgid "Confirm Contract"
+msgstr "确认合同"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_employee_confirm_contract_wizard
+msgid "Confirm Employee Contract"
+msgstr "确认员工合同"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__contact
+msgid "Contact Information"
+msgstr "联系信息"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,name:tg_hr.hr_recruitment_stage_tg_contacted
+msgid "Contacted"
+msgstr "已联系"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Contract Dates"
+msgstr "合同日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__contract_date_end
+msgid "Contract End"
+msgstr "合约结束"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_contract_info
+msgid "Contract Info"
+msgstr "合约信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Contract Information"
+msgstr "合约信息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__is_contract_signed
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Contract Signed"
+msgstr "合同已签署"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__contract_date_start
+msgid "Contract Start"
+msgstr "合约开始"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "Contract confirmed."
+msgstr "合同确认。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "Contract end date cannot be earlier than the start date."
+msgstr "合同结束日期不能早于开始日期。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "Contract end date is required."
+msgstr "合同结束日期是必需的。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "Contract start date is required."
+msgstr "合同开始日期是必需的。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__contractor
+msgid "Contractor"
+msgstr "合约制专员"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__conveyance_pct
+msgid "Conveyance %"
+msgstr "输送率%"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__conveyance_allowance
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__conveyance_amount
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__conveyance_amount
+msgid "Conveyance Allowance"
+msgstr "交通补贴"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__conveyance_pct
+msgid "Conveyance Allowance as a fraction of wage (e.g. 0.10 for 10%)."
+msgstr "交通津贴占工资的一部分（例如 10% 为 0.10）。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_create_employee_wizard_form
+msgid "Create Employee"
+msgstr "新建员工"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_create_employee_wizard
+msgid "Create Employee Wizard"
+msgstr "创建员工向导"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_applicant_view_form_inherit_tg_hr_offer_label
+msgid "Create Offer"
+msgstr "创建报价"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Create Sign Request"
+msgstr "创建签名请求"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_requisition
+msgid "Create a job requisition"
+msgstr "创建职位申请"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__create_date
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Created On"
+msgstr "创建于"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__create_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__create_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__version_contract_date_start
+msgid "Current Contract Start"
+msgstr "当前合同开始时间"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__stage_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Current Stage"
+msgstr "当前阶段"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__daily_wage
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__daily_wage
+msgid "Daily Wage"
+msgstr "每日工资"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__trip_daily
+#: model:ir.model.fields,help:tg_hr.field_hr_version__trip_daily
+msgid "Daily business trip allowance, multiplied by the TRIP input (days)."
+msgstr "每日出差津贴，乘以 TRIP 输入（天）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__expat_daily
+#: model:ir.model.fields,help:tg_hr.field_hr_version__expat_daily
+msgid "Daily expatriate allowance, multiplied by the EXPAT input (days)."
+msgstr "每日外籍人士津贴，乘以外籍人士投入（天）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__date_version
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__date_version
+msgid "Date Version"
+msgstr "日期版本"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_birthday
+msgid "Date of Birth"
+msgstr "出生日期"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Date of Joining"
+msgstr "加入日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__date_request
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Date of Request"
+msgstr "请求日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__days_in_contacted
+msgid "Days in Contacted"
+msgstr "联系天数"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__days_in_initial
+msgid "Days in Initial Screening"
+msgstr "初步筛选天数"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__days_in_interview
+msgid "Days in Interview"
+msgstr "面试天数"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__days_in_offered
+msgid "Days in Offered"
+msgstr "提供天数"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_applicant_create_employee_wizard__trial_date_end
+msgid ""
+"Defaults to join_date + trial period. The contract dates (start / end) are "
+"confirmed later via 'Confirm Contract' on the employee form."
+msgstr "默认为加入日期 + 试用期。合同日期（开始/结束）稍后通过员工表格上的“确认合同”进行确认。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__department_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__department_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__department_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__department_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Department"
+msgstr "部门"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.res_users_view_form_inherit_tg_sign_signature
+msgid "Digital Signature"
+msgstr "数字签名"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_diploma
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__diploma
+msgid "Diploma"
+msgstr "文凭"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_applicant_get_refuse_reason__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_mail_template__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_refuse_offer_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_sign_request__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tier_definition__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__daily_wage
+#: model:ir.model.fields,help:tg_hr.field_hr_version__daily_wage
+msgid ""
+"Display only. Computed as base / working_days_per_month, where the base is "
+"BASIC or WAGE depending on the structure type's Absence Base setting."
+msgstr "仅显示。计算方式为基数 / 每个月工作天数，其中基数是 BASIC 或 WAGE，具体取决于结构类型的缺勤基数设置。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__name
+msgid "Document Name"
+msgstr "单据名称"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"Document signed by the company. The candidate will receive an email with the"
+" signing link."
+msgstr "由公司签署的文件。候选人将收到一封包含签名链接的电子邮件。"
+
+#. module: tg_hr
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_draft
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Draft"
+msgstr "草稿"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Email Template"
+msgstr "EMail模板"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_mail_template
+msgid "Email Templates"
+msgstr "EMail模板"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_emergency_contact
+msgid "Emergency Contact"
+msgstr "紧急联系人"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_emergency_phone
+msgid "Emergency Phone"
+msgstr "紧急联系电话"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_employee
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__employee_id
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__employee
+msgid "Employee"
+msgstr "员工"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_version
+msgid "Employee Contract"
+msgstr "员工合同"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_hr_employee_contract_confirm
+msgid "Employee Contract Confirm"
+msgstr "员工合同确认"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_employee_info_readonly
+msgid "Employee Information Readonly"
+msgstr "员工信息只读"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__employee_job_id
+msgid "Employee Job"
+msgstr "员工工作"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Employee Name"
+msgstr "员工姓名"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Employee Sign"
+msgstr "员工签署"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__is_employee_signed
+msgid "Employee Signed"
+msgstr "员工签名"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_employee_type
+msgid "Employment Type"
+msgstr "雇佣类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr "试用期结束日期（如果有的话）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__trial_date_end
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__trial_date_end
+msgid "End of Trial Period"
+msgstr "试用期结束"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__is_entered_interview
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Entered Interview"
+msgstr "进入面试"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_position_type__expat
+msgid "Expat"
+msgstr "外籍人士"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__expat_daily
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__expat_daily
+msgid "Expat Allowance / Day"
+msgstr "外籍人士津贴/天"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_expat_info
+msgid "Expat Info"
+msgstr "外籍人士信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Expat Information"
+msgstr "外籍人士信息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__date_join_expected
+msgid "Expected Date of Joining"
+msgstr "预计加入日期"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_position_type__factory
+msgid "Factory"
+msgstr "工厂"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Factory: Safety Training"
+msgstr "工厂：安全培训"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_contract_salary_offer__offer_email_state__failed
+msgid "Failed"
+msgstr "失败的"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"Failed to create sign request automatically: %s. Please fix the missing data"
+" and click [Recreate Sign Request] to retry."
+msgstr "无法自动创建签名请求：%s。请修复缺失的数据，然后单击[重新创建签名请求]重试。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_sex__female
+msgid "Female"
+msgstr "女性"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__file
+msgid "File"
+msgstr "文件"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__file_filename
+msgid "File Filename"
+msgstr "文件 文件名"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__signed_filename
+msgid "Filename"
+msgstr "文件名"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_first_contact_wizard_form
+msgid "First Contact"
+msgstr "第一次接触"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__first_contact_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__first_contact_date
+msgid "First Contact Date"
+msgstr "第一次联系日期"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "First Contact Date cannot be in the future."
+msgstr "首次联系日期不能是将来的日期。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__first_contact_made
+msgid "First Contact Made"
+msgstr "第一次接触"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_payroll_structure_type__late_rate_mode__fixed
+msgid "Fixed Per-Minute Rate"
+msgstr "每分钟固定费率"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__late_fixed_per_minute
+msgid "Fixed deduction per late minute, used when Late Rate Mode is 'Fixed'."
+msgstr "每晚一分钟固定扣除，当晚费率模式为“固定”时使用。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__housing_allowance
+#: model:ir.model.fields,help:tg_hr.field_hr_version__housing_allowance
+msgid "Fixed monthly housing allowance."
+msgstr "每月固定住房补贴。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__flow_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__flow_id
+msgid "Flow"
+msgstr "流动"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__fold
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_search
+msgid "Folded in Kanban"
+msgstr "折叠看板"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者（合作伙伴）"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome图标，例如：fa-tasks"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__freelance
+msgid "Freelancer"
+msgstr "自由职业者"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Full name in English"
+msgstr "英文全名"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Fully signed offers cannot be refused."
+msgstr "完全签署的报价不能被拒绝。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g0
+msgid "G0"
+msgstr "G0"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g1
+msgid "G1"
+msgstr "G1"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g2
+msgid "G2"
+msgstr "G2"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g3
+msgid "G3"
+msgstr "G3"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g4
+msgid "G4"
+msgstr "G4"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g5
+msgid "G5"
+msgstr "G5"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g6
+msgid "G6"
+msgstr "G6"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g7
+msgid "G7"
+msgstr "G7"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g8
+msgid "G8"
+msgstr "G8"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_employee__grade__g9
+msgid "G9"
+msgstr "G9"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_sex
+msgid "Gender"
+msgstr "性别"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_applicant_get_refuse_reason
+msgid "Get Refuse Reason"
+msgstr "获取拒绝原因"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__grade
+msgid "Grade"
+msgstr "年级"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "HIRING MANAGER"
+msgstr "招聘经理"
+
+#. module: tg_hr
+#: model:base.approval.flow.zb,name:tg_hr.approval_flow_applicant_offer
+msgid "HR Offer Approval"
+msgstr "人力资源报价批准"
+
+#. module: tg_hr
+#: model:base.approval.flow.zb,name:tg_hr.approval_flow_requisition
+msgid "HR Requisition Approval"
+msgstr "人力资源申请批准"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_hr_version_contract_admin
+msgid "HR Version Contract Administrator"
+msgstr "HR版本合同管理员"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_version_readonly
+msgid "HR Version Readonly"
+msgstr "HR 版本只读"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__join_date
+msgid "HR onboarding date. Distinct from contract start date."
+msgstr "人力资源入职日期。与合同开始日期不同。"
+
+#. module: tg_hr
+#: model:ir.actions.server,name:tg_hr.cron_offer_start_t3_warning_ir_actions_server
+msgid "HR: Offer T-3 Contract Start Warning"
+msgstr "HR：提供 T-3 合同开始警告"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__hra_pct
+msgid "HRA %"
+msgstr "人力资源分析%"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_payroll_structure_type.py:0
+msgid ""
+"HRA + Medical + Conveyance percentages cannot exceed 100%% (got %.2f%%)."
+msgstr "HRA + 医疗 + 运输百分比不能超过 100%%（得到 %.2f%%）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__has_active_offer
+msgid "Has Active Offer"
+msgstr "有有效报价"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__has_sign_request
+msgid "Has Active Sign Request"
+msgstr "有主动签名请求"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__has_comment
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__has_comment
+msgid "Has Comment"
+msgstr "有评论"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__has_message
+msgid "Has Message"
+msgstr "有消息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__has_work_entries
+msgid "Has Work Entries"
+msgstr "有工作记录"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__hide_reviews
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__hide_reviews
+msgid "Hide Reviews"
+msgstr "隐藏评论"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "High or Urgent"
+msgstr "高或紧急"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__hiring_status__hired
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_hired
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Hired"
+msgstr "被雇佣的"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__name
+msgid "Hired Person Name"
+msgstr "受雇人姓名"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__cv
+msgid "Hired person CV"
+msgstr "受雇人员简历"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__cv_filename
+msgid "Hired person CV Filename"
+msgstr "受雇人员简历文件名"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__hired_person_ids
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Hiring Information Person"
+msgstr "聘请信息员"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__hiring_manager_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__hiring_manager_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Hiring Manager"
+msgstr "招聘经理"
+
+#. module: tg_hr
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_hm_assigned
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Hiring Manager Assigned"
+msgstr "已分配用人经理"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__hiring_status
+msgid "Hiring Status"
+msgstr "招聘状况"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__hiring_type
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Hiring Type"
+msgstr "招聘类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__overtime
+#: model:ir.model.fields,help:tg_hr.field_hr_version__overtime
+msgid "Hourly overtime rate. Rule: OT_hours × overtime."
+msgstr "每小时加班费率。规则：OT_小时×加班时间。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__house_rent_allowance
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__hra_amount
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__hra_amount
+msgid "House Rent Allowance"
+msgstr "住房补贴"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__hra_pct
+msgid ""
+"House Rent Allowance as a fraction of wage (e.g. 0.25 for 25%). Leave 0 to "
+"disable salary breakdown for this structure type."
+msgstr "房屋租金补贴占工资的一部分（例如 25% 为 0.25）。保留 0 可禁用此结构类型的薪资细分。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__housing_allowance
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__housing_allowance
+msgid "Housing Allowance"
+msgstr "住房补贴"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__sign_type
+msgid ""
+"How the offer was signed: online (Odoo Sign flow) or offline (paper signed, "
+"scan uploaded)."
+msgstr "报价的签署方式：在线（Odoo Sign 流程）或离线（纸质签名，扫描上传）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_applicant_get_refuse_reason__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_job__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__id
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__id
+#: model:ir.model.fields,field_description:tg_hr.field_mail_template__id
+#: model:ir.model.fields,field_description:tg_hr.field_refuse_offer_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_sign_request__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__id
+#: model:ir.model.fields,field_description:tg_hr.field_tier_definition__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_id_info
+msgid "ID Info"
+msgstr "身份证信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "ID Information"
+msgstr "身份证信息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_id_documents
+msgid "ID Scan"
+msgstr "身份证扫描"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "图标"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "指示异常活动的图标。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，则需要查看新消息。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__message_has_error
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "如果勾选此项， 某些消息将出现发送错误。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__has_comment
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__has_comment
+msgid "If set, Allow the reviewer to leave a comment on the review."
+msgstr "如果设置，则允许审阅者对审阅发表评论。"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,legend_normal:tg_hr.hr_recruitment_stage_tg_contacted
+#: model:hr.recruitment.stage,legend_normal:tg_hr.hr_recruitment_stage_tg_initital
+#: model:hr.recruitment.stage,legend_normal:tg_hr.hr_recruitment_stage_tg_interview
+#: model:hr.recruitment.stage,legend_normal:tg_hr.hr_recruitment_stage_tg_offered
+#: model:hr.recruitment.stage,legend_normal:tg_hr.hr_recruitment_stage_tg_refused
+msgid "In Progress"
+msgstr "进行中"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,name:tg_hr.hr_recruitment_stage_tg_initital
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Initial Screening"
+msgstr "初步筛选"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__initial_screening_notes
+msgid "Initial Screening Notes"
+msgstr "初步筛选注意事项"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__priority
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__priority
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Initial Screening Score"
+msgstr "评估"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"Initial screening stage is not configured (missing xml id "
+"tg_hr.hr_recruitment_stage_tg_initital)."
+msgstr "未配置初始筛选阶段（缺少 xml id tg_hr.hr_recruitment_stage_tg_initital）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__description
+msgid "Internal Notes"
+msgstr "内部说明"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Internal notes (not on the paper form)…"
+msgstr "内部注释（不在纸质表格上）..."
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,name:tg_hr.hr_recruitment_stage_tg_interview
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Interview"
+msgstr "面试"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__interview_datetime
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__interview_datetime
+msgid "Interview Date & Time"
+msgstr "面试日期和时间"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_interview_wizard_form
+msgid "Interview Details"
+msgstr "面试详情"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__interview_notes
+msgid "Interview Notes"
+msgstr "采访笔记"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__interview_passed
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+msgid "Interview Passed"
+msgstr "面试通过"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Interview Process"
+msgstr "面试流程"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__interview_score
+msgid "Interview Score"
+msgstr "面试成绩"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__interview_type
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__interview_type
+msgid "Interview Type"
+msgstr "面试类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_buddy_assigned
+msgid "Is Auto Buddy Assigned"
+msgstr "是否已分配自动好友"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_contract_signed
+msgid "Is Auto Contract Signed"
+msgstr "是否签订汽车合同"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_equipment_issued
+msgid "Is Auto Equipment Issued"
+msgstr "汽车设备是否已发行"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_lark_account
+msgid "Is Auto Lark Account"
+msgstr "是Auto Lark帐号"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_odoo_account
+msgid "Is Auto Odoo Account"
+msgstr "是 Auto Odoo 帐户"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__is_auto_training_completed
+msgid "Is Auto Training Completed"
+msgstr "自动训练完成了吗"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__is_contract_signed_stage
+msgid "Is Contract Signed"
+msgstr "是否已签订合同"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__is_in_interview_stage
+msgid "Is In Interview Stage"
+msgstr "是否在面试阶段"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__is_in_offered_stage
+msgid "Is In Offered Stage"
+msgstr "正处于offer阶段"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_job__is_manager
+msgid "Is Manager"
+msgstr "是经理"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__is_offer_for_current_user
+msgid "Is Offer For Current User"
+msgstr "为当前用户提供优惠"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "JOB DESCRIPTION"
+msgstr "职位描述"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Job"
+msgstr "工作"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_job
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__job_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__job_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Job Position"
+msgstr "工作岗位"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_requisition
+msgid "Job Requisition"
+msgstr "职位要求"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_requisition_hired_person
+msgid "Job Requisition Hired Person"
+msgstr "职位申请受雇人员"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_requisition_stage
+msgid "Job Requisition Stage"
+msgstr "职位申请阶段"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__job_title
+msgid "Job Title"
+msgstr "工作头衔"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__join_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__join_date
+msgid "Join Date"
+msgstr "加入日期"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__joining_date
+msgid "Joining Date"
+msgstr "加入日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__kpi_base
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__kpi_base
+msgid "KPI Base"
+msgstr "关键绩效指标基础"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__key_responsibility
+msgid "Key Responsibility"
+msgstr "主要职责"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__key_skills
+msgid "Key Skills / Competencies"
+msgstr "关键技能/能力"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_lark_account
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_lark_account
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Lark 开通"
+msgstr "飞书开通"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_lark_account
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_lark_account
+msgid "Lark 开通 备注"
+msgstr "Lark 开通 备注"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__write_uid
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_first_contact_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__write_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_payroll_structure_type_view_form_inherit
+msgid "Late Deduction"
+msgstr "逾期扣除"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__late_fixed_per_minute
+msgid "Late Fixed Per-Minute Rate"
+msgstr "迟到每分钟固定费率"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__late_rate_mode
+msgid "Late Rate Mode"
+msgstr "延迟率模式"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__latest_approved_offer_fully_signed
+msgid "Latest Approved Offer Fully Signed"
+msgstr "最新批准的报价已完全签署"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.email_template_form_inherit_tg_hr
+msgid "Leave empty to apply to all companies"
+msgstr "留空适用于所有公司"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__local_name
+msgid "Local Name"
+msgstr "本地名称"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Local official name (Chinese / Bengali / ...) — optional"
+msgstr "当地官方名称（中文/孟加拉语/...） — 可选"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__work_location_id
+msgid "Location"
+msgstr "位置"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__priority__1
+msgid "Low"
+msgstr "低的"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Mail server reported exception: %s"
+msgstr "邮件服务器报告异常：%s"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Main duties…"
+msgstr "主要职责..."
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_sex__male
+msgid "Male"
+msgstr "男性"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_offer_mark_signed_offline_wizard_form
+msgid "Mark Employee Signed Offline"
+msgstr "标记员工已离线签名"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_offer_mark_signed_offline_wizard
+msgid "Mark Offer Employee Signed Offline"
+msgstr "标记员工离线签署的优惠"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Mark Signed Offline"
+msgstr "标记离线签名"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_offer_mark_signed_offline_wizard.py:0
+msgid ""
+"Marked as signed offline. Scanned contract attached: <strong>%s</strong>"
+msgstr "已标记为线下签署。已附上扫描件：<strong>%s</strong>"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__medical_pct
+msgid "Medical %"
+msgstr "医疗的 ％"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__medical_allowance
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__medical_amount
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__medical_amount
+msgid "Medical Allowance"
+msgstr "医疗津贴"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__medical_pct
+msgid "Medical Allowance as a fraction of wage (e.g. 0.15 for 15%)."
+msgstr "医疗补贴为工资比例（如 0.15 表示 15%）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__meeting_url
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_interview_wizard__meeting_url
+msgid "Meeting URL"
+msgstr "会议网址"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr "消息发送错误"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Missing required information: %s"
+msgstr "缺少必需的信息：%s"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__priority__2
+msgid "Moderate"
+msgstr "缓和"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee__phone_allowance
+#: model:ir.model.fields,help:tg_hr.field_hr_version__phone_allowance
+msgid ""
+"Monthly phone allowance at full attendance. Pro-rated by attendance in "
+"payroll rules."
+msgstr "全勤的每月电话津贴。根据工资规则的出席情况按比例分配。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "我的活动截止时间"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"NID format invalid. Must be:\n"
+"• Smart ID: 10 digits\n"
+"• Analog ID: 17 digits"
+msgstr ""
+"NID 格式无效。必须是：\n"
+"• 智能 ID：10 位数字\n"
+"• 模拟 ID：17 位数字"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Name (English)"
+msgstr "姓名（英文）"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__nid
+msgid "National ID"
+msgstr "国民身份证"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_identification_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "National ID (NID)"
+msgstr "国民身份证 (NID)"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_nationality_id
+msgid "Nationality"
+msgstr "国籍"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__need_validation
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__need_validation
+msgid "Need Validation"
+msgstr "需要验证"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "New Headcount"
+msgstr "新员工人数"
+
+#. module: tg_hr
+#: model:ir.actions.act_window,name:tg_hr.action_tg_hr_requisition_stage_new
+msgid "New Requisition Stage"
+msgstr "新申请阶段"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__hiring_type__new
+msgid "New Role"
+msgstr "新角色"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_kanban
+msgid "New Stage"
+msgstr "新阶段"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"New stage is not configured (missing xml id hr_recruitment.stage_job0)."
+msgstr "未配置新阶段（缺少 xml ID hr_recruitment.stage_job0）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一活动日历事件"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__next_review
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__next_review
+msgid "Next Review"
+msgstr "下一篇评论"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "No COMPANY role found in the sign request."
+msgstr "签名请求中未找到 COMPANY 角色。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "No active sign request. Please create one first."
+msgstr "没有主动的签名请求。请先创建一个。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "No candidate signer found in the sign request."
+msgstr "签名请求中未找到候选签名者。"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_applicant_report
+msgid "No data yet"
+msgstr "还没有数据"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_position_type__normal
+msgid "Normal"
+msgstr "正常"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__hiring_status__not_hired
+msgid "Not Hired"
+msgstr "未受聘"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__interview_score__0
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__priority__0
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_review_wizard__priority__0
+msgid "Not Rated"
+msgstr "正常"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_contract_salary_offer__offer_email_state__not_sent
+msgid "Not Sent"
+msgstr "未发送"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__note
+msgid "Note"
+msgstr "备注"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Note (required if manual)"
+msgstr "注意（如果是手动则需要）"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_offer_mark_signed_offline_wizard.py:0
+msgid "Note:"
+msgstr "笔记："
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Notes..."
+msgstr "笔记..."
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr "操作数量"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__number_of_vacancies
+msgid "Number of Vacancies"
+msgstr "职位空缺数量"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_has_error_counter
+msgid "Number of errors"
+msgstr "错误数量"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要采取行动的消息数量"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "发送错误的消息的数量"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__ot_rate
+msgid "OT Rate"
+msgstr "加班费率"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_odoo_account
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_odoo_account
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Odoo 账号"
+msgstr "Odoo 账号"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_odoo_account
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_odoo_account
+msgid "Odoo 账号 备注"
+msgstr "Odoo 账号 备注"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__offer_id
+msgid "Offer"
+msgstr "提供"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Offer - %s"
+msgstr "优惠 - %s"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_offer_ceo
+msgid "Offer - CEO (Manager Positions Only)"
+msgstr "优惠 - 首席执行官（仅限经理职位）"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_offer_coo
+msgid "Offer - COO"
+msgstr "报价 - 首席运营官"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_offer_finance_manager
+msgid "Offer - Finance Manager"
+msgstr "招聘 - 财务经理"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_offer_hr_manager
+msgid "Offer - HR Manager"
+msgstr "招聘 - 人力资源经理"
+
+#. module: tg_hr
+#: model:ir.actions.server,name:tg_hr.server_action_offer_to_offered_ceo
+msgid "Offer CEO Approved: Set Applicant Stage to Offered"
+msgstr "要约首席执行官批准：将申请人阶段设置为要约"
+
+#. module: tg_hr
+#: model:ir.actions.server,name:tg_hr.server_action_offer_to_offered_coo
+msgid "Offer COO Approved: Set Applicant Stage to Offered"
+msgstr "报价 COO 批准：将申请人阶段设置为“已报价”"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Offer Email"
+msgstr "报价电子邮件"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_hr_offer_email_sender
+msgid "Offer Email Sender"
+msgstr "优惠电子邮件发件人"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offer_email_sent_date
+msgid "Offer Email Sent On"
+msgstr "优惠电子邮件发送日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offer_email_state
+msgid "Offer Email Status"
+msgstr "优惠电子邮件状态"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__email_template_id
+msgid "Offer Email Template"
+msgstr "报价电子邮件模板"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Offer Information"
+msgstr "录用信息"
+
+#. module: tg_hr
+#: model:mail.template,name:tg_hr.mail_template_offer_en_tiger
+msgid "Offer Letter - English (Tiger)"
+msgstr ""
+
+#. module: tg_hr
+#: model:mail.template,subject:tg_hr.mail_template_offer_en_tiger
+msgid ""
+"Offer Letter - {{ object.applicant_id.partner_name }} - {{ "
+"object.company_id.name }}"
+msgstr ""
+
+#. module: tg_hr
+#: model:mail.template,name:tg_hr.mail_template_offer_zh_zuojin
+msgid "Offer Letter - 中文（佐津）"
+msgstr ""
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offer_sender_id
+msgid "Offer Sender"
+msgstr "报价发送者"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Offer Sender Work Email"
+msgstr "录用人工作邮箱"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Offer email NOT sent. Reason: %s"
+msgstr "优惠电子邮件未发送。原因：%s"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"Offer email dispatched to %s. Delivery confirmation depends on the recipient"
+" mail server."
+msgstr "优惠电子邮件已发送至 %s。送达确认取决于收件人邮件服务器。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Offer email failed — please fix and resend"
+msgstr "优惠电子邮件失败 - 请修复并重新发送"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Offer fully signed — applicant and requisition stages advanced."
+msgstr "报价已完全签署 - 申请人和申请阶段已提前。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_offer_mark_signed_offline_wizard.py:0
+msgid "Offer has no linked applicant."
+msgstr "优惠没有关联的申请人。"
+
+#. module: tg_hr
+#: model:res.groups,comment:tg_hr.group_hr_offer_email_sender
+msgid ""
+"Offer 相关按钮/RPC；候选人侧 hr.contract.salary.offer 见 tg_hr ACL 与「applicant "
+"pipeline」同名 record rule。"
+msgstr ""
+"Offer相关按钮/RPC；竞选侧 hr.contract.salary.offer 见 tg_hr ACL 与「申请人管道」同名记录规则。"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,name:tg_hr.hr_recruitment_stage_tg_offered
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__is_offered
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Offered"
+msgstr "提供"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__interview_type__offline
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_contract_salary_offer__sign_type__offline
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_interview_wizard__interview_type__offline
+msgid "Offline"
+msgstr "离线"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offline_sign_note
+msgid "Offline Sign Note"
+msgstr "离线签注"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_form_inherit_tg_hr
+msgid "Onboarding"
+msgstr "入职"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "Onboarding Checklist"
+msgstr "入职清单"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__onboarding_complete
+msgid "Onboarding Complete"
+msgstr "入职准备完成"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.role_tg_hr_onboarding_contract_admin_res_groups
+msgid "Onboarding Contract Administrator"
+msgstr "入职合同管理员"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_onboarding_create_employee
+msgid "Onboarding Create Employee"
+msgstr "入职创建员工"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_onboarding_dept_manager
+msgid "Onboarding Department Manager"
+msgstr "入职部门经理"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_attachment
+msgid "Onboarding Document"
+msgstr "入职文件"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__onboarding_attachment_ids
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Onboarding Documents"
+msgstr "入职文件"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__onboarding_done_count
+msgid "Onboarding Done Count"
+msgstr "入职完成计数"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Onboarding Preparation"
+msgstr "入职准备"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__onboarding_progress
+msgid "Onboarding Progress (%)"
+msgstr "入职进度 (%)"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_applicant_records
+msgid "Onboarding Records"
+msgstr "入职记录"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.role_tg_hr_onboarding_records_admin_res_groups
+msgid "Onboarding Records Administrator"
+msgstr "入职记录管理员"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_onboarding_records_core
+msgid "Onboarding Records Core"
+msgstr "入职记录核心"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__onboarding_total_count
+msgid "Onboarding Total Count"
+msgstr "入职总数"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"Onboarding defaults sync failed. Please review the candidate's onboarding "
+"fields manually."
+msgstr "载入默认值同步失败。请手动查看候选人的入职字段。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__interview_type__online
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_contract_salary_offer__sign_type__online
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_interview_wizard__interview_type__online
+msgid "Online"
+msgstr "线上"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Only the assigned HR (%s) can review this applicant."
+msgstr "只有指定的 HR (%s) 可以审核该申请人。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_offer_mark_signed_offline_wizard_form
+msgid "Optional note (e.g. signed on 2026-05-01 in HR office)"
+msgstr "可选注释（例如2026年5月1日在人力资源办公室签署）"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__offline_sign_note
+msgid "Optional note recorded by HR when marking offline signed."
+msgstr "标记离线签名时由 HR 记录的可选注释。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_offer_mark_signed_offline_wizard__note
+msgid "Optional note recorded in chatter."
+msgstr "聊天中记录的可选注释。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_applicant__local_name
+msgid ""
+"Optional. The applicant's legal/official name in their local language or "
+"script (e.g. Chinese, Bengali). Synced to employee.legal_name on hire."
+msgstr "选修的。申请人当地语言或文字的法定/官方名称（例如中文、孟加拉语）。雇用时同步到employee.legal_name。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_sex__other
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__other
+msgid "Other"
+msgstr "其他"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Other Information"
+msgstr "其他信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_payroll_structure_type_view_form_inherit
+msgid "Overtime"
+msgstr "随着时间的推移"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__overtime
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__overtime
+msgid "Overtime Rate / Hour"
+msgstr "加班费率/小时"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__ot_rate
+msgid "Overtime multiplier applied to the hourly rate."
+msgstr "加班乘数适用于小时费率。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Pass Interview"
+msgstr "通过面试"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__passport
+msgid "Passport"
+msgstr "护照"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_passport_expiration_date
+msgid "Passport Expiry"
+msgstr "护照到期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_passport_id
+msgid "Passport No"
+msgstr "护照号"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_template_form_view_inherit
+msgid "Payroll Allowances"
+msgstr "工资津贴"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_payroll_structure_type_view_form_inherit
+msgid "Payroll Configuration"
+msgstr "薪资配置"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.role_tg_hr_payroll_specialist_res_groups
+msgid "Payroll Specialist"
+msgstr "薪资专家"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__perfect_attend_amount
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__perfect_attend_amount
+msgid "Perfect Attendance Bonus"
+msgstr "完美全勤奖金"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_personal_info
+msgid "Personal Info"
+msgstr "个人信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Personal Information"
+msgstr "个人信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Phone"
+msgstr "电话"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__phone_allowance
+#: model:ir.model.fields,field_description:tg_hr.field_hr_version__phone_allowance
+msgid "Phone Allowance (Full Month)"
+msgstr "电话津贴（整月）"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Phone number must be 11 digits (local number, excluding country code)."
+msgstr "电话号码必须为 11 位数字（本地号码，不包括国家代码）。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "Please add a note for these manually-checked items: %s"
+msgstr "请为这些手动检查的项目添加注释：%s"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"Please complete all Onboarding Checklist items before creating an employee."
+msgstr "请在创建员工之前完成所有入职清单项目。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Please set a PDF template (Sign Template) first."
+msgstr "请先设置一个PDF模板（Sign Template）。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Position"
+msgstr "位置"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_position_type
+msgid "Position Type"
+msgstr "职位类型"
+
+#. module: tg_hr
+#: model:res.groups,comment:tg_hr.role_tg_hr_recruitment_specialist_res_groups
+msgid ""
+"Preset: applicant pipeline (TG requisitions, attachments, report, "
+"hr.applicant rw without create, salary offer ACL + applicant-offer record "
+"rule); Offer Email Sender (buttons / RPC gate only, no extra ACL on that "
+"group)."
+msgstr ""
+"预设：申请人管道（TG请购单、附件、报告、不创建的hr.applicant rw、薪资offer ACL + 申请人-"
+"offer记录规则）；提供电子邮件发送器（仅限按钮/RPC 门，该组上没有额外的 ACL）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__priority
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Priority"
+msgstr "优先级"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Proposed Salary"
+msgstr "提议工资"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Qualification"
+msgstr "资历"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,legend_done:tg_hr.hr_recruitment_stage_tg_contacted
+#: model:hr.recruitment.stage,legend_done:tg_hr.hr_recruitment_stage_tg_initital
+#: model:hr.recruitment.stage,legend_done:tg_hr.hr_recruitment_stage_tg_interview
+#: model:hr.recruitment.stage,legend_done:tg_hr.hr_recruitment_stage_tg_offered
+#: model:hr.recruitment.stage,legend_done:tg_hr.hr_recruitment_stage_tg_refused
+msgid "Ready for Next Stage"
+msgstr "下一阶段就绪"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__reason_requisition
+msgid "Reason for Requisition"
+msgstr "申请理由"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offer_email_recipient
+msgid "Recipient Email"
+msgstr "收件人电子邮件"
+
+#. module: tg_hr
+#: model:ir.actions.act_window,name:tg_hr.action_tg_hr_applicant_report
+#: model:ir.model,name:tg_hr.model_tg_hr_applicant_report
+#: model:ir.ui.menu,name:tg_hr.menu_tg_hr_applicant_report
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_graph
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_pivot
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Recruitment Analysis"
+msgstr "招聘分析"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_recruitment_applicant_normal_edit
+msgid ""
+"Recruitment Applicant Normal User (Edit — Own, Assigned HR, or Unassigned)"
+msgstr "招聘申请人普通用户（编辑 - 自己、分配的 HR 或未分配）"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_recruitment_applicant_actions
+msgid "Recruitment Applicant Pipeline Actions"
+msgstr "招聘申请人渠道行动"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_recruitment_degree_readonly
+msgid "Recruitment Degree Readonly"
+msgstr "招聘学位只读"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.role_tg_hr_recruitment_specialist_res_groups
+msgid "Recruitment Specialist (TG HR)"
+msgstr "招聘专员（TG HR）"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_refuse_offer_wizard
+msgid "Refuse an Offer"
+msgstr "拒绝聘用邀约"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,name:tg_hr.hr_recruitment_stage_tg_refused
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__is_refused
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Refused"
+msgstr "已拒绝"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_region
+msgid "Region"
+msgstr "地区"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Region & Position"
+msgstr "地区及职位"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__rejected
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__rejected
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_rejected
+msgid "Rejected"
+msgstr "已拒绝"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__rejected_message
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__rejected_message
+msgid "Rejected Message"
+msgstr "拒绝留言"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__replacement_partner_id
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__hiring_type__replacement
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Replacement"
+msgstr "替代品"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_requisition.py:0
+msgid "Replacement contact is required when hiring type is Replacement."
+msgstr "当招聘类型为替换时，需要替换联系人。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_manager_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__manager_id
+msgid "Reporting Manager"
+msgstr "汇报经理"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__reporting_to_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__reporting_to_id
+msgid "Reporting To"
+msgstr "汇报对象"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Request"
+msgstr "请求"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__requester_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__requester_id
+msgid "Requested By"
+msgstr "请求者"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__replacement_partner_id
+msgid ""
+"Required when hiring type is Replacement. Cleared when hiring type is New "
+"Role."
+msgstr "当招聘类型为替换时需要。当招聘类型为新角色时清除。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__requisition_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__requisition_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__requisition_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Requisition"
+msgstr "征用"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_requisition_ceo
+msgid "Requisition - CEO (Conditional)"
+msgstr "申请 - CEO（有条件）"
+
+#. module: tg_hr
+#: model:tier.definition,name:tg_hr.tier_def_requisition_hr
+msgid "Requisition - HR"
+msgstr "申请-人力资源"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_requisition_creator
+msgid "Requisition Creator"
+msgstr "申请创建者"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_form
+msgid "Requisition Stage"
+msgstr "申请阶段"
+
+#. module: tg_hr
+#: model:ir.actions.act_window,name:tg_hr.action_tg_hr_requisition_stage
+#: model:ir.ui.menu,name:tg_hr.menu_tg_hr_requisition_stage
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_search
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_tree
+msgid "Requisition Stages"
+msgstr "申请阶段"
+
+#. module: tg_hr
+#: model:ir.actions.server,name:tg_hr.server_action_requisition_to_hm_assigned
+msgid "Requisition: Assign HM & Move to HM Assigned"
+msgstr "申请：分配 HM 并移至已分配的 HM"
+
+#. module: tg_hr
+#: model:ir.actions.act_window,name:tg_hr.action_tg_hr_requisition
+#: model:ir.ui.menu,name:tg_hr.menu_tg_hr_requisition
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_tree
+msgid "Requisitions"
+msgstr "请购单"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_resignation_proof
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__resignation_proof
+msgid "Resignation Proof"
+msgstr "辞职证明"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_review_wizard_form
+msgid "Resume Review"
+msgstr "简历审核"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__resume_reviewed
+msgid "Resume Reviewed"
+msgstr "简历审查"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Review"
+msgstr "审查"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__review_date
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_review_wizard__review_date
+msgid "Review Date"
+msgstr "审核日期"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Review Date cannot be in the future."
+msgstr "审核日期不能是将来的日期。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_report__is_reviewed
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_report_search
+msgid "Reviewed"
+msgstr "已审核"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__reviewer_ids
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__reviewer_ids
+msgid "Reviewers"
+msgstr "审稿人"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "短信发送错误"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "SMTP error: %s"
+msgstr "SMTP 错误：%s"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_safety_training
+msgid "Safety Training"
+msgstr "安全培训"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_safety_training_confirmed
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Safety Training Confirmed"
+msgstr "安全培训已确认"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_safety_training_notes
+msgid "Safety Training Notes"
+msgstr "安全培训笔记"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_template_form_view_inherit
+msgid "Salary Breakdown"
+msgstr "薪资明细"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_payroll_structure_type_view_form_inherit
+msgid "Salary Breakdown (% of wage)"
+msgstr "工资明细（占工资的%）"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_contract_salary_offer
+msgid "Salary Package Offer"
+msgstr "薪资待遇"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__salary_grade
+msgid "Salary Range / Grade"
+msgstr "薪资范围/等级"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__structure_type_id
+msgid "Salary Structure Type"
+msgstr "工资结构类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__absence_base
+msgid ""
+"Salary base used to compute daily wage (for absence deduction and daily-wage"
+" rules)."
+msgstr "用于计算日工资的工资基数（用于缺勤扣除和日工资规则）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__priority
+msgid "Same scale as project tasks for the star priority widget."
+msgstr "与星优先级小部件的项目任务规模相同。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Send Offer Email"
+msgstr "发送报价电子邮件"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Send Sign Link to Employee"
+msgstr "向员工发送签名链接"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_contract_salary_offer__offer_email_state__sent
+msgid "Sent"
+msgstr "已发送"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__sequence
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_hired_person__sequence
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__sequence
+msgid "Sequence"
+msgstr "序列"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Set First Contact"
+msgstr "设置首次联系人"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Set Interview"
+msgstr "设置采访"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_first_contact_button
+msgid "Show First Contact Button"
+msgstr "显示首次联系按钮"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_interview_button
+msgid "Show Interview Button"
+msgstr "显示采访按钮"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_interview_process_page
+msgid "Show Interview Process Page"
+msgstr "显示面试流程页面"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_move_to_initial_screening_button
+msgid "Show Move To Initial Screening Button"
+msgstr "显示移至初始筛选按钮"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_onboarding_page
+msgid "Show Onboarding Page"
+msgstr "显示入职页面"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_pass_interview_button
+msgid "Show Pass Interview Button"
+msgstr "显示通过面试按钮"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__show_review_button
+msgid "Show Review Button"
+msgstr "显示审核按钮"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__offer_sender_id
+msgid ""
+"Shown as the sender (From) of the offer email when set. Defaults to the "
+"applicant's Assigned HR."
+msgstr "设置后显示为优惠电子邮件的发件人（发件人）。默认为申请人的指定人力资源。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Sign (Company)"
+msgstr "标志（公司）"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__sign_invite_sent_to_employee
+msgid "Sign Invitation Sent On"
+msgstr "签署邀请函已发送"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_salary_offer_view_form_inherit_tg_hr_approval
+msgid "Sign Status"
+msgstr "标志状态"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__sign_type
+msgid "Sign Type"
+msgstr "标志类型"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Sign invitation sent to candidate(s): %s"
+msgstr "签署邀请已发送给候选人：%s"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Sign request creation failed — please fix and recreate"
+msgstr "签名请求创建失败 - 请修复并重新创建"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Sign request recreated."
+msgstr "已重新创建签名请求。"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_sign_request
+msgid "Signature Request"
+msgstr "签字请求"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_offer_mark_signed_offline_wizard__signed_file
+msgid "Signed Contract (PDF)"
+msgstr "签署的合同（PDF）"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/wizards/hr_offer_mark_signed_offline_wizard.py:0
+msgid "Signed Contract.pdf"
+msgstr "签订合同.pdf"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_region__sg
+msgid "Singapore (SG)"
+msgstr "新加坡 (SG)"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Singapore phone number must be 8 digits (local number)."
+msgstr "新加坡电话号码必须是 8 位数字（本地号码）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__stage_code
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition_stage__code
+msgid ""
+"Stable technical key for transitions and automation (e.g. draft, submitted, "
+"hm_assigned, hired)."
+msgstr "用于过渡和自动化的稳定技术关键（例如草案、提交、hm_分配、雇用）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__stage_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__stage_id
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Stage"
+msgstr "阶段"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__stage_code
+msgid "Stage Code"
+msgstr "阶段代码"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__name
+msgid "Stage Name"
+msgstr "阶段名称"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_requisition_stage
+msgid ""
+"Stages define the pipeline for job requisitions (order, labels, and "
+"technical workflow codes)."
+msgstr "阶段定义作业申请的管道（订单、标签和技术工作流程代码）。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_contract_template_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_employee_form_view_inherit_tg_hr
+msgid "Standard Allowances"
+msgstr "标准津贴"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__working_days_per_month
+msgid ""
+"Standard number of working days per month, used as the base for daily wage, "
+"absence and overtime calculations."
+msgstr "每月标准工作日数，作为日工资、缺勤和加班计算的基础。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_kanban_view_applicant_inherit_tg_hr_buttons
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Start Initial Screening"
+msgstr "开始初步筛选"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态\n"
+"逾期：超出到期日期\n"
+"今天：活动日期是今天\n"
+"计划：未来活动。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__student
+msgid "Student"
+msgstr "学生"
+
+#. module: tg_hr
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_submitted
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Submitted"
+msgstr "已提交"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_swift_code
+msgid "Swift Code"
+msgstr "SWIFT代码"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_tin_number
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "TIN (Tax ID)"
+msgstr "TIN（税号）"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__chk_tax_info
+msgid "Tax Info"
+msgstr "税务信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "Tax Information"
+msgstr "税务信息"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__tier_zb_workflow_act_all_records
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__tier_zb_workflow_act_all_records
+msgid ""
+"Technical field for form modifiers: privileged users skip the requester "
+"check on workflow buttons."
+msgstr "表单修改器的技术领域：特权用户跳过请求者对工作流按钮的检查。"
+
+#. module: tg_hr
+#: model:res.groups,name:tg_hr.group_tg_hr_requisition_terminate
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Terminate Recruitment"
+msgstr "终止招募"
+
+#. module: tg_hr
+#: model:tg.hr.requisition.stage,name:tg_hr.requisition_stage_terminated
+msgid "Terminated"
+msgstr "终止"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "The Sign Template has no roles."
+msgstr "标志模板没有任何角色。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "The applicant must have a valid email address to sign the document."
+msgstr "申请人必须拥有有效的电子邮件地址才能签署文件。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "The company has already signed this document."
+msgstr "该公司已签署该文件。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"The company has not signed yet. Please complete the company side first."
+msgstr "该公司尚未签约。请先填写公司方面。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid ""
+"The company signer must have a valid email address to sign the document."
+msgstr "公司签名者必须拥有有效的电子邮件地址才能签署文档。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__company_signer_id
+msgid ""
+"The company-side signer for the offer letter. Defaults to the HR Responsible"
+" configured on the contract template; can be overridden per offer."
+msgstr "录取通知书的公司方签字人。默认为合同模板上配置的人力资源负责人；每个优惠都可以被覆盖。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_applicant_create_employee_wizard__join_date
+msgid ""
+"The date the employee starts onboarding. Distinct from contract start date."
+msgstr "员工开始入职的日期。与合同开始日期不同。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_form
+msgid ""
+"The workflow code must stay unique and match server rules (allowed transitions, buttons).\n"
+"                        Changing codes on existing stages can break requisitions in those stages."
+msgstr ""
+"工作流代码必须保持唯一并匹配服务器规则（允许的转换、按钮）。\n"
+"                        更改现有阶段的代码可能会破坏这些阶段的请购单。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid ""
+"This action only applies to job applicants in the New stage (not talent "
+"pool). Records: %s"
+msgstr "此行动仅适用于新阶段的求职者（不适用于人才库）。记录：%s"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.res_users_view_form_inherit_tg_sign_signature
+msgid ""
+"This signature image is used when auto-signing offer letters on your behalf."
+msgstr "当代表您自动签署录取通知书时，将使用此签名图像。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"column."
+msgstr "当该列中没有记录时，该阶段会在看板视图中折叠。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid ""
+"This will terminate the requisition and reset the approval flow. Continue?"
+msgstr "这将终止请购单并重置审批流程。继续？"
+
+#. module: tg_hr
+#: model:ir.model,name:tg_hr.model_tier_definition
+msgid "Tier Definition"
+msgstr "层级定义"
+
+#. module: tg_hr
+#: model:ir.module.category,name:tg_hr.module_category_tg_hr
+msgid "Tiger / HR"
+msgstr "老虎/HR"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_applicant_stage
+msgid "Tiger Applicant Stage"
+msgstr "老虎申请阶段"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_employee_info
+msgid "Tiger Employee Information"
+msgstr "老虎员工信息"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_role
+msgid "Tiger HR Roles"
+msgstr "老虎人力资源角色"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_offer_email
+msgid "Tiger Offer Email"
+msgstr "老虎优惠电子邮件"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_onboarding
+msgid "Tiger Onboarding"
+msgstr "老虎入职"
+
+#. module: tg_hr
+#: model:res.groups.privilege,name:tg_hr.res_groups_privilege_tg_hr_requisition
+msgid "Tiger Requisition"
+msgstr "老虎征用"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_payroll_structure_type_view_form_inherit
+msgid "Time Base"
+msgstr "时基"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__sign_invite_sent_to_employee
+msgid "Timestamp of the last time HR sent the sign link to the candidate."
+msgstr "HR 上次向候选人发送签名链接的时间戳。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__display_name
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__name
+msgid "Title"
+msgstr "标题"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__to_validate_message
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__to_validate_message
+msgid "To Validate Message"
+msgstr "验证消息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__offer_total_amount
+msgid "Total"
+msgstr "总计"
+
+#. module: tg_hr
+#: model_terms:ir.actions.act_window,help:tg_hr.action_tg_hr_requisition
+msgid ""
+"Track requisitions from draft through hired. Move cards on the kanban or use"
+" the form buttons."
+msgstr "跟踪从草稿到雇用的申请。在看板上移动卡片或使用表单按钮。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__trainee
+msgid "Trainee"
+msgstr "见习"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__trial_date_end
+msgid "Trial End Date"
+msgstr "试用结束日期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_trial_period_months
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__trial_period_months
+msgid "Trial Period (Months)"
+msgstr "试用期（月）"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__trial_in_progress
+msgid "Trial Still in Progress"
+msgstr "审判仍在进行中"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_applicant__is_contract_signed_stage
+msgid ""
+"True when applicant.stage_id is the Contract Signed stage "
+"(hr_recruitment.stage_job5)."
+msgstr "当applicant.stage_id 是合同签署阶段(hr_recruitment.stage_job5) 时为真。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__is_offer_for_current_user
+msgid ""
+"True when the current logged-in user is the applicant of this offer (used to"
+" gate the Employee Sign button to the candidate only)."
+msgstr "当当前登录用户是此优惠的申请人时为 true（用于仅将“员工签名”按钮设置为候选人）。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_applicant__latest_approved_offer_fully_signed
+msgid ""
+"True when the newest salary offer (by id) is approved, not refused, and "
+"fully signed."
+msgstr "当最新的薪资报价（通过 ID）被批准、未被拒绝并完全签署时，则为真。"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_employee_confirm_contract_wizard__trial_in_progress
+msgid ""
+"True when trial_date_end is today or later — contract end is locked to trial"
+" end."
+msgstr "当 Trial_date_end 为今天或更晚时为真 — 合同结束被锁定为试用结束。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_attachment__attachment_type
+msgid "Type"
+msgstr "类型"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "记录中异常活动的类型。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_interview
+msgid "Unassigned"
+msgstr "未分派"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "Unknown Bank"
+msgstr "未知银行"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "Unlimited"
+msgstr "无限"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.hr_offer_mark_signed_offline_wizard_form
+msgid ""
+"Upload the scanned PDF of the contract signed by the employee.\n"
+"                        The file will be attached to the applicant (and to the employee if already created).\n"
+"                        The current sign request will be cancelled and the offer marked as fully signed."
+msgstr ""
+"上传员工签署的合同的 PDF 扫描件。\n"
+"                        该文件将附加给申请人（如果已创建，则附加给员工）。\n"
+"                        当前的签名请求将被取消，并且要约标记为已完全签名。"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_requisition__priority__3
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_search
+msgid "Urgent"
+msgstr "紧迫的"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__validated
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__validated
+msgid "Validated"
+msgstr "已验证"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__validated_message
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__validated_message
+msgid "Validated Message"
+msgstr "已验证的消息"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__validation_status
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__validation_status
+msgid "Validation Status"
+msgstr "验证状态"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__review_ids
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__review_ids
+msgid "Validations"
+msgstr "审批"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_visa_expire
+msgid "Visa Expiry"
+msgstr "签证到期"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_visa_no
+msgid "Visa No"
+msgstr "签证号"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__wage
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_payroll_structure_type__absence_base__wage
+msgid "Wage"
+msgstr "工资"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_payroll_structure_type__late_rate_mode__wage_based
+msgid "Wage Based"
+msgstr "基于工资"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_payroll_structure_type__late_rate_mode
+msgid ""
+"Wage Based: per-minute rate = wage / (working_days * hours_per_day * 60). "
+"Fixed: use the configured per-minute rate below."
+msgstr "基于工资：每分钟费率 = 工资 / (工作日 * 每日工作小时数 * 60)。已修复：使用下面配置的每分钟费率。"
+
+#. module: tg_hr
+#: model:hr.recruitment.stage,legend_waiting:tg_hr.hr_recruitment_stage_tg_contacted
+#: model:hr.recruitment.stage,legend_waiting:tg_hr.hr_recruitment_stage_tg_initital
+#: model:hr.recruitment.stage,legend_waiting:tg_hr.hr_recruitment_stage_tg_interview
+#: model:hr.recruitment.stage,legend_waiting:tg_hr.hr_recruitment_stage_tg_offered
+#: model:hr.recruitment.stage,legend_waiting:tg_hr.hr_recruitment_stage_tg_refused
+msgid "Waiting"
+msgstr "正在等待"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "Why this headcount or replacement is needed…"
+msgstr "为什么需要这样的人员编制或替换……"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__work_location_id
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__work_location_id
+msgid "Work Location"
+msgstr "工作地点"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__tg_hr_applicant_attachment__attachment_type__work_permit
+msgid "Work Permit"
+msgstr "工作许可证"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_applicant__ob_work_permit_expiration_date
+msgid "Work Permit Expiry"
+msgstr "工作许可证到期"
+
+#. module: tg_hr
+#: model:ir.model.fields.selection,name:tg_hr.selection__hr_applicant__ob_employee_type__worker
+msgid "Worker"
+msgstr "员工"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__tier_zb_workflow_act_all_records
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__tier_zb_workflow_act_all_records
+msgid "Workflow Actions on Any Record (Current User)"
+msgstr "对任何记录（当前用户）的工作流程操作"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition_stage__code
+msgid "Workflow Code"
+msgstr "工作流程代码"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_payroll_structure_type__working_days_per_month
+msgid "Working Days / Month"
+msgstr "工作日/月"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_applicant_create_employee_wizard__resource_calendar_id
+msgid "Working Schedule"
+msgstr "工作安排"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: model:ir.model.fields,field_description:tg_hr.field_hr_contract_salary_offer__working_time_text
+msgid "Working Time"
+msgstr "工作时间"
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_hr_contract_salary_offer__working_time_text
+msgid "Working hours text shown in the offer email, e.g. '9:30 to 18:30'."
+msgstr "报价电子邮件中显示的工作时间文本，例如“9:30 至 18:30”。"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_tg_hr_requisition__experience_years
+msgid "Years of Experience Required"
+msgstr "需要多年经验"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_employee.py:0
+#: code:addons/tg_hr/wizards/hr_employee_confirm_contract_wizard.py:0
+msgid "You are not allowed to confirm employee contracts."
+msgstr "您无权确认员工合同。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+#: code:addons/tg_hr/wizards/hr_offer_mark_signed_offline_wizard.py:0
+msgid "You are not allowed to mark offer as signed offline."
+msgstr "您不能将要约标记为离线签署。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "You are not allowed to open salary offers for applicants."
+msgstr "您不得向申请人提出薪资提议。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "You are not allowed to perform this action."
+msgstr "你不允许执行此操作。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "You are not allowed to recreate sign requests."
+msgstr "您不得重新创建签名请求。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "You are not allowed to send offer emails."
+msgstr "您不得发送报价电子邮件。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "You are not allowed to send sign invitations."
+msgstr "您不得发送签名邀请。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_applicant.py:0
+msgid "You do not have permission to create an employee from this applicant."
+msgstr "您无权从此申请人创建员工。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_form
+msgid "e.g. Customer Service for swap query handling"
+msgstr "例如处理掉期查询的客户服务"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_requisition_stage_form
+msgid "e.g. draft, submitted, hm_assigned, hired"
+msgstr "例如草稿、提交、hm_指派、雇用"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_tg_hr_applicant_interview_wizard_form
+msgid "e.g. https://meet.google.com/..."
+msgstr "例如https://meet.google.com/..."
+
+#. module: tg_hr
+#: model:ir.model.fields,help:tg_hr.field_tg_hr_requisition__name
+msgid "e.g. role or project name for this requisition."
+msgstr "例如此申请的角色或项目名称。"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid ""
+"items completed — please fill in all required information before creating "
+"the employee."
+msgstr "已完成的项目 - 请在创建员工之前填写所有必填信息。"
+
+#. module: tg_hr
+#. odoo-python
+#: code:addons/tg_hr/models/hr_contract_salary_offer.py:0
+msgid "unknown"
+msgstr "未知"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Bank Info"
+msgstr "✓ 银行信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Contract Info"
+msgstr "✓ 合约信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Diploma Uploaded"
+msgstr "✓ 文凭已上传"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Expat Info"
+msgstr "✓ 外籍人士信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ ID Info"
+msgstr "✓ 身份证信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ ID Scan Uploaded"
+msgstr "✓ 已上传身份证件扫描件"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Personal Info"
+msgstr "✓ 个人信息"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Resignation Proof Uploaded"
+msgstr "✓ 已上传辞职证明"
+
+#. module: tg_hr
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_applicant_form_inherit_tg_hr_onboarding
+msgid "✓ Tax Info"
+msgstr "✓ 税务信息"
+
+#. module: tg_hr
+#: model:mail.template,subject:tg_hr.mail_template_offer_zh_zuojin
+msgid ""
+"【{{ object.company_id.name }}】录用通知 - {{ object.applicant_id.partner_name }}"
+msgstr ""
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_contract_signed
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_contract_signed
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "合同签署"
+msgstr "合同签署"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_contract_signed
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_contract_signed
+msgid "合同签署 备注"
+msgstr "合同签署 备注"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_training_completed
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_training_completed
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "培训完成"
+msgstr "培训完成"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_training_completed
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_training_completed
+msgid "培训完成 备注"
+msgstr "培训完成 备注"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_chk_equipment_issued
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__chk_equipment_issued
+#: model_terms:ir.ui.view,arch_db:tg_hr.view_hr_employee_confirm_contract_wizard_form
+msgid "设备发放"
+msgstr "设备发放"
+
+#. module: tg_hr
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee__onb_note_equipment_issued
+#: model:ir.model.fields,field_description:tg_hr.field_hr_employee_confirm_contract_wizard__note_equipment_issued
+msgid "设备发放 备注"
+msgstr "设备发放 备注"

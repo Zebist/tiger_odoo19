@@ -1,0 +1,589 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_tier_validation_correction
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Zebin\n"
+"Language-Team: Chinese (Simplified) <>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "<span class=\"oe_edit_only\">Name</span>"
+msgstr "<span class=\"oe_edit_only\">名称</span>"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_needaction
+msgid "Action Needed"
+msgstr "需要操作"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活动异常标识"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活动类型图标"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Actual Correct"
+msgstr "实际更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__date_actual_correct
+msgid "Actual Correction Date"
+msgstr "实际更正日期"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Actual Revert"
+msgstr "实际还原"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__date_actual_revert
+msgid "Actual Revert Date"
+msgstr "实际还原日期"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__reference
+msgid "Affected Documents"
+msgstr "受影响单据"
+
+#. module: base_tier_validation_correction
+#: model:ir.actions.act_window,name:base_tier_validation_correction.view_affected_tier_reviews_action
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__review_ids
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Affected Tier Reviews"
+msgstr "受影响的层级审批"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Are you sure to reassign new reviewer(s) for affected tier reviews?"
+msgstr "确定要为受影响的层级审批重新指定审批人吗？"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Are you sure to revert to old reviewer(s) for affected tier reviews?"
+msgstr "确定要将受影响的层级审批还原为原审批人吗？"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件数量"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__state__cancel
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_validation_label_forward
+msgid "Change Reviewer"
+msgstr "更换审批人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Change Reviewers"
+msgstr "更换审批人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.view_affected_tier_reviews_form
+msgid "Close"
+msgstr "关闭"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__state__done
+msgid "Corrected"
+msgstr "已更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__correction_id
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Correction"
+msgstr "更正"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Correction Details"
+msgstr "更正明细"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__correction_type
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Correction Type"
+msgstr "更正类型"
+
+#. module: base_tier_validation_correction
+#. odoo-python
+#: code:addons/base_tier_validation_correction/models/tier_correction.py:0
+msgid "Correction is allowed on state = 'done' only"
+msgstr "仅在状态为「已完成」时允许更正"
+
+#. module: base_tier_validation_correction
+#. odoo-python
+#: code:addons/base_tier_validation_correction/models/tier_correction.py:0
+msgid "Correction is allowed on state = 'prepare' only"
+msgstr "仅在状态为「准备中」时允许更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__create_uid
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__create_uid
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__create_date
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__create_date
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid ""
+"Default new reviewers to be assigned to the correction. This value can be overwritten in\n"
+"                                Correction Detail."
+msgstr ""
+"指定更正时默认分配的新审批人。可在\n"
+"                                「更正明细」中单独覆盖。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__name
+msgid "Description"
+msgstr "说明"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__display_name
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__display_name
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__state__draft
+msgid "Draft"
+msgstr "草稿"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Find documents with pending reviews by"
+msgstr "按以下条件查找有待审批的单据"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__old_reviewer_ids
+msgid "Find documents with tier reviews matching some reviewers"
+msgstr "查找层级审批中包含指定审批人的单据"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者（联系人）"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome 图标，例如 fa-tasks"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__has_message
+msgid "Has Message"
+msgstr "有消息"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__id
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__id
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__id
+msgid "ID"
+msgstr "编号"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_exception_icon
+msgid "Icon"
+msgstr "图标"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "用于标识异常活动的图标。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "若勾选，新消息需要您处理。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "若勾选，表示部分消息投递失败。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_is_follower
+msgid "Is Follower"
+msgstr "是否关注"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__item_ids
+msgid "Item"
+msgstr "明细"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__write_uid
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__write_uid
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__write_date
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__write_date
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Make Correcton"
+msgstr "执行更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_has_error
+msgid "Message Delivery error"
+msgstr "消息投递错误"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__model
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Model"
+msgstr "模型"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "我的活动截止日期"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__search_name
+msgid "Name Search"
+msgstr "名称搜索"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__new_reviewer_ids
+msgid "New Reviewers"
+msgstr "新审批人"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_needaction_counter
+msgid "Number of Actions"
+msgstr "待处理数量"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__message_has_error_counter
+msgid "Number of errors"
+msgstr "错误数量"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要处理的消息数量"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "投递失败的消息数量"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__model_id
+msgid "On Model"
+msgstr "所在模型"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__old_reviewer_ids
+msgid "Original Reviewer(s)"
+msgstr "原审批人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Prepare"
+msgstr "准备"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__state__prepare
+msgid "Preparing"
+msgstr "准备中"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__new_reviewer_ids
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__correction_type__reviewer
+msgid "Reassign Reviewer(s)"
+msgstr "重新指定审批人"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__new_reviewer_ids
+msgid "Reassign these reviewers to the tier reviews of the found document"
+msgstr "将所选审批人分配给查找到单据的层级审批"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Reassign to new value"
+msgstr "重新分配到新值"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__reference
+msgid "Reference"
+msgstr "引用"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__res_id
+msgid "Res"
+msgstr "记录 ID"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__res_model
+msgid "Res Model"
+msgstr "模型"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction_item__resource_ref
+msgid "Resource"
+msgstr "资源"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__activity_user_id
+msgid "Responsible User"
+msgstr "负责人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Revert Back"
+msgstr "还原"
+
+#. module: base_tier_validation_correction
+#. odoo-python
+#: code:addons/base_tier_validation_correction/models/tier_correction.py:0
+msgid "Revert Date should be after Correct Date"
+msgstr "还原日期必须晚于更正日期"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields.selection,name:base_tier_validation_correction.selection__tier_correction__state__revert
+msgid "Reverted"
+msgstr "已还原"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_affected_tier_reviews__review_ids
+msgid "Review"
+msgstr "审批"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_search
+msgid "Reviewer"
+msgstr "审批人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Reviewer(s)"
+msgstr "审批人"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Scheduled Action"
+msgstr "计划动作"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Scheduled Correct"
+msgstr "计划更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__date_schedule_correct
+msgid "Scheduled Correction Date"
+msgstr "计划更正日期"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Scheduled Revert"
+msgstr "计划还原"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__date_schedule_revert
+msgid "Scheduled Revert Date"
+msgstr "计划还原日期"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Scheduled date/time to auto correct and/or revert by"
+msgstr "自动执行更正和/或还原的计划日期时间"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Set to Draft"
+msgstr "设为草稿"
+
+#. module: base_tier_validation_correction
+#: model:ir.model,name:base_tier_validation_correction.model_affected_tier_reviews
+msgid "Show Affected Tier Reviews"
+msgstr "查看受影响的层级审批"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__state
+msgid "Status"
+msgstr "状态"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"根据活动计算的状态\n"
+"逾期：已超过截止日期\n"
+"今日：活动日期为今天\n"
+"计划中：未来的活动。"
+
+#. module: base_tier_validation_correction
+#. odoo-python
+#: code:addons/base_tier_validation_correction/models/tier_correction.py:0
+msgid ""
+"The Correction '%(name)s', corrrected reviewers on '%(reviews)s' to "
+"'%(reviewers)s'"
+msgstr ""
+"更正「%(name)s」已将「%(reviews)s」的审批人更正为「%(reviewers)s」"
+
+#. module: base_tier_validation_correction
+#. odoo-python
+#: code:addons/base_tier_validation_correction/models/tier_correction.py:0
+msgid ""
+"The Correction '%(name)s', reverted reviewers on '%(reviews)s' back to "
+"'%(reviewers)s'"
+msgstr ""
+"更正「%(name)s」已将「%(reviews)s」的审批人还原为「%(reviewers)s」"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction_item__new_reviewer_ids
+msgid ""
+"These reviewers will overwrite the existing reviewer_ids in tier.review"
+msgstr "这些审批人将覆盖 tier.review 上现有的审批人。"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid ""
+"This is optional search criteria to find matched document into Correction Details.\n"
+"                                Only document with pending reviews will be listed."
+msgstr ""
+"此为可选搜索条件，用于将匹配的单据带入更正明细。\n"
+"                                仅列出仍有待审批的单据。"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "Tier Correction"
+msgstr "层级审批更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model,name:base_tier_validation_correction.model_tier_correction_item
+msgid "Tier Correction Detail"
+msgstr "层级审批更正明细"
+
+#. module: base_tier_validation_correction
+#: model:ir.actions.server,name:base_tier_validation_correction.tier_correction_scheduler_ir_actions_server
+msgid "Tier Correction Scheduler"
+msgstr "层级审批更正计划任务"
+
+#. module: base_tier_validation_correction
+#: model:ir.actions.act_window,name:base_tier_validation_correction.tier_correction_action
+#: model:ir.model,name:base_tier_validation_correction.model_tier_correction
+#: model:ir.ui.menu,name:base_tier_validation_correction.menu_tier_correction
+#: model:res.groups,name:base_tier_validation_correction.group_tier_correction
+msgid "Tier Review Correction"
+msgstr "层级审批更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model,name:base_tier_validation_correction.model_tier_validation
+msgid "Tier Validation (abstract)"
+msgstr "层级审批（抽象）"
+
+#. module: base_tier_validation_correction
+#: model:mail.message.subtype,name:base_tier_validation_correction.mt_tier_validation_correction
+msgid "Tier Validation Correction"
+msgstr "层级审批更正"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction_item__review_ids
+msgid "Tier reivews that will be affected by this correction."
+msgstr "将受此更正影响的层级审批。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "记录上异常活动的类型。"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,field_description:base_tier_validation_correction.field_tier_correction__website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: base_tier_validation_correction
+#: model:ir.model.fields,help:base_tier_validation_correction.field_tier_correction__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通历史"
+
+#. module: base_tier_validation_correction
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_correction.tier_correction_view_form
+msgid "e.g. Correction for..."
+msgstr "例如：关于……的更正"

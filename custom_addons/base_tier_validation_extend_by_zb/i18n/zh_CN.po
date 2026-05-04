@@ -1,0 +1,383 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_tier_validation_extend_by_zb
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20250917\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-04 03:52+0000\n"
+"PO-Revision-Date: 2026-05-04 12:00+0000\n"
+"Last-Translator: Zebin\n"
+"Language-Team: Chinese (Simplified) / zh_CN\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend
+msgid "Acknowledge & Edit"
+msgstr "确认并编辑"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__active
+msgid "Active"
+msgstr "有效"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__allow_delete
+msgid "Allow delete"
+msgstr "允许删除"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.module.category,name:base_tier_validation_extend_by_zb.module_category_tier_validation_extend
+#: model:res.groups.privilege,name:base_tier_validation_extend_by_zb.res_groups_privilege_tier_validation_extend
+msgid "Approval"
+msgstr "审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:res.groups,name:base_tier_validation_extend_by_zb.group_tier_validation_extend_manager
+msgid "Approval Configuration Manager"
+msgstr "审批配置管理员"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:res.groups,name:base_tier_validation_extend_by_zb.group_tier_validation_extend_user
+msgid "Approval Configuration User (Read)"
+msgstr "审批配置用户（只读）"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model,name:base_tier_validation_extend_by_zb.model_base_approval_flow_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_form
+msgid "Approval Flow"
+msgstr "审批流"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.ui.menu,name:base_tier_validation_extend_by_zb.menu_base_approval_flow_zb_root
+msgid "Approval Flow Configuration"
+msgstr "审批流配置"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.actions.act_window,name:base_tier_validation_extend_by_zb.base_approval_flow_zb_action
+#: model:ir.ui.menu,name:base_tier_validation_extend_by_zb.menu_base_approval_flow_zb_flows
+msgid "Approval Flows"
+msgstr "审批流"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__approval_state
+msgid "Approval Status"
+msgstr "审批状态"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_contract_salary_offer__approval_state__approved
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_payslip_run__approval_state__approved
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tg_hr_requisition__approval_state__approved
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tier_validation_zb__approval_state__approved
+msgid "Approved"
+msgstr "已批准"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__approve_stage_id
+msgid "Approved Stage"
+msgstr "通过后阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_contract_salary_offer__approval_state__approving
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_payslip_run__approval_state__approving
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tg_hr_requisition__approval_state__approving
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tier_validation_zb__approval_state__approving
+msgid "Approving"
+msgstr "审批中"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_form
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__can_forward
+msgid "Can Forward"
+msgstr "可转交"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__can_review
+msgid "Can Review"
+msgstr "可审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__company_id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__company_id
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_search
+msgid "Company"
+msgstr "公司"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.actions.act_window,help:base_tier_validation_extend_by_zb.base_approval_flow_zb_action
+msgid ""
+"Configure the target document model, its stage model, and tier\n"
+"                definition nodes for this flow."
+msgstr ""
+"为该流程配置目标业务单据模型、阶段模型及\n"
+"                多层级审批定义节点。"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.actions.act_window,help:base_tier_validation_extend_by_zb.base_approval_flow_zb_action
+msgid "Create an approval flow"
+msgstr "创建审批流"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__definition_ids
+msgid "Definitions"
+msgstr "定义"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__display_name
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__display_name
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_review__display_name
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_contract_salary_offer__approval_state__draft
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_payslip_run__approval_state__draft
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tg_hr_requisition__approval_state__draft
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tier_validation_zb__approval_state__draft
+msgid "Draft"
+msgstr "草稿"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__draft_stage_id
+msgid "Draft Stage"
+msgstr "草稿阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__flow_id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__flow_id
+msgid "Flow"
+msgstr "流程"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__has_comment
+msgid "Has Comment"
+msgstr "可填写意见"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__hide_reviews
+msgid "Hide Reviews"
+msgstr "隐藏审批记录"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_review__id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,help:base_tier_validation_extend_by_zb.field_tier_validation_zb__has_comment
+msgid "If set, Allow the reviewer to leave a comment on the review."
+msgstr "勾选后，审批人可在审批时填写意见。"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__model_id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__stage_model_field
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_search
+msgid "Model"
+msgstr "模型"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__name
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_form
+msgid "Name"
+msgstr "名称"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__need_validation
+msgid "Need Validation"
+msgstr "需要审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__next_review
+msgid "Next Review"
+msgstr "下一审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_form
+msgid "Nodes"
+msgstr "节点"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__stage_id
+msgid "Post Approve Stage"
+msgstr "审批通过后阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__rejected_stage_id
+msgid "Post Reject Stage"
+msgstr "审批拒绝后阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__model_id
+msgid "Referenced Model"
+msgstr "引用模型"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__reject_stage_id
+msgid "Reject Stage"
+msgstr "拒绝阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__rejected
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_contract_salary_offer__approval_state__rejected
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__hr_payslip_run__approval_state__rejected
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tg_hr_requisition__approval_state__rejected
+#: model:ir.model.fields.selection,name:base_tier_validation_extend_by_zb.selection__tier_validation_zb__approval_state__rejected
+msgid "Rejected"
+msgstr "已拒绝"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__rejected_message
+msgid "Rejected Message"
+msgstr "拒绝说明"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend
+msgid "Request Validation"
+msgstr "提交审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__requester_id
+msgid "Requested By"
+msgstr "申请人"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend
+msgid "Restart Validation"
+msgstr "重新发起审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__reviewer_ids
+msgid "Reviewers"
+msgstr "审批人"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_definition_view_form_inherit_stage
+msgid "Stage"
+msgstr "阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__stage_model_id
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_definition__stage_res_model
+msgid "Stage Model"
+msgstr "阶段模型"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend
+msgid "Submit"
+msgstr "提交"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_base_approval_flow_zb__submit_stage_id
+msgid "Submit Stage"
+msgstr "提交阶段"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,help:base_tier_validation_extend_by_zb.field_tier_validation_zb__tier_zb_workflow_act_all_records
+msgid ""
+"Technical field for form modifiers: privileged users skip the requester "
+"check on workflow buttons."
+msgstr ""
+"表单修饰用技术字段：特权用户在工作流按钮上跳过申请人校验。"
+
+#. module: base_tier_validation_extend_by_zb
+#. odoo-python
+#: code:addons/base_tier_validation_extend_by_zb/models/tier_validation.py:0
+msgid ""
+"This record cannot be deleted. Please archive it instead, or delete it while"
+" in draft state."
+msgstr ""
+"该记录不可删除。请改为归档，或在草稿状态下删除。"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model,name:base_tier_validation_extend_by_zb.model_tier_definition
+msgid "Tier Definition"
+msgstr "层级定义"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model,name:base_tier_validation_extend_by_zb.model_tier_review
+msgid "Tier Review"
+msgstr "多层级审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__to_validate_message
+msgid "To Validate Message"
+msgstr "待审批提示"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__validated
+msgid "Validated"
+msgstr "已审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__validated_message
+msgid "Validated Message"
+msgstr "审批通过说明"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__validation_status
+msgid "Validation Status"
+msgstr "审批状态"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__review_ids
+msgid "Validations"
+msgstr "审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.tier_validation_buttons_base_tier_validation_extend
+msgid "Withdraw to Draft"
+msgstr "撤回到草稿"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:res.groups,name:base_tier_validation_extend_by_zb.group_tier_workflow_actions_all_records
+msgid "Workflow Actions on All Records"
+msgstr "全部记录的工作流操作"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__tier_zb_workflow_act_all_records
+msgid "Workflow Actions on Any Record (Current User)"
+msgstr "对任意记录执行工作流（当前用户）"
+
+#. module: base_tier_validation_extend_by_zb
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_extend_by_zb.base_approval_flow_zb_view_form
+msgid "e.g. Purchase Order Approval"
+msgstr "例如：采购订单审批"
+
+#. module: base_tier_validation_extend_by_zb
+#: model:ir.model,name:base_tier_validation_extend_by_zb.model_tier_validation_zb
+msgid "tier.validation.zb"
+msgstr "tier.validation.zb"
