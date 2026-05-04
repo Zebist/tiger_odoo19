@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tg_hr_employee_create_user_wizard_form" model="ir.ui.view">
+        <field name="name">tg.hr.employee.create.user.wizard.form</field>
+        <field name="model">tg.hr.employee.create.user.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create User">
+                <group>
+                    <group class="oe_avatar_group align-self-start pt-0">
+                        <field name="image_1920"
+                               widget="image"
+                               class="oe_avatar m-0"
+                               nolabel="1"
+                               options="{'zoom': true, 'preview_image': 'image_1920'}"/>
+                    </group>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="role_ids" widget="many2many_tags"
+                               options="{'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_confirm_create_user"
+                            string="Create User"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button special="cancel"
+                            string="Cancel"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
