@@ -14,7 +14,6 @@ _SKIP_DEFAULT_INPUT_LINES_CTX = 'tg_payroll_skip_default_input_lines'
 class HrPayslip(models.Model):
     _inherit = ['hr.payslip', 'form.readonly.mixin']
 
-    payslip_run_id = fields.Many2one(required=True)
     # related from run，供视图守门和后端检查使用
     run_approval_state = fields.Selection(
         related='payslip_run_id.approval_state',

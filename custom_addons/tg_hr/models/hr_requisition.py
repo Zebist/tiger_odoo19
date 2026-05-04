@@ -97,7 +97,7 @@ class TgHrRequisition(models.Model):
     hired_person_ids = fields.One2many(
         'tg.hr.requisition.hired.person',
         'requisition_id',
-        string='Hiring Information Person',
+        string='Hires',
     )
 
     @api.model
@@ -140,6 +140,10 @@ class TgHrRequisition(models.Model):
             record.with_context(skip_validation_check=True).write({
                 'hiring_manager_id': self.env.uid
             })
+
+    def action_tier_validation_anchor(self):
+        """Header placeholder for tier validation injection; never shown (invisible)."""
+        return True
 
     def action_terminate_recruitment(self):
         """终止招聘：切换到终止 stage，并回到草稿（不回退 stage）。"""

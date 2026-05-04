@@ -15,6 +15,10 @@
                 </div>
             </xpath>
 
+            <field name="payslip_run_id" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+
             <xpath expr="//field[@name='payslip_run_id']" position="after">
                 <field name="kpi_base" invisible="1"/>
                 <field name="run_approval_state" invisible="1"/>

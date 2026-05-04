@@ -63,7 +63,7 @@ class HrApplicant(models.Model):
             ("first_contact_made", "First Contact"),
         ],
         "tg_hr.hr_recruitment_stage_tg_interview": [
-            ("interview_type", "Set Interview"),
+            ("interview_type", "Set up interview"),
         ],
         "tg_hr.hr_recruitment_stage_tg_offered": [
             ("interview_passed", "Interview Passed"),
@@ -73,12 +73,13 @@ class HrApplicant(models.Model):
         ],
     }
 
-    stage_id = fields.Many2one(default=lambda r: r.env.ref('hr_recruitment.stage_job0', raise_if_not_found=False))
+    stage_id = fields.Many2one(default=lambda r: r.env.ref('hr_recruitment.stage_job0', raise_if_not_found=False), copy=False)
     is_contract_signed_stage = fields.Boolean(
         string="Is Contract Signed",
         compute="_compute_is_contract_signed_stage",
         store=True,
         help="True when applicant.stage_id is the Contract Signed stage (hr_recruitment.stage_job5).",
+        copy=False,
     )
     # New → Initial Screening 一键推进（仅 New 阶段展示，人才库候选人除外）
     show_move_to_initial_screening_button = fields.Boolean(
@@ -155,20 +156,26 @@ class HrApplicant(models.Model):
         ],
         default="0",
         tracking=True,
-        string="Initial Screening Score"
+        string="Initial Screening Score",
+        copy=False,
     )
 
-    resume_reviewed = fields.Boolean(string="Resume Reviewed", default=False, tracking=True, compute='_compute_resume_reviewd', readonly=True, compute_sudo=True, store=True)
-    review_date = fields.Date(string="Review Date", tracking=True)
-    initial_screening_notes = fields.Html(string="Initial Screening Notes", tracking=True)
+    resume_reviewed = fields.Boolean(string="Resume Reviewed", default=False, tracking=True,
+                                     compute='_compute_resume_reviewd', readonly=True,
+                                     compute_sudo=True, store=True, copy=False)
+    review_date = fields.Date(string="Review Date", tracking=True, copy=False)
+    initial_screening_notes = fields.Html(string="Initial Screening Notes", copy=False)
 
-    first_contact_made = fields.Boolean(string="First Contact Made", default=False, tracking=True, compute='_compute_first_contact_made', readonly=True, compute_sudo=True, store=True)
-    first_contact_date = fields.Date(string="First Contact Date", tracking=True)
+    first_contact_made = fields.Boolean(string="First Contact Made", default=False,
+                                        tracking=True, compute='_compute_first_contact_made'
+                                        , readonly=True, compute_sudo=True, store=True, copy=False)
+    first_contact_date = fields.Date(string="First Contact Date", tracking=True, copy=False)
 
     interview_passed = fields.Boolean(
         string="Interview Passed",
         default=False,
         tracking=True,
+        copy=False
     )
     # 与 _get_latest_approved_offer 一致：按 id 最新一条且已审批、未拒绝时，是否已 full_signed
     latest_approved_offer_fully_signed = fields.Boolean(
@@ -177,6 +184,7 @@ class HrApplicant(models.Model):
         compute_sudo=True,
         store=True,
         help="True when the newest salary offer (by id) is approved, not refused, and fully signed.",
+        copy=False
     )
 
     interview_score = fields.Selection(
@@ -191,8 +199,9 @@ class HrApplicant(models.Model):
         string="Interview Score",
         default="0",
         tracking=True,
+        copy=False
     )
-    interview_datetime = fields.Datetime(string="Interview Date & Time", tracking=True)
+    interview_datetime = fields.Datetime(string="Interview Date & Time", tracking=True, copy=False)
     interview_type = fields.Selection(
         selection=[
             ("online", "Online"),
@@ -202,7 +211,7 @@ class HrApplicant(models.Model):
         tracking=True,
     )
     meeting_url = fields.Char(string="Meeting URL", tracking=True)
-    interview_notes = fields.Html(string="Interview Notes", tracking=True)
+    interview_notes = fields.Html(string="Interview Notes", copy=False)
 
     assigned_hr_id = fields.Many2one(
         "res.users",
@@ -210,16 +219,17 @@ class HrApplicant(models.Model):
         default=lambda self: self.env.user,
         tracking=True,
         domain=[("share", "=", False)],
+        copy=False
     )
 
     # ── Onboarding: 区域 & 岗位类别 ──────────────────────────────────────
     ob_region = fields.Selection(
         [('sg', 'Singapore (SG)'), ('cn', 'China (CN)'), ('tb', 'Bangladesh (TB)'), ('tl', 'Bangladesh (TL)')],
-        string='Region', tracking=True,
+        string='Region', tracking=True, copy=False
     )
     ob_position_type = fields.Selection(
         [('normal', 'Normal'), ('expat', 'Expat'), ('factory', 'Factory')],
-        string='Position Type', tracking=True,
+        string='Position Type', tracking=True, copy=False
     )
 
     # ── Onboarding: 个人基本信息 ──────────────────────────────────────────
@@ -228,81 +238,95 @@ class HrApplicant(models.Model):
         tracking=True,
         help="Optional. The applicant's legal/official name in their local language or script "
              "(e.g. Chinese, Bengali). Synced to employee.legal_name on hire.",
+        copy=False
     )
     work_location_id = fields.Many2one(
         'hr.work.location',
         string='Work Location',
         tracking=True,
         domain="[('company_id', 'in', [False, company_id])]",
+        copy=False
     )
     ob_sex = fields.Selection(
         [('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
         string='Gender', tracking=True,
+        copy=False
     )
-    ob_birthday = fields.Date(string='Date of Birth', tracking=True)
+    ob_birthday = fields.Date(string='Date of Birth', tracking=True, copy=False)
     ob_nationality_id = fields.Many2one('res.country', string='Nationality', tracking=True,
-                                        options="{'no_quick_create': True}")
-    ob_emergency_contact = fields.Char(string='Emergency Contact', tracking=True)
-    ob_emergency_phone = fields.Char(string='Emergency Phone', tracking=True)
+                                        options="{'no_quick_create': True}", copy=False)
+    ob_emergency_contact = fields.Char(string='Emergency Contact', tracking=True, copy=False)
+    ob_emergency_phone = fields.Char(string='Emergency Phone', tracking=True, copy=False)
 
     # ── Onboarding: 证件信息 ──────────────────────────────────────────────
-    ob_identification_id = fields.Char(string='National ID (NID)', tracking=True)
-    ob_passport_id = fields.Char(string='Passport No', tracking=True)
-    ob_passport_expiration_date = fields.Date(string='Passport Expiry', tracking=True)
+    ob_identification_id = fields.Char(string='National ID (NID)', tracking=True, copy=False)
+    ob_passport_id = fields.Char(string='Passport No', tracking=True, copy=False)
+    ob_passport_expiration_date = fields.Date(string='Passport Expiry', tracking=True, copy=False)
 
     # ── Onboarding: 银行信息（文本，Create Employee 时转关联）────────────
-    ob_bank_name = fields.Char(string='Bank Name', tracking=True)
-    ob_bank_account_number = fields.Char(string='Bank Account Number', tracking=True)
-    ob_bank_account_holder = fields.Char(string='Account Holder', tracking=True)
-    ob_swift_code = fields.Char(string='Swift Code', tracking=True)
+    ob_bank_name = fields.Char(string='Bank Name', tracking=True, copy=False)
+    ob_bank_account_number = fields.Char(string='Bank Account Number', tracking=True, copy=False)
+    ob_bank_account_holder = fields.Char(string='Account Holder', tracking=True, copy=False)
+    ob_swift_code = fields.Char(string='Swift Code', tracking=True, copy=False)
 
     # ── Onboarding: 税务 ──────────────────────────────────────────────────
-    ob_tin_number = fields.Char(string='TIN (Tax ID)', tracking=True)
+    ob_tin_number = fields.Char(string='TIN (Tax ID)', tracking=True, copy=False)
 
     # ── Onboarding: 合同信息 ──────────────────────────────────────────────
     ob_employee_type = fields.Selection(
         [('employee', 'Employee'), ('worker', 'Worker'), ('student', 'Student'),
          ('trainee', 'Trainee'), ('contractor', 'Contractor'), ('freelance', 'Freelancer')],
-        string='Employment Type', tracking=True
+        string='Employment Type', tracking=True, copy=False
     )
     ob_manager_id = fields.Many2one('hr.employee', string='Reporting Manager', tracking=True,
-                                    options="{'no_quick_create': True}")
-    ob_trial_period_months = fields.Integer(string='Trial Period (Months)', tracking=True, default=6)
+                                    options="{'no_quick_create': True}", copy=False)
+    ob_trial_period_months = fields.Integer(string='Trial Period (Months)', tracking=True, default=6, copy=False)
 
     # ── Onboarding: 外派专项（position_type == expat）────────────────────
-    ob_visa_no = fields.Char(string='Visa No', tracking=True)
-    ob_visa_expire = fields.Date(string='Visa Expiry', tracking=True)
-    ob_work_permit_expiration_date = fields.Date(string='Work Permit Expiry', tracking=True)
+    ob_visa_no = fields.Char(string='Visa No', tracking=True, copy=False)
+    ob_visa_expire = fields.Date(string='Visa Expiry', tracking=True, copy=False)
+    ob_work_permit_expiration_date = fields.Date(string='Work Permit Expiry', tracking=True, copy=False)
 
     # ── Onboarding: 工厂专项（position_type == factory）──────────────────
-    ob_safety_training_notes = fields.Text(string='Safety Training Notes', tracking=True)
+    ob_safety_training_notes = fields.Text(string='Safety Training Notes', tracking=True, copy=False)
     ob_safety_training_confirmed = fields.Boolean(
         string='Safety Training Confirmed',
         compute='_compute_ob_safety_training_confirmed',
-        store=True,
+        store=True, copy=False
     )
 
     # ── Onboarding: 附件明细 ──────────────────────────────────────────────
     onboarding_attachment_ids = fields.One2many(
         'tg.hr.applicant.attachment', 'applicant_id', string='Onboarding Documents',
+        copy=False
     )
 
     # ── Checklist（全 compute + store，全部 True 时 onboarding_complete）──
-    chk_personal_info = fields.Boolean(string='Personal Info', compute='_compute_chk_personal_info', store=True)
-    chk_id_info = fields.Boolean(string='ID Info', compute='_compute_chk_id_info', store=True)
-    chk_id_documents = fields.Boolean(string='ID Scan', compute='_compute_chk_id_documents', store=True)
-    chk_bank_info = fields.Boolean(string='Bank Info', compute='_compute_chk_bank_info', store=True)
-    chk_tax_info = fields.Boolean(string='Tax Info', compute='_compute_chk_tax_info', store=True)
-    chk_contract_info = fields.Boolean(string='Contract Info', compute='_compute_chk_contract_info', store=True)
-    chk_diploma = fields.Boolean(string='Diploma', compute='_compute_chk_diploma', store=True)
-    chk_resignation_proof = fields.Boolean(string='Resignation Proof', compute='_compute_chk_resignation_proof', store=True)
-    chk_expat_info = fields.Boolean(string='Expat Info', compute='_compute_chk_expat_info', store=True)
-    chk_safety_training = fields.Boolean(string='Safety Training', compute='_compute_chk_safety_training', store=True)
+    chk_personal_info = fields.Boolean(string='Personal Info', compute='_compute_chk_personal_info', store=True, copy=False)
+    chk_id_info = fields.Boolean(string='ID Info', compute='_compute_chk_id_info', store=True, copy=False)
+    chk_id_documents = fields.Boolean(string='ID Scan', compute='_compute_chk_id_documents', store=True, copy=False)
+    chk_bank_info = fields.Boolean(string='Bank Info', compute='_compute_chk_bank_info', store=True, copy=False)
+    chk_tax_info = fields.Boolean(string='Tax Info', compute='_compute_chk_tax_info', store=True, copy=False)
+    chk_contract_info = fields.Boolean(string='Contract Info', compute='_compute_chk_contract_info', store=True, copy=False)
+    chk_diploma = fields.Boolean(string='Diploma', compute='_compute_chk_diploma', store=True, copy=False)
+    chk_resignation_proof = fields.Boolean(string='Resignation Proof', compute='_compute_chk_resignation_proof', store=True, copy=False)
+    chk_expat_info = fields.Boolean(string='Expat Info', compute='_compute_chk_expat_info', store=True, copy=False)
+    chk_safety_training = fields.Boolean(string='Safety Training', compute='_compute_chk_safety_training', store=True, copy=False)
 
-    onboarding_done_count = fields.Integer(compute='_compute_onboarding_progress', store=True)
-    onboarding_total_count = fields.Integer(compute='_compute_onboarding_progress', store=True)
-    onboarding_progress = fields.Float(string='Onboarding Progress (%)', compute='_compute_onboarding_progress', store=True)
-    onboarding_complete = fields.Boolean(string='Onboarding Complete', compute='_compute_onboarding_progress', store=True)
+    onboarding_done_count = fields.Integer(compute='_compute_onboarding_progress', store=True, copy=False)
+    onboarding_total_count = fields.Integer(compute='_compute_onboarding_progress', store=True, copy=False)
+    onboarding_progress = fields.Float(string='Onboarding Progress (%)', compute='_compute_onboarding_progress', store=True, copy=False)
+    onboarding_complete = fields.Boolean(string='Onboarding Complete', compute='_compute_onboarding_progress', store=True, copy=False)
+
+    # 字段必填
+    department_id = fields.Many2one(required=True)
+    job_id = fields.Many2one(required=True)
+
+    # 权限
+    salary_proposed_extra = fields.Char(groups="hr_recruitment.group_hr_recruitment_user,tg_hr.group_tg_hr_recruitment_applicant_actions")
+    salary_expected_extra = fields.Char(groups="hr_recruitment.group_hr_recruitment_user,tg_hr.group_tg_hr_recruitment_applicant_actions")
+    salary_proposed = fields.Float(groups="hr_recruitment.group_hr_recruitment_user,tg_hr.group_tg_hr_recruitment_applicant_actions")
+    salary_expected = fields.Float(groups="hr_recruitment.group_hr_recruitment_user,tg_hr.group_tg_hr_recruitment_applicant_actions")
 
     # ─────────────────────────────────────────────────────────────────────
     # Compute: 既有字段（原代码保留）
@@ -411,7 +435,7 @@ class HrApplicant(models.Model):
             applicant.show_onboarding_page = bool(
                 stage_id in (offered_stage_id, contract_signed_stage_id) and offer_approved
             )
-            applicant.has_active_offer = any(o.state != 'refused' for o in applicant.salary_offer_ids)
+            applicant.has_active_offer = any(o.state not in ('refused', 'cancelled') for o in applicant.salary_offer_ids)
 
     @api.depends("stage_id")
     def _compute_is_contract_signed_stage(self):
@@ -945,6 +969,14 @@ class HrApplicant(models.Model):
         return super().action_generate_offer()
 
     def _check_interviewer_access(self):
-        # @OVERRIDE 支持入职管理员操作
+        # @OVERRIDE 支持档案管理员操作
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user') and not self.env.user.has_group('tg_hr.group_tg_hr_applicant_records_admin'):
             raise UserError(_('You are not allowed to perform this action.'))
+
+    def _get_offer_values(self):
+        # 创建时获取 employee
+        res_info = super()._get_offer_values()
+        res_info.update({
+            'employee_id': self.employee_id.id
+        })
+        return res_info

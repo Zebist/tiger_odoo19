@@ -846,6 +846,8 @@ class HrContractSalaryOffer(models.Model):
         """
         if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
             raise UserError(_("You are not allowed to recreate sign requests."))
+        # 通过校验后提权
+        self = self.sudo()
         for offer in self:
             offer.ensure_one()
             # cancel 所有未结束的旧 sign_request（保留记录，不 unlink）

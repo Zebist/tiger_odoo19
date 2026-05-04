@@ -365,7 +365,7 @@ msgstr "撤回到草稿"
 #. module: base_tier_validation_extend_by_zb
 #: model:res.groups,name:base_tier_validation_extend_by_zb.group_tier_workflow_actions_all_records
 msgid "Workflow Actions on All Records"
-msgstr "全部记录的工作流操作"
+msgstr "全部记录的审批流操作"
 
 #. module: base_tier_validation_extend_by_zb
 #: model:ir.model.fields,field_description:base_tier_validation_extend_by_zb.field_tier_validation_zb__tier_zb_workflow_act_all_records

@@ -28,6 +28,7 @@ class HrOfferMarkSignedOfflineWizard(models.TransientModel):
         if not self.env.user.has_groups("tg_hr.group_hr_offer_email_sender,base.group_system"):
             raise UserError(_("You are not allowed to mark offer as signed offline."))
 
+        self = self.sudo()  # 权限校验通过后直接提权
         offer = self.offer_id
         applicant = offer.applicant_id
         if not applicant:

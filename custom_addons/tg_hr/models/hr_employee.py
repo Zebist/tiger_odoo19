@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -50,6 +50,17 @@ class HrEmployee(models.Model):
     def _compute_version_contract_date_start(self):
         for rec in self:
             rec.version_contract_date_start = rec.version_id.contract_date_start
+
+    tg_employee_create_user_wizard_ui = fields.Boolean(
+        compute="_compute_tg_employee_create_user_wizard_ui",
+        help="Technical field for form modifiers (Create User wizard button).",
+    )
+
+    @api.depends_context("uid")
+    def _compute_tg_employee_create_user_wizard_ui(self):
+        flag = self.env.user.has_group("tg_hr.group_tg_hr_employee_create_user_wizard")
+        for rec in self:
+            rec.tg_employee_create_user_wizard_ui = flag
 
     # ── Onboarding Checklist（首次合同 confirm 时填）──────────────────────
     onb_chk_contract_signed = fields.Boolean(string="合同签署", copy=False, tracking=True)
@@ -110,6 +121,22 @@ class HrEmployee(models.Model):
             "name": _("Confirm Contract"),
             "type": "ir.actions.act_window",
             "res_model": "hr.employee.confirm.contract.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_employee_id": self.id},
+        }
+
+    def action_open_onboarding_create_user_wizard(self):
+        """员工 Create User 向导（服务端 sudo）；仅 group_tg_hr_employee_create_user_wizard。"""
+        self.ensure_one()
+        if not self.env.user.has_group("tg_hr.group_tg_hr_employee_create_user_wizard"):
+            raise UserError(_("You are not allowed to create users from employees."))
+        if self.user_id:
+            raise UserError(_("This employee already has a user."))
+        return {
+            "name": _("Create User"),
+            "type": "ir.actions.act_window",
+            "res_model": "tg.hr.employee.create.user.wizard",
             "view_mode": "form",
             "target": "new",
             "context": {"default_employee_id": self.id},

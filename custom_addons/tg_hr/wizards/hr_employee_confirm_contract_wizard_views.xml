@@ -12,7 +12,6 @@
 
                     <group string="Contract Dates">
                         <field name="contract_date_start"/>
-                        <field name="trial_period_months"/>
                         <field name="trial_date_end"/>
                         <!-- 试用期未结束：contract_date_end readonly + 强制 = trial_date_end；过了可编辑 -->
                         <field name="contract_date_end"

@@ -81,6 +81,13 @@
             <form string="Requisition">
                 <header>
                     <field name="stage_id" widget="statusbar" readonly="1" options="{'fold_field': 'fold'}"/>
+                    <!-- Anchor for base_tier_validation get_view: /form/header/button[last()]. Terminate has groups and is stripped for normal users, leaving zero buttons otherwise. -->
+                    <button
+                            name="action_tier_validation_anchor"
+                            type="object"
+                            string="Tier anchor"
+                            invisible="1"
+                    />
                     <button
                         name="action_terminate_recruitment"
                         type="object"

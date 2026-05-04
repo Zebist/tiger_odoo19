@@ -5,6 +5,11 @@
         <field name="group_ids" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_actions'))]"/>
     </record>
 
+    <!-- By Job Positions：标准仅 Recruitment User；流水线组也需入口 -->
+    <record id="hr_recruitment.menu_hr_job_position" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('tg_hr.group_tg_hr_recruitment_applicant_actions'))]"/>
+    </record>
+
     <menuitem
         id="menu_tg_hr_requisition"
         name="Requisitions"

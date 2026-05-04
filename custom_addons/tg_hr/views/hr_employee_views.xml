@@ -6,6 +6,26 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
 
+            <!-- HR Officer 或「员工 Create User 向导」组可见 header（后者仅用于向导按钮） -->
+            <xpath expr="//form[@js_class='hr_employee_form']/header" position="attributes">
+                <attribute name="groups">hr.group_hr_user,tg_hr.group_tg_hr_employee_create_user_wizard</attribute>
+            </xpath>
+            <!-- 向导组：隐藏原生 Create User，仅用向导 -->
+            <xpath expr="//button[@name='action_create_user']" position="attributes">
+                <attribute name="invisible">user_id or tg_employee_create_user_wizard_ui</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_user']" position="after">
+                <button name="action_open_onboarding_create_user_wizard"
+                        type="object"
+                        string="Create User"
+                        class="btn-primary"
+                        invisible="user_id or not tg_employee_create_user_wizard_ui"
+                        groups="tg_hr.group_tg_hr_employee_create_user_wizard"/>
+            </xpath>
+            <xpath expr="//sheet/div[@name='button_box']" position="before">
+                <field name="tg_employee_create_user_wizard_ui" invisible="1"/>
+            </xpath>
+
             <!-- 顶部横幅：当前 version 的合同开始日期为空 → 提示 HR 走 Confirm Contract -->
             <xpath expr="//sheet" position="before">
                 <field name="version_contract_date_start" invisible="1"/>

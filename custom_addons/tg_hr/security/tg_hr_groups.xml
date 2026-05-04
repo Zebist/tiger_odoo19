@@ -89,6 +89,12 @@
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
     </record>
 
+    <!-- 员工表单「Create User」向导（sudo 建账号）；仅显式授予此组，不随 Records Core 附带 -->
+    <record id="group_tg_hr_employee_create_user_wizard" model="res.groups">
+        <field name="name">Employee Create User (Wizard)</field>
+        <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_onboarding"/>
+    </record>
+
     <!-- 合同/薪酬侧：显式 hr.version 全权限（可与 hr.group_hr_user 叠加） -->
     <record id="group_hr_version_contract_admin" model="res.groups">
         <field name="name">HR Version Contract Administrator</field>
@@ -122,7 +128,7 @@
 
     <record id="group_hr_offer_email_sender" model="res.groups">
         <field name="name">Offer Email Sender</field>
-        <field name="comment">Offer 相关按钮/RPC；候选人侧 hr.contract.salary.offer 见 tg_hr ACL 与「applicant pipeline」同名 record rule。</field>
+        <field name="comment">Offer 相关按钮/RPC；候选人侧 hr.contract.salary.offer 见 tg_hr ACL 与 rule_hr_contract_salary_offer_applicant_pipeline_applicant（仅本组）。流水线操作组见 rule_hr_contract_salary_offer_applicant_pipeline_all。</field>
         <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_offer_email"/>
         <field name="implied_ids" eval="[(6, 0, [])]"/>
     </record>

@@ -1,6 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tg_hr_requisition_user,tg.hr.requisition applicant pipeline,model_tg_hr_requisition,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,0,1
 access_tg_hr_requisition_creator,tg.hr.requisition creator,model_tg_hr_requisition,tg_hr.group_tg_hr_requisition_creator,1,0,1,0
+access_tg_hr_requisition_hired_person_creator,tg.hr.requisition.hired.person requisition creator,model_tg_hr_requisition_hired_person,tg_hr.group_tg_hr_requisition_creator,1,1,1,1
 access_tg_hr_requisition_system,tg.hr.requisition system,model_tg_hr_requisition,base.group_system,1,1,1,1
 access_tg_hr_requisition_manager,tg.hr.requisition recruitment manager,model_tg_hr_requisition,hr_recruitment.group_hr_recruitment_manager,1,1,1,1
 access_tg_hr_requisition_interviewer,tg.hr.requisition recruitment interviewer,model_tg_hr_requisition,hr_recruitment.group_hr_recruitment_interviewer,1,0,0,0
@@ -23,10 +24,16 @@ access_tg_hr_applicant_report_manager,tg.hr.applicant.report manager,model_tg_hr
 access_hr_employee_onboarding_records_core,tg.hr onboarding records employee,hr.model_hr_employee,tg_hr.group_tg_hr_onboarding_records_core,1,1,1,1
 access_hr_employee_info_readonly,tg.hr employee information readonly,hr.model_hr_employee,tg_hr.group_tg_hr_employee_info_readonly,1,0,0,0
 access_hr_version_onboarding_records_ro,tg.hr onboarding records hr.version ro,hr.model_hr_version,tg_hr.group_tg_hr_onboarding_records_core,1,0,0,0
+access_tg_hr_employee_create_user_wizard_acl,tg.hr employee create user wizard,model_tg_hr_employee_create_user_wizard,tg_hr.group_tg_hr_employee_create_user_wizard,1,1,1,1
+access_res_users_role_employee_create_user_ro,res.users.role employee create user wizard readonly,base_user_role.model_res_users_role,tg_hr.group_tg_hr_employee_create_user_wizard,1,0,0,0
+access_res_users_employee_create_user_wizard_rwc,res.users employee create user wizard minimal rwc no unlink,base.model_res_users,tg_hr.group_tg_hr_employee_create_user_wizard,1,1,1,0
 access_hr_version_contract_admin_rwcd,tg.hr hr.version contract admin,hr.model_hr_version,tg_hr.group_hr_version_contract_admin,1,1,1,1
 access_tg_hr_version_readonly_hr_version,tg.hr hr.version readonly,hr.model_hr_version,tg_hr.group_tg_hr_version_readonly,1,0,0,0
 access_tg_hr_hr_version_system,tg.hr hr.version system,hr.model_hr_version,base.group_system,1,1,1,1
 access_tg_hr_applicant_actions_hr_applicant_rw,tg.hr pipeline hr.applicant rw no create,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,0,0
+access_hr_recruitment_stage_applicant_pipeline,hr.recruitment.stage applicant pipeline read,hr_recruitment.model_hr_recruitment_stage,tg_hr.group_tg_hr_recruitment_applicant_actions,1,0,0,0
+access_hr_talent_pool_applicant_pipeline,hr.talent.pool applicant pipeline rwc no unlink,hr_recruitment.model_hr_talent_pool,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,0
+access_hr_applicant_skill_applicant_pipeline,hr.applicant.skill applicant pipeline rwc no unlink,hr_recruitment_skills.model_hr_applicant_skill,tg_hr.group_tg_hr_recruitment_applicant_actions,1,1,1,0
 access_tg_hr_recruitment_applicant_normal_edit_hr_applicant,tg.hr recruitment applicant normal user edit hr.applicant,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_recruitment_applicant_normal_edit,1,1,1,0
 access_tg_hr_hr_applicant_system,tg.hr hr.applicant system,hr_recruitment.model_hr_applicant,base.group_system,1,1,1,1
 access_tg_hr_applicant_records_admin_hr_applicant,tg.hr applicant records admin hr.applicant only,hr_recruitment.model_hr_applicant,tg_hr.group_tg_hr_applicant_records_admin,1,1,0,0

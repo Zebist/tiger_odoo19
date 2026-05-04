@@ -28,13 +28,13 @@
                         groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_open_first_contact_wizard"
                         type="object"
-                        string="Set First Contact"
+                        string="First contact completed"
                         class="btn-primary"
                         invisible="not show_first_contact_button"
                         groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
                 <button name="action_open_interview_wizard"
                         type="object"
-                        string="Set Interview"
+                        string="Set up interview"
                         class="btn-primary"
                         invisible="not show_interview_button"
                         groups="tg_hr.group_tg_hr_recruitment_applicant_actions,base.group_system"/>
@@ -85,7 +85,7 @@
                             <field name="interview_score" widget="priority"/>
                             <field name="interview_datetime"/>
                             <field name="interview_type"/>
-                            <field name="meeting_url" widget="url"/>
+                            <field name="meeting_url" widget="url" invisible="interview_type == 'offline'"/>
                             <field name="interview_notes" placeholder="Notes..."/>
                         </group>
                     </group>
@@ -140,13 +140,13 @@
                        name="action_open_first_contact_wizard"
                        type="object"
                        class="btn btn-sm btn-primary">
-                        Set First Contact
+                        First contact completed
                     </a>
                     <a t-if="record.show_interview_button.raw_value"
                        name="action_open_interview_wizard"
                        type="object"
                        class="btn btn-sm btn-primary">
-                        Set Interview
+                        Set up interview
                     </a>
                     <a t-if="record.show_pass_interview_button.raw_value"
                        name="action_pass_interview"
@@ -179,6 +179,7 @@
         <field name="arch" type="xml">
             <field name="stage_id" widget="rotting_statusbar_duration" position="attributes">
                 <attribute name="options">{"clickable": "1", "fold_field": "fold"}</attribute>
+                <attribute name="force_save">1</attribute>
             </field>
         </field>
     </record>

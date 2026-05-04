@@ -12,3 +12,4 @@ from . import hr_employee
 from . import hr_version
 from . import hr_contract_salary_offer
 from . import tg_hr_applicant_report
+from . import res_users

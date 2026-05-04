@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
@@ -33,16 +32,7 @@ class HrEmployeeConfirmContractWizard(models.TransientModel):
         required=True,
         default=lambda self: self._default_contract_date_start(),
     )
-    trial_period_months = fields.Integer(
-        string='Trial Period (Months)',
-        default=lambda self: self._default_trial_period_months(),
-    )
-    trial_date_end = fields.Date(
-        string='End of Trial Period',
-        compute='_compute_trial_date_end',
-        store=True,
-        readonly=True,
-    )
+    trial_date_end = fields.Date(string='End of Trial Period')
     contract_date_end = fields.Date(
         string='Contract End',
         required=True,
@@ -91,16 +81,6 @@ class HrEmployeeConfirmContractWizard(models.TransientModel):
         return fields.Date.context_today(self)
 
     @api.model
-    def _default_trial_period_months(self):
-        emp_id = self.env.context.get('default_employee_id')
-        if emp_id:
-            emp = self.env['hr.employee'].browse(emp_id)
-            applicant = emp._get_recruitment_applicant()
-            if applicant and applicant.ob_trial_period_months:
-                return applicant.ob_trial_period_months
-        return 6
-
-    @api.model
     def default_get(self, fields_list):
         vals = super().default_get(fields_list)
         emp_id = vals.get('employee_id') or self.env.context.get('default_employee_id')
@@ -121,17 +101,13 @@ class HrEmployeeConfirmContractWizard(models.TransientModel):
                 vals[f'chk_{code}'] = detected or bool(emp[f'onb_chk_{code}'])
                 # 已有 note 默认带过来
                 vals[f'note_{code}'] = emp[f'onb_note_{code}'] or False
+            if 'trial_date_end' in fields_list:
+                vals['trial_date_end'] = emp.trial_date_end or False
+        elif 'trial_date_end' in fields_list:
+            vals.setdefault('trial_date_end', False)
         return vals
 
     # ── Computes ──────────────────────────────────────────────────────────
-    @api.depends('contract_date_start', 'trial_period_months')
-    def _compute_trial_date_end(self):
-        for wiz in self:
-            if wiz.contract_date_start and wiz.trial_period_months:
-                wiz.trial_date_end = wiz.contract_date_start + relativedelta(months=wiz.trial_period_months)
-            else:
-                wiz.trial_date_end = False
-
     @api.depends('trial_date_end')
     def _compute_trial_in_progress(self):
         today = fields.Date.context_today(self)

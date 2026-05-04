@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- OCA base_user_role：TG HR 预置角色（noupdate=0 便于升级同步名称与 implied 组） -->
-
-    <data noupdate="0">
-        <!-- 已废弃角色：从库中删除（若曾安装过旧数据） -->
-        <delete model="res.users.role" id="role_tg_hr_onboarding_contract_admin"/>
-
+    <data noupdate="1">
         <record id="role_tg_hr_recruitment_specialist" model="res.users.role">
             <field name="name">Recruitment Specialist</field>
             <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
@@ -15,10 +10,11 @@
             ref('tg_hr.group_tg_hr_recruitment_applicant_actions'),
             ref('tg_hr.group_tg_hr_recruitment_degree_readonly'),
             ref('tg_hr.group_tg_hr_requisition_terminate'),
-            ref('hr_recruitment.group_hr_recruitment_interviewer'),
+            ref('base.group_partner_manager'),
             ref('tg_hr.group_tg_hr_employee_info_readonly'),
             ref('tg_hr.group_tg_hr_version_readonly'),
             ref('tg_hr.group_hr_offer_email_sender'),
+            ref('sign.group_sign_user'),
         ])]"/>
         </record>
 
@@ -31,12 +27,29 @@
             ref('hr.group_hr_user'),
             ref('tg_hr.group_tg_hr_recruitment_applicant_actions'),
             ref('tg_hr.group_tg_hr_recruitment_degree_readonly'),
-            ref('hr_recruitment.group_hr_recruitment_interviewer'),
             ref('tg_hr.group_tg_hr_applicant_records_admin'),
             ref('tg_hr.group_hr_employee_contract_confirm'),
             ref('tg_hr.group_tg_hr_onboarding_create_employee'),
             ref('tg_hr.group_tg_hr_onboarding_records_core'),
+            ref('tg_hr.group_tg_hr_employee_create_user_wizard'),
+            ref('base.group_partner_manager'),
             ref('sign.group_sign_user'),
+        ])]"/>
+        </record>
+
+        <!-- HR 经理：员工 Officer + 招聘/入职/Offer 相关 Tiger 组 -->
+        <record id="role_tg_hr_hr_manager" model="res.users.role">
+            <field name="name">HR Manager</field>
+            <field name="privilege_id" ref="tg_hr.res_groups_privilege_tg_hr_role"/>
+            <field name="implied_ids" eval="[(6, 0, [
+            ref('base.group_user'),
+            ref('hr.group_hr_user'),
+            ref('tg_hr.group_tg_hr_recruitment_applicant_actions'),
+            ref('hr_recruitment.group_hr_recruitment_user'),
+            ref('hr_payroll.group_hr_payroll_user'),
+            ref('tg_hr.group_hr_employee_contract_confirm'),
+            ref('tg_hr.group_tg_hr_onboarding_records_core'),
+            ref('tg_hr.group_hr_offer_email_sender'),
         ])]"/>
         </record>
 
